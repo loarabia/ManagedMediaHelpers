@@ -46,6 +46,10 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitTools.cs" />
+    <Compile Include="ID3Segment.cs" />
+    <Compile Include="MediaStructures.cs" />
+    <Compile Include="Mp3Frame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\v2.0\Microsoft.Silverlight.CSharp.targets" />
