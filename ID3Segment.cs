@@ -112,7 +112,11 @@ namespace ManagedMediaParsers
                 // 4 Bytes
                 // Size as a 32 bit synchsafe integer
                 // See the same link as above about ID3 tags            
-                _totalID3Size = BitTools.convertSSIntToInt(_id3Header[3], _id3Header[4], _id3Header[5], _id3Header[6]);
+                _totalID3Size = BitTools.convertSSIntToInt(
+				_id3Header[3],
+			       	_id3Header[4],
+			       	_id3Header[5],
+			       	_id3Header[6]);
 
                 // Add in the size of the Header
                 _totalID3Size += 10;

@@ -33,13 +33,15 @@ namespace ManagedMediaParsers
                 return -1;
             }
 
-            // Clear out numbers where you are masking outside of the valid range.
+            // Clear out numbers where you are masking outside of the valid
+	    // range.
             if ((startingBit + maskSize) > header.Length * 8)
             {
                 return -1;
             }
 
-            // Clear out masks which are larger than the number of bits in an int
+            // Clear out masks which are larger than the number of bits in an
+	    // int
             if (maskSize > sizeof(int) * 8)
             {
                 return -1;
@@ -49,7 +51,7 @@ namespace ManagedMediaParsers
             int startByteIndex = startingBit / 8; // Integer divide by 8
 
             // Figure what byte the ending bit is in
-            int endByteIndex = (startingBit + maskSize - 1) / 8; // Integer divide by 8
+            int endByteIndex = (startingBit + maskSize - 1) / 8; // Int div by 8
 
             // initialize the mask
             int mask = 0;
@@ -72,7 +74,9 @@ namespace ManagedMediaParsers
              * number of bytes
              */
             Int64 temp;
-            for (int byteIndex = startByteIndex; byteIndex <= endByteIndex; byteIndex++)
+            for (int byteIndex = startByteIndex;
+			    byteIndex <= endByteIndex;
+			    byteIndex++)
             {
                 temp = header[byteIndex];
 

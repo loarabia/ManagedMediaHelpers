@@ -15,7 +15,7 @@ namespace ManagedMediaParsers
     public class Mp3Frame
     {
         private const int SYNC_VALUE = 2047;    // Frame Sync is 12 1s
-        private const int FRAME_HEADER_SIZE = 4;// MP3 Frame Headers are 4 Bytes long
+        private const int FRAME_HEADER_SIZE = 4;// MP3 Headers are 4 Bytes long
         private byte[] _mp3FrameHeader = null;
 
         private int? _version = null;
@@ -126,7 +126,10 @@ namespace ManagedMediaParsers
                 }
                 else if (_mp3FrameHeader != null)
                 {
-                    _samplingRateIndex = BitTools.MaskBits(_mp3FrameHeader, 10, 2);
+                    _samplingRateIndex 
+			    = BitTools.MaskBits(_mp3FrameHeader,
+				    10,
+				    2);
                     return (int)_samplingRateIndex;
                 }
                 else
@@ -172,7 +175,10 @@ namespace ManagedMediaParsers
                 }
                 else if (_mp3FrameHeader != null)
                 {
-                    _protected = BitTools.MaskBits(_mp3FrameHeader, 16, 1) == 1 ? true : false;
+                    _protected 
+			    = BitTools.MaskBits(_mp3FrameHeader, 16, 1) == 1 ?
+			    true :
+			    false;
                     return (bool)_protected;
                 }
                 else
@@ -280,10 +286,12 @@ namespace ManagedMediaParsers
                 switch (Layer)
                 {
                     case 1:
-                        return (12 * BitRate / SamplingRate + PaddingBit) * 4 - _mp3FrameHeader.Length;
+                        return (12 * BitRate / SamplingRate + PaddingBit) 
+				* 4 - _mp3FrameHeader.Length;
                     case 2:
                     case 3:
-                        return 144 * BitRate / SamplingRate + PaddingBit - _mp3FrameHeader.Length;
+                        return 144 * BitRate / SamplingRate 
+				+ PaddingBit - _mp3FrameHeader.Length;
                     default:
                         return -1;
                 }
@@ -313,7 +321,8 @@ namespace ManagedMediaParsers
             _mp3FrameHeader = new byte[FRAME_HEADER_SIZE];
 
             // Guard against an IO error
-            if (stream.Read(_mp3FrameHeader, 0, FRAME_HEADER_SIZE) != FRAME_HEADER_SIZE)
+            if (stream.Read(_mp3FrameHeader, 0, FRAME_HEADER_SIZE)
+			    != FRAME_HEADER_SIZE)
             {
                 goto cleanup;
             }
