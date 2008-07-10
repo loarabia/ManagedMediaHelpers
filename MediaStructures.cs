@@ -24,6 +24,21 @@ namespace ManagedMediaParsers
         public short BitsPerSample { get; set; }
         public short Size { get; set; }
 
+        public string ToHexString()
+        {
+            string s = "";
+
+            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", FormatTag));
+            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", Channels));
+            s += BitTools.ToLittleEndianString(string.Format("{0:X8}", SamplesPerSec));
+            s += BitTools.ToLittleEndianString(string.Format("{0:X8}", AvgBytesPerSec));
+            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", BlockAlign));
+            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", BitsPerSample));
+            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", Size));
+
+            return s;
+        }
+
         public override string ToString()
         {
             char[] rawData = new char[18];
@@ -49,6 +64,18 @@ namespace ManagedMediaParsers
         public short BlockSize { get; set; }
         public short FramesPerBlock { get; set; }
         public short CodecDelay { get; set; }
+
+        public string ToHexString()
+        {
+            string s;
+            s = wfx.ToHexString();
+            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", ID));
+            s += BitTools.ToLittleEndianString(string.Format("{0:X8}", Flags));
+            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", BlockSize));
+            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", FramesPerBlock));
+            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", CodecDelay));
+            return s;
+        }
 
         public override string ToString()
         {
