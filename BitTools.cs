@@ -1,13 +1,11 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
+﻿/******************************************************************************
+ * (c) Copyright Microsoft Corporation.
+ * This source is subject to the Microsoft Reciprocal License (Ms-RL)
+ * See http://www.microsoft.com/resources/sharedsource/licensingbasics/reciprocallicense.mspx
+ * All other rights reserved.
+ ******************************************************************************/
+using System;
+
 
 namespace ManagedMediaParsers
 {
@@ -117,39 +115,6 @@ namespace ManagedMediaParsers
             return number;
         }
 
-        public static string ToLittleEndianString(string bigEndianString)
-        {
-            if (bigEndianString == null) { return ""; }
-
-            char[] bigEndianChars = bigEndianString.ToCharArray();
-
-            // Guard
-            if (bigEndianChars.Length % 2 != 0) { return ""; }
-
-            int i, ai, bi, ci, di;
-            char a, b, c, d;
-            for (i = 0; i < bigEndianChars.Length / 2; i += 2)
-            {
-                // front byte
-                ai = i;
-                bi = i + 1;
-
-                // back byte
-                ci = bigEndianChars.Length - 2 - i;
-                di = bigEndianChars.Length - 1 - i;
-
-                a = bigEndianChars[ai];
-                b = bigEndianChars[bi];
-                c = bigEndianChars[ci];
-                d = bigEndianChars[di];
-
-                bigEndianChars[ci] = a;
-                bigEndianChars[di] = b;
-                bigEndianChars[ai] = c;
-                bigEndianChars[bi] = d;
-            }
-
-            return new string(bigEndianChars);
-        }
+        
     }
 }

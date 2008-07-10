@@ -1,91 +1,217 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
+﻿/******************************************************************************
+ * (c) Copyright Microsoft Corporation.
+ * This source is subject to the Microsoft Reciprocal License (Ms-RL)
+ * See http://www.microsoft.com/resources/sharedsource/licensingbasics/reciprocallicense.mspx
+ * All other rights reserved.
+ ******************************************************************************/
+using System;
+using ExtensionMethods;
+
 
 namespace ManagedMediaParsers
 {
     /// <summary>
-    /// 
+    /// A managed representation of the multimedia WAVEFORMATEX structure
+    /// declared in mmreg.h.
     /// </summary>
+    /// <remarks>
+    /// This was designed for usage in an environment where PInvokes are not
+    /// allowed.
+    /// </remarks>
+    // TODO: struct might be more efficient but these are made so seldom, I
+    // doubt it would even be noticeable.
     public class WAVEFORMATEX
     {
+        /// <summary>
+        /// The audio format type. A complete list of format tags can be
+        /// found in the Mmreg.h header file.
+        /// </summary>
+        /// <remarks>
+        /// Silverlight 2 supports:
+        /// WMA 7,8,9
+        /// WMA 10 Pro
+        /// Mp3
+        /// 
+        /// WAVE_FORMAT_MPEGLAYER3 = 0x0055
+        /// </remarks>
+        // TODO: Gather the other FormatTag numbers for WMA 7 - 10 and add them
+        // to the comments
         public short FormatTag { get; set; }
+
+        /// <summary>
+        /// Number of channels in the data. 
+        /// Mono            1
+        /// Stereo          2
+        /// Dual            2 (2 Mono channels)
+        /// </summary>
+        /// <remarks>
+        /// Silverlight 2 only supports stereo output and folds down higher
+        /// numbers of channels to stereo.
+        /// </remarks>
         public short Channels { get; set; }
+
+        /// <summary>
+        /// Sampling rate in hertz (samples per second)
+        /// </summary>
         public int SamplesPerSec { get; set; }
+
+        /// <summary>
+        /// Average data-transfer rate, in bytes per second, for the format.
+        /// </summary>
         public int AvgBytesPerSec { get; set; }
+
+        /// <summary>
+        /// Minimum size of a unit of data for the given format in Bytes.
+        /// </summary>
         public short BlockAlign { get; set; }
+
+        /// <summary>
+        /// The number of bits in a single sample of the format's data.
+        /// </summary>
         public short BitsPerSample { get; set; }
+
+        /// <summary>
+        /// The size in bytes of any extra format data added to the end of the
+        /// WAVEFORMATEX structure.
+        /// </summary>
         public short Size { get; set; }
 
+        /// <summary>
+        /// Returns a string representing the structure in little-endian 
+        /// hexadecimal format.
+        /// </summary>
+        /// <remarks>
+        /// The string generated here is intended to be passed as 
+        /// CodecPrivateData for Silverlight 2's MediaStreamSource
+        /// </remarks>
+        /// <returns>
+        /// A string representing the structure in little-endia hexadecimal
+        /// format.
+        /// </returns>
         public string ToHexString()
         {
-            string s = "";
-
-            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", FormatTag));
-            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", Channels));
-            s += BitTools.ToLittleEndianString(string.Format("{0:X8}", SamplesPerSec));
-            s += BitTools.ToLittleEndianString(string.Format("{0:X8}", AvgBytesPerSec));
-            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", BlockAlign));
-            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", BitsPerSample));
-            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", Size));
-
+            string s = string.Format("{0:X4}", FormatTag).ToLittleEndian();
+            s += string.Format("{0:X4}", Channels).ToLittleEndian();
+            s += string.Format("{0:X8}", SamplesPerSec).ToLittleEndian();
+            s += string.Format("{0:X8}", AvgBytesPerSec).ToLittleEndian();
+            s += string.Format("{0:X4}", BlockAlign).ToLittleEndian();
+            s += string.Format("{0:X4}", BitsPerSample).ToLittleEndian();
+            s += string.Format("{0:X4}", Size).ToLittleEndian();
             return s;
         }
 
+        /// <summary>
+        /// Returns a string representing all of the fields in the object.
+        /// </summary>
+        /// <returns>
+        /// A string representing all of the fields in the object.
+        /// </returns>
         public override string ToString()
         {
-            char[] rawData = new char[18];
-            BitConverter.GetBytes(FormatTag).CopyTo(rawData, 0);
-            BitConverter.GetBytes(Channels).CopyTo(rawData, 2);
-            BitConverter.GetBytes(SamplesPerSec).CopyTo(rawData, 4);
-            BitConverter.GetBytes(AvgBytesPerSec).CopyTo(rawData, 8);
-            BitConverter.GetBytes(BlockAlign).CopyTo(rawData, 12);
-            BitConverter.GetBytes(BitsPerSample).CopyTo(rawData, 14);
-            BitConverter.GetBytes(Size).CopyTo(rawData, 16);
-            return new string(rawData);
+            return string.Format(
+                "WAVEFORMATEX FormatTag: {0}, Channels: {1},"
+                + "SamplesPerSec: {2}, AvgBytesPerSec: {3}, BlockAlign: {4}, "
+                + "BitsPerSample: {5}, Size: {6} ",
+                FormatTag, Channels,
+                SamplesPerSec, AvgBytesPerSec, BlockAlign,
+                BitsPerSample, Size);
         }
     }
 
     /// <summary>
-    /// 
-    /// </summary> 
+    /// A managed representation of the multimedia MPEGLAYER3WAVEFORMATEX 
+    /// structure declared in mmreg.h.
+    /// </summary>
+    /// <remarks>
+    /// This was designed for usage in an environment where PInvokes are not
+    /// allowed.
+    /// </remarks>
+    // TODO: struct might be more efficient but these are made so seldom, I
+    // doubt it would even be noticeable.
     public class MPEGLAYER3WAVEFORMAT
     {
+        /// <summary>
+        /// The core WAVEFORMATEX strucutre representing the Mp3 audio data's
+        /// core attributes. 
+        /// </summary>
+        /// <remarks>
+        /// wfx.FormatTag must be WAVE_FORMAT_MPEGLAYER3 = 0x0055 = (85)
+        /// wfx.Size must be >= 12
+        /// </remarks>
         public WAVEFORMATEX wfx { get; set; }
+
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// Set this to 
+        /// MPEGLAYER3_ID_MPEG = 1
+        /// </remarks>
         public short ID { get; set; }
+
+        /// <summary>
+        /// Set to determine if padding is needed to adjust the average bitrate
+        /// to meet the sampling rate.
+        /// 0 = adjust as needed
+        /// 1 = always pad
+        /// 2 = never pad
+        /// </summary>
         public int Flags { get; set; }
+
+        /// <summary>
+        /// Block Size in bytes. For MP3 audio this is
+        /// 144 * bitrate / samplingRate + padding
+        /// </summary>
         public short BlockSize { get; set; }
+
+        /// <summary>
+        /// Number of frames per block.
+        /// </summary>
+        //TODO: Always 1?
         public short FramesPerBlock { get; set; }
+
+        /// <summary>
+        /// Encoder delay in samples.
+        /// </summary>
         public short CodecDelay { get; set; }
 
+        /// <summary>
+        /// Returns a string representing the structure in little-endian 
+        /// hexadecimal format.
+        /// </summary>
+        /// <remarks>
+        /// The string generated here is intended to be passed as 
+        /// CodecPrivateData for Silverlight 2's MediaStreamSource
+        /// </remarks>
+        /// <returns>
+        /// A string representing the structure in little-endia hexadecimal
+        /// format.
+        /// </returns>
         public string ToHexString()
         {
-            string s;
-            s = wfx.ToHexString();
-            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", ID));
-            s += BitTools.ToLittleEndianString(string.Format("{0:X8}", Flags));
-            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", BlockSize));
-            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", FramesPerBlock));
-            s += BitTools.ToLittleEndianString(string.Format("{0:X4}", CodecDelay));
+            string s = wfx.ToHexString();
+            s += string.Format("{0:X4}", ID).ToLittleEndian();
+            s += string.Format("{0:X8}", Flags).ToLittleEndian();
+            s += string.Format("{0:X4}", BlockSize).ToLittleEndian();
+            s += string.Format("{0:X4}", FramesPerBlock).ToLittleEndian();
+            s += string.Format("{0:X4}", CodecDelay).ToLittleEndian();
             return s;
         }
 
+        /// <summary>
+        /// Returns a string representing all of the fields in the object.
+        /// </summary>
+        /// <returns>
+        /// A string representing all of the fields in the object.
+        /// </returns>
         public override string ToString()
         {
-            char[] rawData = new char[12];
-            BitConverter.GetBytes(ID).CopyTo(rawData, 0);
-            BitConverter.GetBytes(Flags).CopyTo(rawData, 2);
-            BitConverter.GetBytes(BlockSize).CopyTo(rawData, 6);
-            BitConverter.GetBytes(FramesPerBlock).CopyTo(rawData, 8);
-            BitConverter.GetBytes(CodecDelay).CopyTo(rawData, 10);
-            return wfx.ToString() + new string(rawData);
+            return "MPEGLAYER3 "
+                + wfx.ToString()
+                + string.Format(
+                    "ID: {0}, Flags: {1}, BlockSize: {2}, "
+                    + "FramesPerBlock {3}, CodecDelay {4}",
+                    ID, Flags, BlockSize,
+                    FramesPerBlock, CodecDelay);
         }
     }
 }
