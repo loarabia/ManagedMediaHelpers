@@ -12,15 +12,35 @@ using System.Windows.Shapes;
 namespace ExtensionMethods
 {
     /// <summary>
-    /// 
+    /// Extensions for the standard string class.
     /// </summary>
     public static class StringExtensions
     {
         /// <summary>
+        /// Converts a string of characters from Big Endian byte order to
+        /// Little Endian byte order.
         /// 
+        /// Assumptions this makes about the string. Every two characters
+        /// make up the smallest data unit (analogous to byte). The entire
+        /// string is the size of the systems natural unit of data (analogous
+        /// to a word).
         /// </summary>
-        /// <param name="bigEndianString"></param>
-        /// <returns></returns>
+        /// <param name="bigEndianString">
+        /// A string in Big Endian Byte order.
+        /// </param>
+        /// <returns>
+        /// A string in Little Endian Byte order.
+        /// </returns>
+        /// <remarks>
+        /// This function was designed to take in a Big Endian string of
+        /// hexadecimal digits.
+        /// 
+        /// Example input:
+        ///     DEADBEEF
+        /// Example output:
+        ///     EFBEADDE
+        /// </remarks>
+        // TODO: Not quite the right way to do this but good enough for now
         public static string ToLittleEndian(this string bigEndianString)
         {
             // Guard
@@ -34,13 +54,13 @@ namespace ExtensionMethods
             int i, ai, bi, ci, di;
             char a, b, c, d;
 
-            for (i = 0; i < bigEndianChars.Length / 2; i += 2)
+            for (i = 0; i < bigEndianChars.Length / 2; i += 2) //TODO: bug here
             {
-                // front byte
+                // front byte ( in hex )
                 ai = i;
                 bi = i + 1;
 
-                // back byte
+                // back byte ( in hex )
                 ci = bigEndianChars.Length - 2 - i;
                 di = bigEndianChars.Length - 1 - i;
 

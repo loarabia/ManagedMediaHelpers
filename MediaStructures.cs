@@ -126,8 +126,8 @@ namespace ManagedMediaParsers
     /// This was designed for usage in an environment where PInvokes are not
     /// allowed.
     /// </remarks>
-    // TODO: struct might be more efficient but these are made so seldom, I
-    // doubt it would even be noticeable.
+    // TODO: struct might be more efficient but these are instantiated so
+    // seldom, I doubt it would even be noticeable.
     public class MPEGLAYER3WAVEFORMAT
     {
         /// <summary>
