@@ -23,7 +23,7 @@ namespace ManagedMediaParsers
         private bool? _protected = null;
         private Channel? _channels = null;
 
-        // Cannot make pointers (reference types) consts.
+        //TODO: Cannot make pointers (reference types) consts.
         // What is the right way to make this data one const item ?
         private static int[,] BITRATE_INDEX = new int[,]
             {   {0,32,64,96,128,160,192,224,256,288,320,352,384,416,448,-1},
@@ -33,7 +33,7 @@ namespace ManagedMediaParsers
                 {0,8,16,24,32,40,48,56,64,80,96,112,128,144,160,-1}
             };
 
-        // Cannot make pointers (reference types) consts.
+        //TODO: Cannot make pointers (reference types) consts.
         // What is the right way to make this data one const item ?
         private static int[,] SAMPLNIG_RATE_INDEX = new int[,]
             {   {44100,48000,32000,-1},
