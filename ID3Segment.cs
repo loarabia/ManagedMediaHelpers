@@ -10,11 +10,13 @@ using System.IO;
 namespace ManagedMediaParsers
 {
     /// <summary>
-    /// TODO: REWORK TO TAKE INTO ACCOUNT V1 vs V2 ID3 Tags 
+    ///  
     /// </summary>
+    //TODO: Anything special about the dot releases of ID3 that should be
+    // accounted for?
     public class ID3Segment
     {
-        private const int ID3 = 4801587;        // "ID3" This is IDE V2.X
+        private const int ID3 = 4801587;        // "ID3" This is ID3 V2.X
         private const int TAG = 5521735;        // "TAG" This is ID3 V1.X
 
 
@@ -109,11 +111,7 @@ namespace ManagedMediaParsers
                 // 4 Bytes
                 // Size as a 32 bit synchsafe integer
                 // See the same link as above about ID3 tags            
-                _totalID3Size = BitTools.convertSSIntToInt(
-				_id3Header[3],
-			       	_id3Header[4],
-			       	_id3Header[5],
-			       	_id3Header[6]);
+                _totalID3Size = BitTools.convertToSyncSafeInt( _id3Header,3);
 
                 // Add in the size of the Header
                 _totalID3Size += 10;
