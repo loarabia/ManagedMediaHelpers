@@ -21,7 +21,8 @@ namespace ManagedMediaParsers
         private const int BYTE_SIZE = 8; 
 
         /// <summary>
-        /// Masks out a set of bits from an array of bytes.
+        /// Masks out up to an integer sized (4 bytes) set of bits from an
+        /// array of bytes.
         /// </summary>
         /// <param name="header">An array of data</param>
         /// <param name="startingBit">The bit index of the first bit</param>
