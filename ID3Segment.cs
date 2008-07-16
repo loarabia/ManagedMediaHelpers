@@ -65,7 +65,16 @@ namespace ManagedMediaParsers
         public ID3Segment(Stream stream)
         {
             _position = stream.Position;
+#if DEBUG
+            DateTime startTime = DateTime.Now;
+#endif
             _position = FindSyncPoint(stream);
+#if DEBUG
+            DateTime endTime = DateTime.Now;
+            // Need to put this output somewhere else . . .
+            System.Console.Error.Write(endTime.Subtract(startTime));
+#endif
+
             ParseID3(stream);
 
 
@@ -180,20 +189,20 @@ namespace ManagedMediaParsers
                         partialFind += (char)data[i];
 
                         // ID + 3
-                        if (partialFind == "ID3")
+                        if (partialFind == "TAG")
                         {
                             s.Position = s.Position - bytesRead + i;
                             return s.Position;
                         }
                         // I + D
-                        else if (partialFind == "ID" )
+                        else if (partialFind == "TA" )
                         {
                             continue; // Go straight to the next for iteration
                         }
                         // EDGE CASE something like IID3 or IDID3 start over
-                        else if ('I' == (char)data[i])
+                        else if ('T' == (char)data[i])
                         {
-                            partialFind = "I";
+                            partialFind = "T";
                             continue; // Go straight to the next for iteration
                         }
                         // Nothing
@@ -203,9 +212,9 @@ namespace ManagedMediaParsers
                             potentialFind = false;
                         }
                     }
-                    else if ('I' == (char)data[i])
+                    else if ('T' == (char)data[i])
                     {
-                        partialFind = "I";
+                        partialFind += (char)data[i];
                         potentialFind = true;
                     }
                 }
