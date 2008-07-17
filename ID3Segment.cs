@@ -162,6 +162,14 @@ namespace ManagedMediaParsers
         //  1. Call BeginRead to buffer data and while that is buffering search
         //      the current set of data
         //  2. Do a parallel search of the data buffer
+        //TODO: Some streams from WebResponses will have a length of:
+        //  -1 ( cannot Seek )
+        //  0 ( Response stream is still null )
+        //  Size of the WebRequest
+        //  Size of the Stream
+        //TODO: don't return -1 or 0, return the position the stream was at when
+        //  you got it.
+        //TODO: Account for TAG and ID3.
         private long FindSyncPoint(Stream s)
         {
             // Guard 
@@ -175,48 +183,51 @@ namespace ManagedMediaParsers
             string partialFind = "";
 
             // Inner loop variables
-            int bytesRead;
-            int i;
-
-            while (s.Position < s.Length-1)
+            int bytesRead = 0;
+            long streamIndex;
+            long index;
+            long cachedStreamLength = s.Length - 1; // MAKES A BIG DIFFERENCE IN PERF
+            for (streamIndex = 0; streamIndex < cachedStreamLength; streamIndex++)
             {
-                bytesRead = s.Read(data, 0, data.Length);
-                for (i = 0; i < bytesRead; i++)
+                index = streamIndex % (bytesRead - 1);
+                if (index == 0)
                 {
-                    if (potentialFind)
-                    {
-                        // To even get here you must have seen an "I" or "ID"
-                        partialFind += (char)data[i];
+                    bytesRead = s.Read(data, 0, data.Length);
+                }
 
-                        // ID + 3
-                        if (partialFind == "TAG")
-                        {
-                            s.Position = s.Position - bytesRead + i;
-                            return s.Position;
-                        }
-                        // I + D
-                        else if (partialFind == "TA" )
-                        {
-                            continue; // Go straight to the next for iteration
-                        }
-                        // EDGE CASE something like IID3 or IDID3 start over
-                        else if ('T' == (char)data[i])
-                        {
-                            partialFind = "T";
-                            continue; // Go straight to the next for iteration
-                        }
-                        // Nothing
-                        else 
-                        {
-                            partialFind = "";
-                            potentialFind = false;
-                        }
-                    }
-                    else if ('T' == (char)data[i])
+                if (potentialFind)
+                {
+                    // To even get here you must have seen an "I" or "ID"
+                    partialFind += (char)data[index];
+
+                    // ID + 3
+                    if (partialFind == "TAG")
                     {
-                        partialFind += (char)data[i];
-                        potentialFind = true;
+                        s.Position = s.Position - bytesRead + index;
+                        return s.Position;
                     }
+                    // I + D
+                    else if (partialFind == "TA")
+                    {
+                        continue; // Go straight to the next for iteration
+                    }
+                    // EDGE CASE something like IID3 or IDID3 start over
+                    else if ('T' == (char)data[index])
+                    {
+                        partialFind = "T";
+                        continue; // Go straight to the next for iteration
+                    }
+                    // Nothing
+                    else
+                    {
+                        partialFind = "";
+                        potentialFind = false;
+                    }
+                }
+                else if ('T' == (char)data[index])
+                {
+                    partialFind += (char)data[index];
+                    potentialFind = true;
                 }
             }
             return -1;
