@@ -170,9 +170,6 @@ namespace ManagedMediaParsers
         //TODO: don't return -1 or 0, return the position the stream was at when
         //  you got it.
         //TODO: Account for TAG and ID3.
-        //TODO: Can probably remove potentialFind bool and just use PartialFind.Length
-        //  will this cause a perf hit similar to what happened when not using the
-        //  cachedStreamLength ?
         private long FindSyncPoint(Stream s)
         {
             // Guard 
@@ -182,7 +179,6 @@ namespace ManagedMediaParsers
             byte[] data = new byte[1000];       // Buffer of data
                                                    
 
-            bool potentialFind = false;
             string partialFind = "";
 
             // Inner loop variables
@@ -199,7 +195,7 @@ namespace ManagedMediaParsers
                     bytesRead = s.Read(data, 0, data.Length);
                 }
 
-                if (potentialFind)
+                if (partialFind.Length > 0)
                 {
                     // To even get here you must have seen an "I" or "ID"
                     partialFind += (char)data[index];
@@ -225,13 +221,11 @@ namespace ManagedMediaParsers
                     else
                     {
                         partialFind = "";
-                        potentialFind = false;
                     }
                 }
                 else if ('T' == (char)data[index])
                 {
                     partialFind += (char)data[index];
-                    potentialFind = true;
                 }
             }
             return -1;
