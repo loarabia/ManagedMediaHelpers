@@ -71,8 +71,6 @@ namespace ManagedMediaParsers
             _position = FindSyncPoint(stream);
 #if DEBUG
             DateTime endTime = DateTime.Now;
-            // Need to put this output somewhere else . . .
-            System.Console.Error.Write(endTime.Subtract(startTime));
 #endif
 
             ParseID3(stream);
@@ -167,7 +165,7 @@ namespace ManagedMediaParsers
         //  0 ( Response stream is still null )
         //  Size of the WebRequest
         //  Size of the Stream
-        //TODO: Account for TAG and ID3.
+        //TODO: Only parses "ID3" / "TAG". This should be generalizeable.
         private long FindSyncPoint(Stream s)
         {
             long startPosition = s.Position;
@@ -200,20 +198,21 @@ namespace ManagedMediaParsers
                     partialFind += (char)data[index];
 
                     // ID + 3
-                    if (partialFind == "TAG")
+                    if (partialFind == "TAG" || partialFind == "ID3" )
                     {
-                        s.Position = s.Position - bytesRead + index;
+                        s.Position = s.Position - bytesRead + (index + 1) - partialFind.Length;
                         return s.Position;
                     }
                     // I + D
-                    else if (partialFind == "TA")
+                    else if (partialFind == "TA" || partialFind == "ID" )
                     {
                         continue; // Go straight to the next for iteration
                     }
                     // EDGE CASE something like IID3 or IDID3 start over
-                    else if ('T' == (char)data[index])
+                    else if ('T' == (char)data[index] || 'I' == (char)data[index])
                     {
-                        partialFind = "T";
+                        partialFind = "";
+                        partialFind += (char)data[index];
                         continue; // Go straight to the next for iteration
                     }
                     // Nothing
@@ -222,7 +221,7 @@ namespace ManagedMediaParsers
                         partialFind = "";
                     }
                 }
-                else if ('T' == (char)data[index])
+                else if ('T' == (char)data[index] || 'I' == (char)data[index])
                 {
                     partialFind += (char)data[index];
                 }
