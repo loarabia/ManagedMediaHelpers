@@ -153,8 +153,8 @@ namespace ManagedMediaParsers
  *  The position in the stream at which the I or T was found. The stream will
  *  be left pointing to that position. 
  *  
- * If the stream cannot be seeked or read, this method will return 0.
- * If the stream search turns up nothing, a -1 will be returned.
+ *  If the stream cannot be seeked or read or the search turns up nothing, this
+ *  method returns the start position of the stream.
  *****************************************************************************/
         //TODO: 2 types of parallelism that could be employed here if needed.
         //  1. Call BeginRead to buffer data and while that is buffering search
