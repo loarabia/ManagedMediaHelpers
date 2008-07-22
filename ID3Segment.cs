@@ -167,13 +167,12 @@ namespace ManagedMediaParsers
         //  0 ( Response stream is still null )
         //  Size of the WebRequest
         //  Size of the Stream
-        //TODO: don't return -1 or 0, return the position the stream was at when
-        //  you got it.
         //TODO: Account for TAG and ID3.
         private long FindSyncPoint(Stream s)
         {
+            long startPosition = s.Position;
             // Guard 
-            if (s.CanSeek == false || s.CanRead == false) { return 0; }
+            if (s.CanSeek == false || s.CanRead == false) { return startPosition; }
 
             // Linear search
             byte[] data = new byte[1000];       // Buffer of data
@@ -228,7 +227,7 @@ namespace ManagedMediaParsers
                     partialFind += (char)data[index];
                 }
             }
-            return -1;
+            return startPosition;
         }
 
         private void ParseID3(Stream s)
