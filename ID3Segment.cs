@@ -19,8 +19,8 @@ namespace ManagedMediaParsers
         private const int ID3 = 4801587;        // "ID3" This is ID3 V2.X
         private const int TAG = 5521735;        // "TAG" This is ID3 V1.X
 
-        private long _position;
-        
+
+        byte[] _id3Header;
 
         /// <summary>
         /// 
@@ -62,81 +62,16 @@ namespace ManagedMediaParsers
         ///  1 byte:     track
         ///  1 byte:     genre
         /// </remarks>
-        public ID3Segment(Stream stream)
+        public ID3Segment(Stream s)
         {
-            _position = stream.Position;
-#if DEBUG
-            DateTime startTime = DateTime.Now;
-#endif
-            _position = FindSyncPoint(stream);
-#if DEBUG
-            DateTime endTime = DateTime.Now;
-#endif
-
-            ParseID3(stream);
-
-
-            //byte[] id3SegmentIdentifier = new byte[3];
-            //if (stream.Read(id3SegmentIdentifier, 0, 3) != 3)
-            //{
-            //    stream.Position = startPosition;
-            //    return;
-            //}
-
-            //// Build the string from the first 3 bytes
-            //int identifier = 0;
-            //identifier |= id3SegmentIdentifier[0] << 16;  // I | T byte
-            //identifier |= id3SegmentIdentifier[1] << 8;   // D | A byte
-            //identifier |= id3SegmentIdentifier[2];        // 3 | G byte
-
-            //// Compare to see if it is "ID3" (ID3 2.X ) or "TAG" (ID3 1.X)
-            //startPosition = stream.Position;
-            //if (identifier == ID3)
-            //{
-            //    MajorVersion = 2;
-            //    _id3Header = new byte[7];
-            //    if (stream.Read(_id3Header, 0, 7) != 7)
-            //    {
-            //        stream.Position = startPosition;
-            //    }
-            //    // 2 Bytes
-            //    // Version and Revision
-            //    //_minorVersion = (int)_id3Header[0];
-            //    //_revision = (int)_id3Header[1];
-
-            //    // 1 Byte
-            //    // Flags ( Footer )
-            //    bool hasFooter = true;
-            //    if ((_id3Header[2] & (1 << 4)) == 0)
-            //    {
-            //        hasFooter = false;
-            //    }
-
-            //    // 4 Bytes
-            //    // Size as a 32 bit synchsafe integer
-            //    // See the same link as above about ID3 tags            
-            //    Length = BitTools.convertToSyncSafeInt( _id3Header,3);
-
-            //    // Add in the size of the Header
-            //    Length += 10;
-
-            //    // Add in the size of the Footer if there is one
-            //    if (hasFooter)
-            //    {
-            //        Length += 10;
-            //    }
-            //    // TEMP Move the stream forward by the proper amount
-            //    stream.Position += Length - 10;
-            //}
-            //else if (identifier == TAG)
-            //{
-            //    MajorVersion = 1;
-            //    _id3Header = new byte[125];
-            //    if (stream.Read(_id3Header, 0, 125) != 125)
-            //    {
-            //        stream.Position = startPosition;
-            //    }
-            //}
+            if (s.Position == FindSyncPoint(s))
+            {
+                ParseID3(s);
+            }
+            else
+            {
+                throw new InvalidOperationException("Stream does not have ID3 tags.");
+            }
         }
 
 /******************************************************************************
@@ -229,8 +164,81 @@ namespace ManagedMediaParsers
             return startPosition;
         }
 
+/******************************************************************************
+ * ParseID3
+ * 
+ * Summary:
+ * 
+ * Input:
+ * 
+ *****************************************************************************/
         private void ParseID3(Stream s)
         {
+            byte[] id3SegmentIdentifier = new byte[3];
+            long startPosition = s.Position;
+
+            if (s.Read(id3SegmentIdentifier, 0, 3) != 3)
+            {
+                s.Position = startPosition;
+                return;
+            }
+
+            //// Build the string from the first 3 bytes
+            int identifier = 0;
+            identifier |= id3SegmentIdentifier[0] << 16;  // I | T byte
+            identifier |= id3SegmentIdentifier[1] << 8;   // D | A byte
+            identifier |= id3SegmentIdentifier[2];        // 3 | G byte
+
+            //// Compare to see if it is "ID3" (ID3 2.X ) or "TAG" (ID3 1.X)
+            startPosition = s.Position;
+            if (identifier == ID3)
+            {
+                MajorVersion = 2;
+                _id3Header = new byte[7];
+                if (s.Read(_id3Header, 0, 7) != 7)
+                {
+                    s.Position = startPosition;
+                }
+                // 2 Bytes
+                // Version and Revision
+                //_minorVersion = (int)_id3Header[0];
+                //_revision = (int)_id3Header[1];
+
+                // 1 Byte
+                // Flags ( Footer )
+                bool hasFooter = true;
+                if ((_id3Header[2] & (1 << 4)) == 0)
+                {
+                    hasFooter = false;
+                }
+
+                // 4 Bytes
+                // Size as a 32 bit synchsafe integer
+                // See the same link as above about ID3 tags            
+                Length = BitTools.convertToSyncSafeInt( _id3Header,3);
+
+                // Add in the size of the Header
+                Length += 10;
+
+                // Add in the size of the Footer if there is one
+                if (hasFooter)
+                {
+                    Length += 10;
+                }
+                // Due to Reads, s.Position is already 10 forward
+                // Length includes the total length so when adjusting the
+                // stream forward, remove the 10 that have already been read.
+                s.Position += Length - 10;
+            }
+            else if (identifier == TAG)
+            {
+                MajorVersion = 1;
+                _id3Header = new byte[125];
+                if (s.Read(_id3Header, 0, 125) != 125)
+                {
+                    s.Position = startPosition;
+                }
+            }
         }
     }
 }
