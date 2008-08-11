@@ -24,18 +24,18 @@ namespace ManagedMediaParsers
         /// Masks out up to an integer sized (4 bytes) set of bits from an
         /// array of bytes.
         /// </summary>
-        /// <param name="header">An array of data</param>
-        /// <param name="startingBit">The bit index of the first bit</param>
+        /// <param name="data">An array of data</param>
+        /// <param name="firstBit">The bit index of the first bit</param>
         /// <param name="maskSize">The length of the mask in bits</param>
         /// <returns></returns>
-        public static int MaskBits(byte[] array, int firstBit, int maskSize)
+        public static int MaskBits(byte[] data, int firstBit, int maskSize)
         {
             // Clear out numbers which are too small
-            if (array.Length <= 0 || firstBit < 0 || maskSize <= 0){return -1;}
+            if (data.Length <= 0 || firstBit < 0 || maskSize <= 0){return -1;}
 
             // Clear out numbers where you are masking outside of the valid
             // range
-            if ((firstBit + maskSize) > array.Length * BYTE_SIZE) {return -1;}
+            if ((firstBit + maskSize) > data.Length * BYTE_SIZE) {return -1;}
 
             // Clear out masks which are larger than the number of bits in an
             // int
@@ -61,14 +61,13 @@ namespace ManagedMediaParsers
 
             // initialize the bytes to be masked
             /*
-             * Keep in mind that the bits we want could actually be spread
-             * across 5 bytes but they probably will be spread over a lesser
-             * number of bytes
+             * The desired bits could be spread across 5 bytes
+             * but they probably will be spread over fewer bytes
              */
             Int64 temp;
             for (int bi = startByteIndex; bi <= endByteIndex; bi++)
             {
-                temp = array[bi];
+                temp = data[bi];
 
                 // Shift it to the right byte position
                 temp = temp << ((bi) * BYTE_SIZE);
