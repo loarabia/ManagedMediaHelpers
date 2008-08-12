@@ -6,6 +6,7 @@
  ******************************************************************************/
 using System;
 using System.IO;
+using System.Diagnostics;
 
 namespace ManagedMediaParsers
 {
@@ -18,6 +19,7 @@ namespace ManagedMediaParsers
     {
         private const int ID3 = 4801587;        // "ID3" This is ID3 V2.X
         private const int TAG = 5521735;        // "TAG" This is ID3 V1.X
+        private const int BUFFER_SIZE = 10000;
 
 
         byte[] _id3Header;
@@ -108,7 +110,7 @@ namespace ManagedMediaParsers
             if (s.CanSeek == false || s.CanRead == false) { return startPosition; }
 
             // Linear search
-            byte[] data = new byte[1000];       // Buffer of data
+            byte[] data = new byte[BUFFER_SIZE];       // Buffer of data
                                                    
 
             string partialFind = "";
