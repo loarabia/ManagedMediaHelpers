@@ -5,6 +5,8 @@
  * All other rights reserved.
  ******************************************************************************/
 using System;
+using System.Diagnostics;
+
 
 
 namespace ManagedMediaParsers
@@ -18,7 +20,10 @@ namespace ManagedMediaParsers
         private const int SYNC_SAFE_INT_SIZE = 4;
 
         // 1 Byte is 8 bits
-        private const int BYTE_SIZE = 8; 
+        private const int BYTE_SIZE = 8;
+
+        // 1111 1111
+        private const int FULL_BYTE_MASK = 255;
 
         /// <summary>
         /// Masks out up to an integer sized (4 bytes) set of bits from an
@@ -128,6 +133,67 @@ namespace ManagedMediaParsers
             integer |= syncSafeByte;
 
             return integer;
+        }
+
+        /// <summary>
+        /// Searches a byte array for a pattern of bits.
+        /// </summary>
+        /// <param name="data">
+        /// The array of bytes to search for the pattern within.
+        /// </param>
+        /// <param name="pattern">
+        /// The pattern of bytes to match with undesired bits zeroed out.
+        /// </param>
+        /// <param name="mask">
+        /// A mask to zero out bits that aren't part of the pattern.
+        /// </param>
+        /// <returns>
+        /// Returns the location of the first byte in the pattern or -1 if
+        /// nothing was found or there was an error.
+        /// </returns>
+        public static int FindBitPattern(byte[] data, byte[] pattern, byte[] mask)
+        {
+            // GUARD
+            if( pattern.Length < 0 || data.Length < 0 || data.Length < pattern.Length || mask.Length != pattern.Length)
+            {
+                return -1;
+            }
+
+            int di = 0; // data index
+            int pati = 0; // pattern index
+
+            while (di < data.Length)
+            {
+                if (pati == pattern.Length) { return di - pattern.Length; }
+                else if(pattern[pati] == (data[di] & mask[pati])){ pati++; }
+                else if (pattern[pati] != (data[di] & mask[pati])) { pati = 0; }
+                else { Debug.Assert(false); }
+                di++;
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Searches a byte array for a pattern of bytes.
+        /// </summary>
+        /// <param name="data">
+        /// The array of bytes to search for the pattern within.
+        /// </param>
+        /// <param name="pattern">
+        /// The pattern of bytes to match.
+        /// </param>
+        /// <returns>
+        /// Returns the location of the first byte in the pattern or -1 if
+        /// nothing was found or there was an error.
+        /// </returns>
+        public static int FindBytePattern(byte[] data, byte[] pattern)
+        {
+            byte[] mask = new byte[pattern.Length];
+            for (int i = 0; i < pattern.Length; i++)
+            {
+                mask[i] = FULL_BYTE_MASK;
+            }
+            return FindBitPattern(data, pattern, mask);
         }
     }
 }
