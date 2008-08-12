@@ -164,10 +164,22 @@ namespace ManagedMediaParsers
 
             while (di < data.Length)
             {
-                if (pati == pattern.Length) { return di - pattern.Length; }
-                else if(pattern[pati] == (data[di] & mask[pati])){ pati++; }
-                else if (pattern[pati] != (data[di] & mask[pati])) { pati = 0; }
-                else { Debug.Assert(false); }
+                if (pati == pattern.Length)
+                {
+                    return di - pattern.Length;
+                }
+                else if (pattern[pati] == (data[di] & mask[pati]))
+                {
+                    pati++;
+                }
+                else if (pattern[pati] != (data[di] & mask[pati]))
+                {
+                    pati = 0;
+                }
+                else
+                {
+                    Debug.Assert(false);
+                }
                 di++;
             }
             return -1;
