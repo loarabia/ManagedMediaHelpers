@@ -22,8 +22,6 @@ namespace ManagedMediaParsers
         // 1 Byte is 8 bits
         private const int BYTE_SIZE = 8;
 
-        // 1111 1111
-        private const int FULL_BYTE_MASK = 255;
 
         /// <summary>
         /// Masks out up to an integer sized (4 bytes) set of bits from an
@@ -203,7 +201,7 @@ namespace ManagedMediaParsers
             byte[] mask = new byte[pattern.Length];
             for (int i = 0; i < pattern.Length; i++)
             {
-                mask[i] = FULL_BYTE_MASK;
+                mask[i] = byte.MaxValue; // 1111 1111
             }
             return FindBitPattern(data, pattern, mask);
         }
