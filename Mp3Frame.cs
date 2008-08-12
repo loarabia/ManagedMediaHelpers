@@ -317,7 +317,7 @@ namespace ManagedMediaParsers
             long startPostion = stream.Position;
             _mp3FrameHeader = new byte[FRAME_HEADER_SIZE];
 
-            // Guard against an IO error
+            // Guard against a read error
             if (stream.Read(_mp3FrameHeader, 0, FRAME_HEADER_SIZE)
 			    != FRAME_HEADER_SIZE)
             {
