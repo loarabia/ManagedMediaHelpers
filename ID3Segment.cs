@@ -15,7 +15,7 @@ namespace ManagedMediaParsers
     /// </summary>
     //TODO: Anything special about the dot releases of ID3 that should be
     // accounted for?
-    public class ID3Segment
+    public class Id3Segment
     {
         private const int ID3 = 4801587;        // "ID3" This is ID3 V2.X
         private const int TAG = 5521735;        // "TAG" This is ID3 V1.X
@@ -64,11 +64,11 @@ namespace ManagedMediaParsers
         ///  1 byte:     track
         ///  1 byte:     genre
         /// </remarks>
-        public ID3Segment(Stream s)
+        public Id3Segment(Stream fileStream)
         {
-            if (s.Position == FindSyncPoint(s))
+            if (fileStream.Position == FindSyncPoint(fileStream))
             {
-                ParseID3(s);
+                ParseId3(fileStream);
             }
             else
             {
@@ -103,11 +103,11 @@ namespace ManagedMediaParsers
         //  Size of the WebRequest
         //  Size of the Stream
         //TODO: Only parses "ID3" / "TAG". This should be generalizeable.
-        private long FindSyncPoint(Stream s)
+        private static long FindSyncPoint(Stream fleStream)
         {
-            long startPosition = s.Position;
+            long startPosition = fleStream.Position;
             // Guard 
-            if (s.CanSeek == false || s.CanRead == false) { return startPosition; }
+            if (fleStream.CanSeek == false || fleStream.CanRead == false) { return startPosition; }
 
             // Linear search
             byte[] data = new byte[BUFFER_SIZE];       // Buffer of data
@@ -119,14 +119,14 @@ namespace ManagedMediaParsers
             int bytesRead = 0;
             long index;
 
-            for (long streamIndex = 0, cachedStreamLength = s.Length -1;
+            for (long streamIndex = 0, cachedStreamLength = fleStream.Length -1;
                 streamIndex < cachedStreamLength;
                 streamIndex++)
             {
                 index = streamIndex % (bytesRead - 1);
                 if (index == 0)
                 {
-                    bytesRead = s.Read(data, 0, data.Length);
+                    bytesRead = fleStream.Read(data, 0, data.Length);
                 }
 
                 if (partialFind.Length > 0)
@@ -137,8 +137,8 @@ namespace ManagedMediaParsers
                     // ID + 3
                     if (partialFind == "TAG" || partialFind == "ID3" )
                     {
-                        s.Position = s.Position - bytesRead + (index + 1) - partialFind.Length;
-                        return s.Position;
+                        fleStream.Position = fleStream.Position - bytesRead + (index + 1) - partialFind.Length;
+                        return fleStream.Position;
                     }
                     // I + D
                     else if (partialFind == "TA" || partialFind == "ID" )
@@ -174,14 +174,14 @@ namespace ManagedMediaParsers
  * Input:
  * 
  *****************************************************************************/
-        private void ParseID3(Stream s)
+        private void ParseId3(Stream fileStream)
         {
             byte[] id3SegmentIdentifier = new byte[3];
-            long startPosition = s.Position;
+            long startPosition = fileStream.Position;
 
-            if (s.Read(id3SegmentIdentifier, 0, 3) != 3)
+            if (fileStream.Read(id3SegmentIdentifier, 0, 3) != 3)
             {
-                s.Position = startPosition;
+                fileStream.Position = startPosition;
                 return;
             }
 
@@ -192,14 +192,14 @@ namespace ManagedMediaParsers
             identifier |= id3SegmentIdentifier[2];        // 3 | G byte
 
             //// Compare to see if it is "ID3" (ID3 2.X ) or "TAG" (ID3 1.X)
-            startPosition = s.Position;
+            startPosition = fileStream.Position;
             if (identifier == ID3)
             {
                 MajorVersion = 2;
                 _id3Header = new byte[7];
-                if (s.Read(_id3Header, 0, 7) != 7)
+                if (fileStream.Read(_id3Header, 0, 7) != 7)
                 {
-                    s.Position = startPosition;
+                    fileStream.Position = startPosition;
                 }
                 // 2 Bytes
                 // Version and Revision
@@ -217,7 +217,7 @@ namespace ManagedMediaParsers
                 // 4 Bytes
                 // Size as a 32 bit synchsafe integer
                 // See the link in the ID3 segment constructor            
-                Length = BitTools.convertToSyncSafeInt( _id3Header,3);
+                Length = BitTools.ConvertToSyncSafeInt( _id3Header,3);
 
                 // Add in the size of the Header
                 Length += 10;
@@ -230,15 +230,15 @@ namespace ManagedMediaParsers
                 // Due to Reads, s.Position is already 10 forward
                 // Length includes the total length so when adjusting the
                 // stream forward, remove the 10 that have already been read.
-                s.Position += Length - 10;
+                fileStream.Position += Length - 10;
             }
             else if (identifier == TAG)
             {
                 MajorVersion = 1;
                 _id3Header = new byte[125];
-                if (s.Read(_id3Header, 0, 125) != 125)
+                if (fileStream.Read(_id3Header, 0, 125) != 125)
                 {
-                    s.Position = startPosition;
+                    fileStream.Position = startPosition;
                 }
             }
         }

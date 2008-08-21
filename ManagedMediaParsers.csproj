@@ -49,7 +49,7 @@
     <Compile Include="BitTools.cs" />
     <Compile Include="ID3Segment.cs" />
     <Compile Include="MediaStructures.cs" />
-    <Compile Include="Mp3Frame.cs" />
+    <Compile Include="MpegFrame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringExtensions.cs" />
   </ItemGroup>

@@ -6,6 +6,7 @@
  ******************************************************************************/
 using System;
 using ExtensionMethods;
+using System.Globalization;
 
 
 namespace ManagedMediaParsers
@@ -20,7 +21,7 @@ namespace ManagedMediaParsers
     /// </remarks>
     // TODO: struct might be more efficient but these are made so seldom, I
     // doubt it would even be noticeable.
-    public class WAVEFORMATEX
+    public class WaveFormatExtensible
     {
         /// <summary>
         /// The audio format type. A complete list of format tags can be
@@ -58,7 +59,7 @@ namespace ManagedMediaParsers
         /// <summary>
         /// Average data-transfer rate, in bytes per second, for the format.
         /// </summary>
-        public int AvgBytesPerSec { get; set; }
+        public int AverageBytesPerSecond { get; set; }
 
         /// <summary>
         /// Minimum size of a unit of data for the given format in Bytes.
@@ -90,13 +91,13 @@ namespace ManagedMediaParsers
         /// </returns>
         public string ToHexString()
         {
-            string s = string.Format("{0:X4}", FormatTag).ToLittleEndian();
-            s += string.Format("{0:X4}", Channels).ToLittleEndian();
-            s += string.Format("{0:X8}", SamplesPerSec).ToLittleEndian();
-            s += string.Format("{0:X8}", AvgBytesPerSec).ToLittleEndian();
-            s += string.Format("{0:X4}", BlockAlign).ToLittleEndian();
-            s += string.Format("{0:X4}", BitsPerSample).ToLittleEndian();
-            s += string.Format("{0:X4}", Size).ToLittleEndian();
+            string s = string.Format(CultureInfo.InvariantCulture, "{0:X4}", FormatTag).ToLittleEndian();
+            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", Channels).ToLittleEndian();
+            s += string.Format(CultureInfo.InvariantCulture, "{0:X8}", SamplesPerSec).ToLittleEndian();
+            s += string.Format(CultureInfo.InvariantCulture, "{0:X8}", AverageBytesPerSecond).ToLittleEndian();
+            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", BlockAlign).ToLittleEndian();
+            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", BitsPerSample).ToLittleEndian();
+            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", Size).ToLittleEndian();
             return s;
         }
 
@@ -108,12 +109,12 @@ namespace ManagedMediaParsers
         /// </returns>
         public override string ToString()
         {
-            return string.Format(
+            return string.Format(CultureInfo.InvariantCulture, 
                 "WAVEFORMATEX FormatTag: {0}, Channels: {1},"
                 + "SamplesPerSec: {2}, AvgBytesPerSec: {3}, BlockAlign: {4}, "
                 + "BitsPerSample: {5}, Size: {6} ",
                 FormatTag, Channels,
-                SamplesPerSec, AvgBytesPerSec, BlockAlign,
+                SamplesPerSec, AverageBytesPerSecond, BlockAlign,
                 BitsPerSample, Size);
         }
     }
@@ -128,7 +129,7 @@ namespace ManagedMediaParsers
     /// </remarks>
     // TODO: struct might be more efficient but these are instantiated so
     // seldom, I doubt it would even be noticeable.
-    public class MPEGLAYER3WAVEFORMAT
+    public class MpegLayer3WaveFormat
     {
         /// <summary>
         /// The core WAVEFORMATEX strucutre representing the Mp3 audio data's
@@ -138,7 +139,7 @@ namespace ManagedMediaParsers
         /// wfx.FormatTag must be WAVE_FORMAT_MPEGLAYER3 = 0x0055 = (85)
         /// wfx.Size must be >= 12
         /// </remarks>
-        public WAVEFORMATEX wfx { get; set; }
+        public WaveFormatExtensible WaveFormatExtensible { get; set; }
 
         /// <summary>
         /// </summary>
@@ -146,7 +147,7 @@ namespace ManagedMediaParsers
         /// Set this to 
         /// MPEGLAYER3_ID_MPEG = 1
         /// </remarks>
-        public short ID { get; set; }
+        public short Id { get; set; }
 
         /// <summary>
         /// Set to determine if padding is needed to adjust the average bitrate
@@ -188,12 +189,12 @@ namespace ManagedMediaParsers
         /// </returns>
         public string ToHexString()
         {
-            string s = wfx.ToHexString();
-            s += string.Format("{0:X4}", ID).ToLittleEndian();
-            s += string.Format("{0:X8}", Flags).ToLittleEndian();
-            s += string.Format("{0:X4}", BlockSize).ToLittleEndian();
-            s += string.Format("{0:X4}", FramesPerBlock).ToLittleEndian();
-            s += string.Format("{0:X4}", CodecDelay).ToLittleEndian();
+            string s = WaveFormatExtensible.ToHexString();
+            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", Id).ToLittleEndian();
+            s += string.Format(CultureInfo.InvariantCulture, "{0:X8}", Flags).ToLittleEndian();
+            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", BlockSize).ToLittleEndian();
+            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", FramesPerBlock).ToLittleEndian();
+            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", CodecDelay).ToLittleEndian();
             return s;
         }
 
@@ -206,11 +207,11 @@ namespace ManagedMediaParsers
         public override string ToString()
         {
             return "MPEGLAYER3 "
-                + wfx.ToString()
-                + string.Format(
+                + WaveFormatExtensible.ToString()
+                + string.Format(CultureInfo.InvariantCulture, 
                     "ID: {0}, Flags: {1}, BlockSize: {2}, "
                     + "FramesPerBlock {3}, CodecDelay {4}",
-                    ID, Flags, BlockSize,
+                    Id, Flags, BlockSize,
                     FramesPerBlock, CodecDelay);
         }
     }

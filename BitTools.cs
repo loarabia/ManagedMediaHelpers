@@ -22,6 +22,10 @@ namespace ManagedMediaParsers
         // 1 Byte is 8 bits
         private const int BYTE_SIZE = 8;
 
+/******************************************************************************
+ * This class should not be constructed as it is a set of static libraries.
+ *****************************************************************************/
+        private BitTools() { }
 
         /// <summary>
         /// Masks out up to an integer sized (4 bytes) set of bits from an
@@ -107,7 +111,7 @@ namespace ManagedMediaParsers
         /// A standard integer. Note that this integer can only have a data
         /// resolution of 28 bits (max value of this could only be 2^28 -1).
         /// </returns>
-        public static int convertToSyncSafeInt( 
+        public static int ConvertToSyncSafeInt( 
             byte[] syncSafeData,
             short startIndex )
         {
