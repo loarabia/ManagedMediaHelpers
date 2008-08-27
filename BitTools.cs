@@ -1,26 +1,31 @@
-﻿/******************************************************************************
- * (c) Copyright Larry Olson.
- * This source is subject to the Microsoft Reciprocal License (Ms-RL)
- * See http://www.microsoft.com/resources/sharedsource/licensingbasics/reciprocallicense.mspx
- * All other rights reserved.
- ******************************************************************************/
-using System;
-using System.Diagnostics;
-
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="BitTools.cs" company="Larry Olson">
+// (c) Copyright Larry Olson.
+// This source is subject to the Microsoft Reciprocal License (Ms-RL)
+// See http://www.microsoft.com/resources/sharedsource/licensingbasics/reciprocallicense.mspx
+// All other rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace ManagedMediaParsers
 {
+    using System;
+    using System.Diagnostics;
+
     /// <summary>
     /// Helper methods for manipulating values at the byte and binary level.
     /// </summary>
     public static class BitTools
     {
-        // defined by ID3v2 spec as 4 bytes
-        private const int SYNC_SAFE_INT_SIZE = 4;
+        /// <summary>
+        /// Defined by ID3v2 spec as 4 bytes
+        /// </summary>
+        private const int SyncSafeIntegerSize = 4;
 
-        // 1 Byte is 8 bits
-        private const int BYTE_SIZE = 8;
+        /// <summary>
+        /// 1 Byte is 8 bits 
+        /// </summary>
+        private const int ByteSize = 8;
 
         /// <summary>
         /// Masks out up to an integer sized (4 bytes) set of bits from an
@@ -29,25 +34,34 @@ namespace ManagedMediaParsers
         /// <param name="data">An array of data</param>
         /// <param name="firstBit">The bit index of the first bit</param>
         /// <param name="maskSize">The length of the mask in bits</param>
-        /// <returns></returns>
+        /// <returns>An integer of the bits masked out</returns>
         public static int MaskBits(byte[] data, int firstBit, int maskSize)
         {
             // Clear out numbers which are too small
-            if (data.Length <= 0 || firstBit < 0 || maskSize <= 0){return -1;}
+            if (data.Length <= 0 || firstBit < 0 || maskSize <= 0)
+            {
+                return -1;
+            }
 
             // Clear out numbers where you are masking outside of the valid
             // range
-            if ((firstBit + maskSize) > data.Length * BYTE_SIZE) {return -1;}
+            if ((firstBit + maskSize) > data.Length * ByteSize) 
+            { 
+                return -1;
+            }
 
             // Clear out masks which are larger than the number of bits in an
             // int
-            if (maskSize > sizeof(int) * BYTE_SIZE) { return -1; }
+            if (maskSize > sizeof(int) * ByteSize) 
+            {
+                return -1;
+            }
 
             // Figure out what byte the starting bit is in
-            int startByteIndex = firstBit / BYTE_SIZE; // Int div
+            int startByteIndex = firstBit / ByteSize; // Int div
 
             // Figure what byte the ending bit is in
-            int endByteIndex = (firstBit + maskSize - 1) / BYTE_SIZE; // Int div
+            int endByteIndex = (firstBit + maskSize - 1) / ByteSize; // Int div
 
             // initialize the mask
             int mask = 0;
@@ -59,20 +73,20 @@ namespace ManagedMediaParsers
             }
 
             // initialize the return value
-            Int64 headerValue = 0;
+            long headerValue = 0;
 
             // initialize the bytes to be masked
             /*
              * The desired bits could be spread across 5 bytes
              * but they probably will be spread over fewer bytes
              */
-            Int64 temp;
+            long temp;
             for (int bi = startByteIndex; bi <= endByteIndex; bi++)
             {
                 temp = data[bi];
 
                 // Shift it to the right byte position
-                temp = temp << ((bi) * BYTE_SIZE);
+                temp = temp << (bi * ByteSize);
                 headerValue = headerValue | temp;
             }
 
@@ -98,7 +112,7 @@ namespace ManagedMediaParsers
         /// Output would be:
         /// 00001111 11111111 11111111 11111111
         /// </param>
-        /// <param name="syncSafeDataStart">
+        /// <param name="startIndex">
         /// Where in the array of bytes, the syncsafe data starts. Note that
         /// data's size is assumed to be 4 bytes in length.
         /// </param>
@@ -106,22 +120,22 @@ namespace ManagedMediaParsers
         /// A standard integer. Note that this integer can only have a data
         /// resolution of 28 bits (max value of this could only be 2^28 -1).
         /// </returns>
-        public static int ConvertToSyncSafeInt32( 
+        public static int ConvertToSyncSafeInt32(
             byte[] syncSafeData,
-            short startIndex )
+            short startIndex)
         {
             int integer = 0;
             int syncSafeByte = 0; // Store byte in an int to enable shifting
-            int shiftAmount = 0; 
+            int shiftAmount = 0;
 
             // Stop shifting before you hit the last byte. The last byte is
             // already where it needs to be
             // Shifts the first three bytes left and copies them into the int
             int i;
-            for(i = 0; i < SYNC_SAFE_INT_SIZE - 1; i++)
+            for (i = 0; i < SyncSafeIntegerSize - 1; i++)
             {
                 syncSafeByte = syncSafeData[startIndex + i];
-                shiftAmount = BYTE_SIZE * (SYNC_SAFE_INT_SIZE - 1 - i) - 1;
+                shiftAmount = (ByteSize * (SyncSafeIntegerSize - 1 - i)) - 1;
                 integer |= syncSafeByte << (int)shiftAmount;
             }
 
@@ -151,7 +165,7 @@ namespace ManagedMediaParsers
         public static int FindBitPattern(byte[] data, byte[] pattern, byte[] mask)
         {
             // GUARD
-            if( pattern.Length < 0 || data.Length < 0 || data.Length < pattern.Length || mask.Length != pattern.Length)
+            if (pattern.Length < 0 || data.Length < 0 || data.Length < pattern.Length || mask.Length != pattern.Length)
             {
                 return -1;
             }
@@ -175,10 +189,12 @@ namespace ManagedMediaParsers
                 }
                 else
                 {
-                    Debug.Assert(false);
+                    Debug.Assert(false, "All possible states should have already been covered.");
                 }
+
                 di++;
             }
+
             return -1;
         }
 
@@ -202,6 +218,7 @@ namespace ManagedMediaParsers
             {
                 mask[i] = byte.MaxValue; // 1111 1111
             }
+
             return FindBitPattern(data, pattern, mask);
         }
     }

@@ -1,67 +1,158 @@
-﻿/******************************************************************************
- * (c) Copyright Larry Olson.
- * This source is subject to the Microsoft Reciprocal License (Ms-RL)
- * See http://www.microsoft.com/resources/sharedsource/licensingbasics/reciprocallicense.mspx
- * All other rights reserved.
- ******************************************************************************/
-using System;
-using System.IO;
-using System.Diagnostics.CodeAnalysis;
+﻿//-----------------------------------------------------------------------
+// <copyright file="MpegFrame.cs" company="Larry Olson">
+// (c) Copyright Larry Olson.
+// This source is subject to the Microsoft Reciprocal License (Ms-RL)
+// See http://www.microsoft.com/resources/sharedsource/licensingbasics/reciprocallicense.mspx
+// All other rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 
 // Supressing Code Analysis rule(s)
-[module: SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional",
+[module: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional",
     Scope = "member",
     Target = "ManagedMediaParsers.MpegFrame.#SAMPLING_RATE_INDEX",
     MessageId = "Member",
-    Justification="Array is not Jagged and does not waste space.")]
+    Justification = "Array is not Jagged and does not waste space.")]
 
-[module: SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional",
+[module: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional",
     Scope = "member",
     Target = "ManagedMediaParsers.MpegFrame.#BITRATE_INDEX",
     MessageId = "Member",
     Justification = "Array is not Jagged and does not waste space.")]
 
-
 namespace ManagedMediaParsers
 {
+    using System;
+    using System.IO;
+
+    /// <summary>
+    /// Reproduction mode of given audio data. Typically maps to the number of
+    /// output devices used to reproduce it.
+    /// </summary>
+    public enum Channel
+    {
+        /// <summary>
+        /// Stereo: independent audio typically output to 2 speakers and is intended
+        /// to create a more realistic or pleasing representation of audio by
+        /// representing sound coming from multiple directons.
+        /// </summary>
+        Stereo = 0,
+
+        /// <summary>
+        /// Joint Stereo: The joining of multiple channels of audio to create another separate
+        /// one, to reduce the size of the file, or to increase the quality.
+        /// </summary>
+        JointStereo,
+
+        /// <summary>
+        /// Dual Channel: Two independent Mono channels. May overlap with stereo or may 
+        /// be completely independent as in the case of foreign language audio dubbing.
+        /// </summary>
+        DualChannel,
+
+        /// <summary>
+        /// Single Channel: Also known as Mono. Typically the reproduction of a single
+        /// independent audio stream in one device or of the same independent audio stream
+        /// in multiple devices.
+        /// </summary>
+        SingleChannel,
+    }
+
     /// <summary>
     /// A partial implementation of an MPEG audio frame as specified by IS0/IEC
     /// 13818-3 and ISO/IEC 11172-3.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// The primary purpose of this class is to represent an Mpeg 1 Layer 3
     /// file or MP3 file for short. Many of the features not explicitly needed
     /// for audio rendering are omitted from the implementation.
-    /// 
+    /// </para>
+    /// <para>
     /// Data on this format is readily discoverable in many books as well as by
     /// searching for "MP3 Frame" in your favorite search engine. As always,
     /// Wikipedia is well stocked in all of these areas as well.
+    /// </para>
     /// </remarks>
-
     public class MpegFrame
     {
-        private const int SYNC_VALUE = 2047;    // Frame Sync is 12 1s
-        private const int FRAME_HEADER_SIZE = 4;// MP3 Headers are 4 Bytes long
+        /// <summary>
+        /// Frame Sync is 12 1s
+        /// </summary>
+        private const int SyncValue = 2047;
 
-        //TODO: Cannot make pointers (reference types) consts.
-        // What is the right way to make this data one const item ?
+        /// <summary>
+        /// MP3 Headers are 4 Bytes long
+        /// </summary>
+        private const int FrameHeaderSize = 4;
 
-        private static int[,] BITRATE_INDEX = new int[,]
-            {   {0,32,64,96,128,160,192,224,256,288,320,352,384,416,448,-1},
-                {0,32,48,56,64,80,96,112,128,160,192,224,256,320,384,-1},
-                {0,32,40,48,56,64,80,96,112,128,160,192,224,256,320,-1},
-                {0,32,48,56,64,80,96,112,128,144,160,176,192,224,256,-1},
-                {0,8,16,24,32,40,48,56,64,80,96,112,128,144,160,-1}
+        /// <summary>
+        /// A table of bitrates / 1000. These are all of the possible bitrates for Mpeg 1 - 2.5 audio. -1 encodes an error lookup.
+        /// </summary>
+        private static int[,] bitrateTable = new int[,]
+            {   
+                { 0, 32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448 },
+                { 0, 32, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 384 },
+                { 0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320 },
+                { 0, 32, 48, 56, 64, 80, 96, 112, 128, 144, 160, 176, 192, 224, 256 },
+                { 0, 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160 }
             };
 
-        //TODO: Cannot make pointers (reference types) consts.
-        // What is the right way to make this data one const item ?
-        
-        private static int[,] SAMPLING_RATE_INDEX = new int[,]
-            {   {44100,48000,32000,-1},
-                {22050,24000,16000,-1},
-                {11025,12000,8000,-1}
+        /// <summary>
+        /// A table of all of the possible sampling rates of Mpeg 1 - 2.5 audio. 
+        /// </summary>
+        private static int[,] samplingRateTable = new int[,]
+            {   
+                { 44100, 48000, 32000 },
+                { 22050, 24000, 16000 },
+                { 11025, 12000, 8000 }
             };
+
+        /// <summary>
+        /// Initializes a new instance of the MpegFrame class.
+        /// </summary>
+        /// <param name="stream">
+        /// A stream with its position at the SyncPoint of the header.
+        /// </param>
+        public MpegFrame(Stream stream)
+        {
+            long startPostion = stream.Position;
+            byte[] frameHeader = new byte[FrameHeaderSize];
+
+            // Guard against a read error
+            if (stream.Read(frameHeader, 0, FrameHeaderSize) != FrameHeaderSize)
+            {
+                goto cleanup;
+            }
+
+            Array.Reverse(frameHeader);
+
+            // Sync
+            int value = BitTools.MaskBits(frameHeader, 21, 11);
+            if (!(value == SyncValue))
+            {
+                goto cleanup;
+            }
+
+            this.Version = ParseVersion(frameHeader);
+            this.Layer = ParseLayer(frameHeader);
+            this.IsProtected = BitTools.MaskBits(frameHeader, 16, 1) == 1 ? false : true;
+            this.BitrateIndex = BitTools.MaskBits(frameHeader, 12, 4);
+            this.SamplingRateIndex = BitTools.MaskBits(frameHeader, 10, 2);
+            this.Padding = BitTools.MaskBits(frameHeader, 9, 1);
+            ////Private Bit = BitTools.MaskBits(_mp3FrameHeader,8,1); USELESS
+            this.Channels = ParseChannel(frameHeader);
+            //// Joint Mode = ParseJoitMode(_mp3FrameHeader); Not used by  Mp3MSS
+            //// CopyRight = BitTools.MaskBits(_mp3FrameHeader,3,1); Not used by Mp3MSS
+            //// Original = BitTools.MaskBits(_mp3FrameHeader,2,1); Not used by Mp3MSS
+            //// Emphasis = ParseEmphasis(_mp3FrameHeader); Not used by Mp3MSS
+
+            return;
+        cleanup:
+            stream.Position = startPostion;
+            frameHeader = null;
+            return;
+        }
 
         /**********************************************************************
          * FILE DATA- data which comes directly from the MP3 header.
@@ -69,41 +160,41 @@ namespace ManagedMediaParsers
         #region File Data
 
         /// <summary>
-        /// Version of the MPEG standard this frame conforms to.
+        /// Gets the Version of the MPEG standard this frame conforms to.
         /// MPEG 1, MPEG 2, or MPEG 2.5
         /// </summary>
         public int Version { get; private set; }
 
         /// <summary>
-        /// The layer of complexity used in this frame.
+        /// Gets the layer of complexity used in this frame.
         /// Layer 1, 2, or 3.
         /// </summary>
         public int Layer { get; private set; }
 
         /// <summary>
-        /// Indicates whether or not the frame is protected by a
+        /// Gets a value indicating whether or not the frame is protected by a
         /// Cyclic Redundancy Check (CRC). If true, then a 16 bit
         /// CRC follows the header.
         /// </summary>
         public bool IsProtected { get; private set; }
 
         /// <summary>
-        /// Index into the bitrate table as defined in the MPEG spec.
+        /// Gets the Index into the bitrate table as defined in the MPEG spec.
         /// </summary>
         public int BitrateIndex { get; private set; }
 
         /// <summary>
-        /// Index into the samplingrate table as defined in the MPEG spec.
+        /// Gets the Index into the samplingrate table as defined in the MPEG spec.
         /// </summary>
         public int SamplingRateIndex { get; private set; }
 
         /// <summary>
-        /// The number of additional bytes of padding in this frame.
+        /// Gets the number of additional bytes of padding in this frame.
         /// </summary>
         public int Padding { get; private set; }
         
         /// <summary>
-        /// The output channel used to encode this frame.
+        /// Gets the output channel used to playback this frame.
         /// </summary>
         public Channel Channels { get; private set; }
         #endregion
@@ -114,38 +205,40 @@ namespace ManagedMediaParsers
         #region Derived Data
 
         /// <summary>
-        /// The number of bits per second the raw audio is compressed into.
+        /// Gets the number of bits per second the raw audio is compressed into.
         /// </summary>
         public int Bitrate
         {
             get
             {
-                switch (Version)
+                switch (this.Version)
                 {
                     case 1: // Version 1.0
-                        switch (Layer)
+                        switch (this.Layer)
                         {
                             case 1: // MPEG 1 Layer 1
-                                return BITRATE_INDEX[0, BitrateIndex] * 1000;
+                                return bitrateTable[0, this.BitrateIndex] * 1000;
                             case 2: // MPEG 1 Layer 2
-                                return BITRATE_INDEX[1, BitrateIndex] * 1000;
+                                return bitrateTable[1, this.BitrateIndex] * 1000;
                             case 3: // MPEG 1 Layer 3 (MP3)
-                                return BITRATE_INDEX[2, BitrateIndex] * 1000;
+                                return bitrateTable[2, this.BitrateIndex] * 1000;
                             default: // MPEG 1 LAYER ERROR
                                 return -2;
                         }
+
                     case 2: // Version 2.0
                     case 3: // Version 2.5 in reality
-                        switch (Layer)
+                        switch (this.Layer)
                         {
                             case 1: // MPEG 2 or 2.5 Layer 1
-                                return BITRATE_INDEX[3, BitrateIndex] * 1000;
+                                return bitrateTable[3, this.BitrateIndex] * 1000;
                             case 2: // MPEG 2 or 2.5 Layer 2
                             case 3: // MPEG 2 or 2.5 Layer 3
-                                return BITRATE_INDEX[4, BitrateIndex] * 1000;
+                                return bitrateTable[4, this.BitrateIndex] * 1000;
                             default: // Mpeg 2 LAYER ERROR
                                 return -2;
                         }
+
                     default: // VERSION ERROR
                         return -2;
                 }
@@ -153,20 +246,20 @@ namespace ManagedMediaParsers
         }
         
         /// <summary>
-        /// The number of samples per second in the frame.
+        /// Gets the number of samples per second in the frame.
         /// </summary>
         public int SamplingRate
         {
             get
             {
-                switch (Version)
+                switch (this.Version)
                 {
                     case 1: // MPEG 1
-                        return SAMPLING_RATE_INDEX[0, SamplingRateIndex];
+                        return samplingRateTable[0, this.SamplingRateIndex];
                     case 2: // MPEG 2
-                        return SAMPLING_RATE_INDEX[1, SamplingRateIndex];
+                        return samplingRateTable[1, this.SamplingRateIndex];
                     case 3: // MPEG 2.5
-                        return SAMPLING_RATE_INDEX[2, SamplingRateIndex];
+                        return samplingRateTable[2, this.SamplingRateIndex];
                     default:
                         return -1; // RESERVED
                 }
@@ -174,19 +267,19 @@ namespace ManagedMediaParsers
         }
 
         /// <summary>
-        /// The number of bytes in the frame.
+        /// Gets the number of bytes in the frame.
         /// </summary>
         public int FrameSize
         {
             get
             {
-                switch (Layer)
+                switch (this.Layer)
                 {
                     case 1:
-                        return (12 * Bitrate / SamplingRate + Padding) * 4; 
+                        return ((12 * this.Bitrate / this.SamplingRate) + this.Padding) * 4; 
                     case 2:
                     case 3:
-                        return 144 * Bitrate / SamplingRate + Padding;
+                        return (144 * this.Bitrate / this.SamplingRate) + this.Padding;
                     default:
                         return -1;
                 }
@@ -202,79 +295,27 @@ namespace ManagedMediaParsers
         /// </returns>
         public override string ToString()
         {
-            string s = "";
-            s += "FrameSize\t" + FrameSize + "\n";
-            s += "BitRate\t" + Bitrate + "\n";
-            s += "SamplingRate" + SamplingRate + "\n";
+            string s = string.Empty;
+            s += "FrameSize\t" + this.FrameSize + "\n";
+            s += "BitRate\t" + this.Bitrate + "\n";
+            s += "SamplingRate" + this.SamplingRate + "\n";
             return s;
         }
 
         /// <summary>
-        /// Creates an MpegFrame from a stream.
+        /// Parses the version of the MPEG standard this frame header conforms to from the frame header.
         /// </summary>
-        /// <param name="stream">
-        /// A stream with its position at the SyncPoint of the header.
-        /// </param>
-        public MpegFrame(Stream stream)
-        {
-            long startPostion = stream.Position;
-            byte[] mp3FrameHeader = new byte[FRAME_HEADER_SIZE];
-
-            // Guard against a read error
-            if (stream.Read(mp3FrameHeader, 0, FRAME_HEADER_SIZE) != FRAME_HEADER_SIZE)
-            {
-                goto cleanup;
-            }
-
-            Array.Reverse(mp3FrameHeader);
-
-            // Sync
-            int value = BitTools.MaskBits(mp3FrameHeader, 21, 11);
-            if (!(value == SYNC_VALUE))
-            {
-                goto cleanup;
-            }
-
-            Version = ParseVersion(mp3FrameHeader);
-            Layer = ParseLayer(mp3FrameHeader);
-            IsProtected = BitTools.MaskBits(mp3FrameHeader, 16, 1) == 1 ? false : true;
-            BitrateIndex = BitTools.MaskBits(mp3FrameHeader, 12, 4);
-            SamplingRateIndex = BitTools.MaskBits(mp3FrameHeader, 10, 2);
-            Padding = BitTools.MaskBits(mp3FrameHeader, 9, 1);
-            //Private Bit = BitTools.MaskBits(_mp3FrameHeader,8,1); USELESS
-            Channels = ParseChannel(mp3FrameHeader);
-            // Joint Mode = ParseJoitMode(_mp3FrameHeader); Not used by  Mp3MSS
-            // CopyRight = BitTools.MaskBits(_mp3FrameHeader,3,1); Not used by Mp3MSS
-            // Original = BitTools.MaskBits(_mp3FrameHeader,2,1); Not used by Mp3MSS
-            // Emphasis = ParseEmphasis(_mp3FrameHeader); Not used by Mp3MSS
-
-            return;
-        cleanup:
-            stream.Position = startPostion;
-            mp3FrameHeader = null;
-            return;
-        }
-
-/******************************************************************************
- * ParseVersion
- * 
- * Summary:
- * Parses the version of the MPEG standard this frame header conforms to from
- * the frame header.
- * 
- * Input:
- * The 4 byte header for this frame.
- * 
- * Output:
- * The version of the MPEG standard this frame conforms to.
- * 1 = Mpeg 1
- * 2 = Mpeg 2
- * 3 = Mpeg 2.5
- *****************************************************************************/
-        private static int ParseVersion(byte[] mp3FrameHeader)
+        /// <param name="frameHeader"> The 4 byte header for this frame. </param>
+        /// <returns>
+        /// The version of the MPEG standard this frame conforms to.
+        /// 1 = Mpeg 1
+        /// 2 = Mpeg 2
+        /// 3 = Mpeg 2.5
+        /// </returns>
+        private static int ParseVersion(byte[] frameHeader)
         {
             int version;
-            int versionValue = BitTools.MaskBits(mp3FrameHeader, 19, 2);
+            int versionValue = BitTools.MaskBits(frameHeader, 19, 2);
 
             switch (versionValue)
             {
@@ -291,27 +332,19 @@ namespace ManagedMediaParsers
                     version = -1;   // ERROR
                     break;
             }
+
             return version;
         }
 
-
-/******************************************************************************
- * ParseLayer
- * 
- * Summary:
- * Parses which complexity layer of the MPEG standard this frame conforms to
- * from the frame header.
- * 
- * Input:
- * The 4 byte header for this frame.
- * 
- * Output:
- * The complexity layer this frame conforms to.
- *****************************************************************************/
-        private static int ParseLayer(byte[] mp3FrameHeader)
+        /// <summary>
+        /// Parses which complexity layer of the MPEG standard this frame conforms to from the frame header.
+        /// </summary>
+        /// <param name="frameHeader">The 4 byte header for this frame.</param>
+        /// <returns>The complexity layer this frame conforms to.</returns>
+        private static int ParseLayer(byte[] frameHeader)
         {
             int layer;
-            int layerValue = BitTools.MaskBits(mp3FrameHeader, 17, 2);
+            int layerValue = BitTools.MaskBits(frameHeader, 17, 2);
 
             switch (layerValue)
             {
@@ -328,25 +361,19 @@ namespace ManagedMediaParsers
                     layer = -1;
                     break;
             }
+
             return layer;
         }
 
-/******************************************************************************
- * ParseChannel
- * 
- * Summary:
- * Parses the audio output mode of this frame's audio data.
- * 
- * Input:
- * The 4 byte header for this frame.
- * 
- * Output:
- * The audio output mode of this frame's audio data.
- *****************************************************************************/
-        private static Channel ParseChannel(byte[] mp3FrameHeader)
+        /// <summary>
+        /// Parses the audio output mode of this frame's audio data.
+        /// </summary>
+        /// <param name="frameHeader">The 4 byte header for this frame.</param>
+        /// <returns>The audio output mode of this frame's audio data.</returns>
+        private static Channel ParseChannel(byte[] frameHeader)
         {
             Channel channel;
-            int channelValue = BitTools.MaskBits(mp3FrameHeader, 6, 2);
+            int channelValue = BitTools.MaskBits(frameHeader, 6, 2);
 
             switch (channelValue)
             {
@@ -366,34 +393,8 @@ namespace ManagedMediaParsers
                     channel = Channel.SingleChannel; // ERROR CASE
                     break;
             }
+
             return channel;
         }
-
-    }
-
-    /// <summary>
-    /// Reproduction mode of given audio data. Typically maps to the number of
-    /// output devices used to reproduce it.
-    /// 
-    /// Stereo: independent audio typically output to 2 speakers and is intended
-    /// to create a more realistic or pleasing representation of audio by
-    /// representing sound coming from multiple directons.
-    /// 
-    /// Single Channel: Also known as Mono. Typically the reproduction of a single
-    /// independent audio stream in one device or of the same independent audio stream
-    /// in multiple devices.
-    /// 
-    /// Dual Channel: Two independent Mono channels. May overlap with stereo or may 
-    /// be completely independent as in the case of foreign language audio dubbing.
-    /// 
-    /// Joint Stereo: The joining of multiple channels of audio to create another separate
-    /// one, to reduce the size of the file, or to increase the quality.
-    /// </summary>
-    public enum Channel
-    {
-        Stereo = 0,
-        JointStereo,
-        DualChannel,
-        SingleChannel,
     }
 }
