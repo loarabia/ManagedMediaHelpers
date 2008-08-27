@@ -1,5 +1,5 @@
 ﻿/******************************************************************************
- * (c) Copyright Microsoft Corporation.
+ * (c) Copyright Larry Olson.
  * This source is subject to the Microsoft Reciprocal License (Ms-RL)
  * See http://www.microsoft.com/resources/sharedsource/licensingbasics/reciprocallicense.mspx
  * All other rights reserved.
@@ -217,7 +217,7 @@ namespace ManagedMediaParsers
                 // 4 Bytes
                 // Size as a 32 bit synchsafe integer
                 // See the link in the ID3 segment constructor            
-                Length = BitTools.ConvertToSyncSafeInt( _id3Header,3);
+                Length = BitTools.ConvertToSyncSafeInt32( _id3Header,3);
 
                 // Add in the size of the Header
                 Length += 10;

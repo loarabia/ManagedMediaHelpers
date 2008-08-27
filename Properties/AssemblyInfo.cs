@@ -1,7 +1,15 @@
-﻿using System.Reflection;
+﻿/******************************************************************************
+ * (c) Copyright Larry Olson.
+ * This source is subject to the Microsoft Reciprocal License (Ms-RL)
+ * See http://www.microsoft.com/resources/sharedsource/licensingbasics/reciprocallicense.mspx
+ * All other rights reserved.
+ ******************************************************************************/
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -9,9 +17,9 @@ using System;
 [assembly: AssemblyTitle("ManagedMediaParsers")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ManagedMediaParsers")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2008")]
+[assembly: AssemblyCopyright("Copyright © Larry Olson 2008")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly:CLSCompliant(true)]
@@ -35,3 +43,4 @@ using System;
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+

@@ -1,11 +1,25 @@
 ﻿/******************************************************************************
- * (c) Copyright Microsoft Corporation.
+ * (c) Copyright Larry Olson.
  * This source is subject to the Microsoft Reciprocal License (Ms-RL)
  * See http://www.microsoft.com/resources/sharedsource/licensingbasics/reciprocallicense.mspx
  * All other rights reserved.
  ******************************************************************************/
 using System;
 using System.IO;
+using System.Diagnostics.CodeAnalysis;
+
+[module: SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional",
+    Scope = "member",
+    Target = "ManagedMediaParsers.MpegFrame.#SAMPLING_RATE_INDEX",
+    MessageId = "Member",
+    Justification="Array is not Jagged and does not waste space.")]
+
+[module: SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional",
+    Scope = "member",
+    Target = "ManagedMediaParsers.MpegFrame.#BITRATE_INDEX",
+    MessageId = "Member",
+    Justification = "Array is not Jagged and does not waste space.")]
+
 
 namespace ManagedMediaParsers
 {
@@ -22,6 +36,7 @@ namespace ManagedMediaParsers
     /// searching for "MP3 Frame" in your favorite search engine. As always,
     /// Wikipedia is well stocked in all of these areas as well.
     /// </remarks>
+
     public class MpegFrame
     {
         private const int SYNC_VALUE = 2047;    // Frame Sync is 12 1s
@@ -29,6 +44,7 @@ namespace ManagedMediaParsers
 
         //TODO: Cannot make pointers (reference types) consts.
         // What is the right way to make this data one const item ?
+
         private static int[,] BITRATE_INDEX = new int[,]
             {   {0,32,64,96,128,160,192,224,256,288,320,352,384,416,448,-1},
                 {0,32,48,56,64,80,96,112,128,160,192,224,256,320,384,-1},
@@ -39,7 +55,8 @@ namespace ManagedMediaParsers
 
         //TODO: Cannot make pointers (reference types) consts.
         // What is the right way to make this data one const item ?
-        private static int[,] SAMPLNIG_RATE_INDEX = new int[,]
+        
+        private static int[,] SAMPLING_RATE_INDEX = new int[,]
             {   {44100,48000,32000,-1},
                 {22050,24000,16000,-1},
                 {11025,12000,8000,-1}
@@ -98,7 +115,7 @@ namespace ManagedMediaParsers
         /// <summary>
         /// The number of bits per second the raw audio is compressed into.
         /// </summary>
-        public int BitRate
+        public int Bitrate
         {
             get
             {
@@ -144,11 +161,11 @@ namespace ManagedMediaParsers
                 switch (Version)
                 {
                     case 1: // MPEG 1
-                        return SAMPLNIG_RATE_INDEX[0, SamplingRateIndex];
+                        return SAMPLING_RATE_INDEX[0, SamplingRateIndex];
                     case 2: // MPEG 2
-                        return SAMPLNIG_RATE_INDEX[1, SamplingRateIndex];
+                        return SAMPLING_RATE_INDEX[1, SamplingRateIndex];
                     case 3: // MPEG 2.5
-                        return SAMPLNIG_RATE_INDEX[2, SamplingRateIndex];
+                        return SAMPLING_RATE_INDEX[2, SamplingRateIndex];
                     default:
                         return -1; // RESERVED
                 }
@@ -165,10 +182,10 @@ namespace ManagedMediaParsers
                 switch (Layer)
                 {
                     case 1:
-                        return (12 * BitRate / SamplingRate + Padding) * 4; 
+                        return (12 * Bitrate / SamplingRate + Padding) * 4; 
                     case 2:
                     case 3:
-                        return 144 * BitRate / SamplingRate + Padding;
+                        return 144 * Bitrate / SamplingRate + Padding;
                     default:
                         return -1;
                 }
@@ -186,7 +203,7 @@ namespace ManagedMediaParsers
         {
             string s = "";
             s += "FrameSize\t" + FrameSize + "\n";
-            s += "BitRate\t" + BitRate + "\n";
+            s += "BitRate\t" + Bitrate + "\n";
             s += "SamplingRate" + SamplingRate + "\n";
             return s;
         }

@@ -1,5 +1,5 @@
 ﻿/******************************************************************************
- * (c) Copyright Microsoft Corporation.
+ * (c) Copyright Larry Olson.
  * This source is subject to the Microsoft Reciprocal License (Ms-RL)
  * See http://www.microsoft.com/resources/sharedsource/licensingbasics/reciprocallicense.mspx
  * All other rights reserved.
@@ -14,18 +14,13 @@ namespace ManagedMediaParsers
     /// <summary>
     /// Helper methods for manipulating values at the byte and binary level.
     /// </summary>
-    public class BitTools
+    public static class BitTools
     {
         // defined by ID3v2 spec as 4 bytes
         private const int SYNC_SAFE_INT_SIZE = 4;
 
         // 1 Byte is 8 bits
         private const int BYTE_SIZE = 8;
-
-/******************************************************************************
- * This class should not be constructed as it is a set of static libraries.
- *****************************************************************************/
-        private BitTools() { }
 
         /// <summary>
         /// Masks out up to an integer sized (4 bytes) set of bits from an
@@ -111,7 +106,7 @@ namespace ManagedMediaParsers
         /// A standard integer. Note that this integer can only have a data
         /// resolution of 28 bits (max value of this could only be 2^28 -1).
         /// </returns>
-        public static int ConvertToSyncSafeInt( 
+        public static int ConvertToSyncSafeInt32( 
             byte[] syncSafeData,
             short startIndex )
         {

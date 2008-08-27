@@ -1,5 +1,5 @@
 ﻿/******************************************************************************
- * (c) Copyright Microsoft Corporation.
+ * (c) Copyright Larry Olson.
  * This source is subject to the Microsoft Reciprocal License (Ms-RL)
  * See http://www.microsoft.com/resources/sharedsource/licensingbasics/reciprocallicense.mspx
  * All other rights reserved.
@@ -156,7 +156,11 @@ namespace ManagedMediaParsers
         /// 1 = always pad
         /// 2 = never pad
         /// </summary>
-        public int Flags { get; set; }
+        /// <remarks>
+        /// This is different than the unmanaged version of MpegLayer3WaveFormat
+        /// which has the field Flags instead of this name.
+        /// </remarks>
+        public int BitratePaddingMode { get; set; }
 
         /// <summary>
         /// Block Size in bytes. For MP3 audio this is
@@ -191,7 +195,7 @@ namespace ManagedMediaParsers
         {
             string s = WaveFormatExtensible.ToHexString();
             s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", Id).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X8}", Flags).ToLittleEndian();
+            s += string.Format(CultureInfo.InvariantCulture, "{0:X8}", BitratePaddingMode).ToLittleEndian();
             s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", BlockSize).ToLittleEndian();
             s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", FramesPerBlock).ToLittleEndian();
             s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", CodecDelay).ToLittleEndian();
@@ -211,7 +215,7 @@ namespace ManagedMediaParsers
                 + string.Format(CultureInfo.InvariantCulture, 
                     "ID: {0}, Flags: {1}, BlockSize: {2}, "
                     + "FramesPerBlock {3}, CodecDelay {4}",
-                    Id, Flags, BlockSize,
+                    Id, BitratePaddingMode, BlockSize,
                     FramesPerBlock, CodecDelay);
         }
     }

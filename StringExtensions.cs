@@ -1,10 +1,17 @@
 ﻿/******************************************************************************
- * (c) Copyright Microsoft Corporation.
+ * (c) Copyright Larry Olson.
  * This source is subject to the Microsoft Reciprocal License (Ms-RL)
  * See http://www.microsoft.com/resources/sharedsource/licensingbasics/reciprocallicense.mspx
  * All other rights reserved.
  ******************************************************************************/
 using System;
+using System.Diagnostics.CodeAnalysis;
+
+
+[module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes",
+    Scope = "namespace",
+    Target = "ExtensionMethods",
+    Justification = "This is appropriate as a separate namespace because it logically is separate from the ManagedMediaParsers namespace.")]
 
 namespace ExtensionMethods
 {
@@ -38,12 +45,12 @@ namespace ExtensionMethods
         ///     EFBEADDE
         /// </remarks>
         // TODO: Not quite the right way to do this but good enough for now
-        public static string ToLittleEndian(this string bigEndianString)
+        public static string ToLittleEndian(this string value)
         {
             // Guard
-            if (bigEndianString == null) { return ""; }
+            if (value == null) { return ""; }
 
-            char[] bigEndianChars = bigEndianString.ToCharArray();
+            char[] bigEndianChars = value.ToCharArray();
 
             // Guard
             if (bigEndianChars.Length % 2 != 0) { return ""; }
