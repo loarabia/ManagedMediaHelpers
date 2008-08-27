@@ -8,15 +8,16 @@
 //-----------------------------------------------------------------------
 
 // Supressing Code Analysis rule(s)
+
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional",
     Scope = "member",
-    Target = "ManagedMediaParsers.MpegFrame.#SAMPLING_RATE_INDEX",
+    Target = "ManagedMediaParsers.MpegFrame.#bitrateTable",
     MessageId = "Member",
     Justification = "Array is not Jagged and does not waste space.")]
 
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional",
     Scope = "member",
-    Target = "ManagedMediaParsers.MpegFrame.#BITRATE_INDEX",
+    Target = "ManagedMediaParsers.MpegFrame.#samplingRateTable",
     MessageId = "Member",
     Justification = "Array is not Jagged and does not waste space.")]
 
