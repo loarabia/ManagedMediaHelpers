@@ -7,7 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-
+// Supressing Code Analysis rule(s)
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes",
     Scope = "namespace",
     Target = "ExtensionMethods",

@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Diagnostics.CodeAnalysis;
 
+// Supressing Code Analysis rule(s)
 [module: SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional",
     Scope = "member",
     Target = "ManagedMediaParsers.MpegFrame.#SAMPLING_RATE_INDEX",
