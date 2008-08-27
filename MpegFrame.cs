@@ -141,12 +141,12 @@ namespace ManagedMediaParsers
             this.BitrateIndex = BitTools.MaskBits(frameHeader, 12, 4);
             this.SamplingRateIndex = BitTools.MaskBits(frameHeader, 10, 2);
             this.Padding = BitTools.MaskBits(frameHeader, 9, 1);
-            ////Private Bit = BitTools.MaskBits(_mp3FrameHeader,8,1); USELESS
+            //// Private Bit = BitTools.MaskBits(_mp3FrameHeader,8,1); //USELESS
             this.Channels = ParseChannel(frameHeader);
-            //// Joint Mode = ParseJoitMode(_mp3FrameHeader); Not used by  Mp3MSS
-            //// CopyRight = BitTools.MaskBits(_mp3FrameHeader,3,1); Not used by Mp3MSS
-            //// Original = BitTools.MaskBits(_mp3FrameHeader,2,1); Not used by Mp3MSS
-            //// Emphasis = ParseEmphasis(_mp3FrameHeader); Not used by Mp3MSS
+            //// Joint Mode = ParseJoitMode(_mp3FrameHeader); //Not used by  Mp3MSS
+            //// CopyRight = BitTools.MaskBits(_mp3FrameHeader,3,1); //Not used by Mp3MSS
+            //// Original = BitTools.MaskBits(_mp3FrameHeader,2,1); //Not used by Mp3MSS
+            //// Emphasis = ParseEmphasis(_mp3FrameHeader); //Not used by Mp3MSS
 
             return;
         cleanup:
