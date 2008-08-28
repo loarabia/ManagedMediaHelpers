@@ -55,8 +55,8 @@ namespace ExtensionMethods
         {
             // Guard
             if (value == null)
-            { 
-                return string.Empty;
+            {
+                throw new NullReferenceException();
             }
 
             char[] bigEndianChars = value.ToCharArray();
