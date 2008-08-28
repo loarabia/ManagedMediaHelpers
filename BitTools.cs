@@ -37,24 +37,30 @@ namespace ManagedMediaParsers
         /// <returns>An integer of the bits masked out</returns>
         public static int MaskBits(byte[] data, int firstBit, int maskSize)
         {
+            // Guard against null data
+            if (data == null)
+            {
+                throw new NullReferenceException();
+            }
+
             // Clear out numbers which are too small
             if (data.Length <= 0 || firstBit < 0 || maskSize <= 0)
             {
-                return -1;
+                throw new ArgumentException();
             }
 
             // Clear out numbers where you are masking outside of the valid
             // range
             if ((firstBit + maskSize) > data.Length * ByteSize) 
-            { 
-                return -1;
+            {
+                throw new ArgumentException();
             }
 
             // Clear out masks which are larger than the number of bits in an
             // int
             if (maskSize > sizeof(int) * ByteSize) 
             {
-                return -1;
+                throw new ArgumentException();
             }
 
             // Figure out what byte the starting bit is in
