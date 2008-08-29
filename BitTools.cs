@@ -31,7 +31,7 @@ namespace ManagedMediaParsers
         /// Masks out up to an integer sized (4 bytes) set of bits from an
         /// array of bytes.
         /// </summary>
-        /// <param name="data">An array of data</param>
+        /// <param name="data">An array of data in Little Endian Order</param>
         /// <param name="firstBit">The bit index of the first bit</param>
         /// <param name="maskSize">The length of the mask in bits</param>
         /// <returns>An integer of the bits masked out</returns>
@@ -40,27 +40,27 @@ namespace ManagedMediaParsers
             // Guard against null data
             if (data == null)
             {
-                throw new NullReferenceException();
+                throw new ArgumentNullException("data");
             }
 
             // Clear out numbers which are too small
             if (data.Length <= 0 || firstBit < 0 || maskSize <= 0)
             {
-                throw new ArgumentException();
+                throw new ArgumentException("data,firstBit,or MaskSize are too small");
             }
 
             // Clear out numbers where you are masking outside of the valid
             // range
             if ((firstBit + maskSize) > data.Length * ByteSize) 
             {
-                throw new ArgumentException();
+                throw new ArgumentException("Attempting to mask outside of the data array");
             }
 
             // Clear out masks which are larger than the number of bits in an
             // int
             if (maskSize > sizeof(int) * ByteSize) 
             {
-                throw new ArgumentException();
+                throw new ArgumentException("maskSize is larger than an integer");
             }
 
             // Figure out what byte the starting bit is in
@@ -90,7 +90,7 @@ namespace ManagedMediaParsers
             for (int bi = startByteIndex; bi <= endByteIndex; bi++)
             {
                 temp = data[bi];
-
+                System.Console.WriteLine(bi); //TODO
                 // Shift it to the right byte position
                 temp = temp << (bi * ByteSize);
                 headerValue = headerValue | temp;
@@ -117,6 +117,7 @@ namespace ManagedMediaParsers
         /// 01111111 01111111 01111111 01111111
         /// Output would be:
         /// 00001111 11111111 11111111 11111111
+        /// Assumes syncSafeData array is in Big Endiah Order.
         /// </param>
         /// <param name="startIndex">
         /// Where in the array of bytes, the syncsafe data starts. Note that
@@ -126,7 +127,7 @@ namespace ManagedMediaParsers
         /// A standard integer. Note that this integer can only have a data
         /// resolution of 28 bits (max value of this could only be 2^28 -1).
         /// </returns>
-        public static int ConvertToSyncSafeInt32(
+        public static int ConvertToInt32(
             byte[] syncSafeData,
             short startIndex)
         {
@@ -134,15 +135,21 @@ namespace ManagedMediaParsers
             int syncSafeByte = 0; // Store byte in an int to enable shifting
             int shiftAmount = 0;
 
+            // Guard
+            if (syncSafeData == null)
+            {
+                throw new ArgumentNullException("syncSafeData");
+            }
+
+            // Shifts the first three bytes left and copies them into the int
             // Stop shifting before you hit the last byte. The last byte is
             // already where it needs to be
-            // Shifts the first three bytes left and copies them into the int
             int i;
             for (i = 0; i < SyncSafeIntegerSize - 1; i++)
             {
                 syncSafeByte = syncSafeData[startIndex + i];
-                shiftAmount = (ByteSize * (SyncSafeIntegerSize - 1 - i)) - 1;
-                integer |= syncSafeByte << (int)shiftAmount;
+                shiftAmount = (ByteSize - 1) * (SyncSafeIntegerSize - 1 - i);
+                integer |= syncSafeByte << shiftAmount;
             }
 
             // Copy the unshifted fourth bit into the int

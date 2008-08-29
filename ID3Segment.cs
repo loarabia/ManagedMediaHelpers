@@ -236,7 +236,7 @@ namespace ManagedMediaParsers
                 // 4 Bytes
                 // Size as a 32 bit synchsafe integer
                 // See the link in the ID3 segment constructor            
-                this.Length = BitTools.ConvertToSyncSafeInt32(this.id3Header, 3);
+                this.Length = BitTools.ConvertToInt32(this.id3Header, 3);
 
                 // Add in the size of the Header
                 this.Length += 10;

@@ -13,6 +13,11 @@
     Target = "ExtensionMethods",
     Justification = "This is appropriate as a separate namespace because it logically is separate from the ManagedMediaParsers namespace.")]
 
+[module: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes",
+    Scope = "member",
+    Target = "ExtensionMethods.StringExtensions.#ToLittleEndian(System.String)",
+    Justification = "This is appropriate to make this method look like a first class member of string.")]
+
 namespace ExtensionMethods
 {
     using System;
