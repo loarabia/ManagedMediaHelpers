@@ -87,17 +87,19 @@ namespace ManagedMediaParsers
              * but they probably will be spread over fewer bytes
              */
             long temp;
+            int shiftAmount;
             for (int bi = startByteIndex; bi <= endByteIndex; bi++)
             {
                 temp = data[bi];
-                System.Console.WriteLine(bi); //TODO
-                // Shift it to the right byte position
-                temp = temp << (bi * ByteSize);
+                                
+                shiftAmount = (endByteIndex - bi) * ByteSize;
+                temp = temp << shiftAmount;
+                
                 headerValue = headerValue | temp;
             }
 
             // shift the bits to the right to make an int
-            headerValue = headerValue >> firstBit;
+            headerValue = headerValue >> firstBit % 8;
 
             // mask out the appropriate bits
             headerValue = headerValue & mask;
@@ -127,7 +129,7 @@ namespace ManagedMediaParsers
         /// A standard integer. Note that this integer can only have a data
         /// resolution of 28 bits (max value of this could only be 2^28 -1).
         /// </returns>
-        public static int ConvertToInt32(
+        public static int ConvertSyncSafeToInt32(
             byte[] syncSafeData,
             short startIndex)
         {
