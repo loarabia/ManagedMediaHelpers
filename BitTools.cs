@@ -46,7 +46,7 @@ namespace ManagedMediaParsers
             // Clear out numbers which are too small
             if (data.Length <= 0 || firstBit < 0 || maskSize <= 0)
             {
-                throw new ArgumentException("data,firstBit,or MaskSize are too small");
+                throw new ArgumentException("data array, firstBit, or maskSize are too small");
             }
 
             // Clear out numbers where you are masking outside of the valid
@@ -99,7 +99,7 @@ namespace ManagedMediaParsers
             }
 
             // shift the bits to the right to make an int
-            headerValue = headerValue >> firstBit % 8;
+            headerValue = headerValue >> (firstBit % 8);
 
             // mask out the appropriate bits
             headerValue = headerValue & mask;
@@ -131,7 +131,7 @@ namespace ManagedMediaParsers
         /// </returns>
         public static int ConvertSyncSafeToInt32(
             byte[] syncSafeData,
-            short startIndex)
+            int startIndex)
         {
             int integer = 0;
             int syncSafeByte = 0; // Store byte in an int to enable shifting
@@ -141,6 +141,24 @@ namespace ManagedMediaParsers
             if (syncSafeData == null)
             {
                 throw new ArgumentNullException("syncSafeData");
+            }
+
+            // Guard
+            if (startIndex < 0 || startIndex >= syncSafeData.Length)
+            {
+                throw new ArgumentOutOfRangeException("startIndex", "startIndex is outside of the syncSafeData array");
+            }
+
+            // Guard
+            if (syncSafeData.Length < 4)
+            {
+                throw new ArgumentException("syncSafeData array is smaller than an integer(4 bytes)", "syncSafeData");
+            }
+
+            // Guard
+            if (startIndex + SyncSafeIntegerSize - 1 >= syncSafeData.Length)
+            {
+                throw new ArgumentOutOfRangeException("startIndex", "This startIndex is too close to the end of the data array");
             }
 
             // Shifts the first three bytes left and copies them into the int
@@ -158,6 +176,7 @@ namespace ManagedMediaParsers
             syncSafeByte = syncSafeData[startIndex + i];
             integer |= syncSafeByte;
 
+            Debug.Assert(integer >= 0, "SyncSafeIntegers after conversion should always have the first 4 bits be 0 by spec and therefore cannot be negative");
             return integer;
         }
 
@@ -180,7 +199,25 @@ namespace ManagedMediaParsers
         public static int FindBitPattern(byte[] data, byte[] pattern, byte[] mask)
         {
             // GUARD
-            if (pattern.Length < 0 || data.Length < 0 || data.Length < pattern.Length || mask.Length != pattern.Length)
+            if (data == null)
+            {
+                throw new ArgumentNullException("data");
+            }
+
+            // GUARD
+            if (pattern == null)
+            {
+                throw new ArgumentNullException("pattern");
+            }
+
+            // GUARD
+            if (mask == null)
+            {
+                throw new ArgumentNullException("mask");
+            }
+
+            // GUARD
+            if (pattern.Length <= 0 || data.Length <= 0 || data.Length < pattern.Length || mask.Length != pattern.Length)
             {
                 return -1;
             }
@@ -190,11 +227,7 @@ namespace ManagedMediaParsers
 
             while (di < data.Length)
             {
-                if (pati == pattern.Length)
-                {
-                    return di - pattern.Length;
-                }
-                else if (pattern[pati] == (data[di] & mask[pati]))
+                if (pattern[pati] == (data[di] & mask[pati]))
                 {
                     pati++;
                 }
@@ -208,6 +241,11 @@ namespace ManagedMediaParsers
                 }
 
                 di++;
+
+                if (pati == pattern.Length)
+                {
+                    return di - pattern.Length;
+                }
             }
 
             return -1;
@@ -228,6 +266,12 @@ namespace ManagedMediaParsers
         /// </returns>
         public static int FindBytePattern(byte[] data, byte[] pattern)
         {
+            // GUARD
+            if (pattern == null)
+            {
+                throw new ArgumentNullException("pattern");
+            }
+
             byte[] mask = new byte[pattern.Length];
             for (int i = 0; i < pattern.Length; i++)
             {

@@ -126,6 +126,8 @@ namespace ManagedMediaParsers
                 goto cleanup;
             }
 
+            // TODO: Mask was rewritten to a different Byte Order so this may not be needed
+            // and the calls below may need to be rewritten as well.
             Array.Reverse(frameHeader);
 
             // Sync
