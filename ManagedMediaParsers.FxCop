@@ -22,8 +22,10 @@
   <IgnoreGeneratedCode>False</IgnoreGeneratedCode>
  </ProjectOptions>
  <Targets>
+  <AssemblyReferenceDirectories>
+   <Directory>$(ProjectDir)/Tests/ClientBin/</Directory>
+  </AssemblyReferenceDirectories>
   <Target Name="$(ProjectDir)/Source/Bin/Debug/ManagedMediaParsers.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/Tests/ClientBin/ManagedMediaParsersTests.dll" Analyze="True" AnalyzeAllChildren="True" />
  </Targets>
  <Rules>
   <RuleFiles>
