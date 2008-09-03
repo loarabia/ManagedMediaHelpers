@@ -69,7 +69,7 @@
     <Content Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Desktop\Repositories\ManagedMediaParsers\ManagedMediaParsers.csproj">
+    <ProjectReference Include="..\Source\ManagedMediaParsers.csproj">
       <Project>{4354547C-0008-4D2A-8644-F2ACAC9DCC85}</Project>
       <Name>ManagedMediaParsers</Name>
     </ProjectReference>

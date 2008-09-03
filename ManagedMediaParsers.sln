@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedMediaParsers", "Source\ManagedMediaParsers.csproj", "{4354547C-0008-4D2A-8644-F2ACAC9DCC85}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedMediaParsersTests", "Tests\ManagedMediaParsersTests.csproj", "{0A489EAA-2083-43A3-987E-C25DDFF5A892}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
@@ -23,6 +25,16 @@ Global
 		{4354547C-0008-4D2A-8644-F2ACAC9DCC85}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4354547C-0008-4D2A-8644-F2ACAC9DCC85}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4354547C-0008-4D2A-8644-F2ACAC9DCC85}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{0A489EAA-2083-43A3-987E-C25DDFF5A892}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{0A489EAA-2083-43A3-987E-C25DDFF5A892}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A489EAA-2083-43A3-987E-C25DDFF5A892}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A489EAA-2083-43A3-987E-C25DDFF5A892}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0A489EAA-2083-43A3-987E-C25DDFF5A892}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0A489EAA-2083-43A3-987E-C25DDFF5A892}.Release|.NET.ActiveCfg = Release|Any CPU
+		{0A489EAA-2083-43A3-987E-C25DDFF5A892}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A489EAA-2083-43A3-987E-C25DDFF5A892}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A489EAA-2083-43A3-987E-C25DDFF5A892}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0A489EAA-2083-43A3-987E-C25DDFF5A892}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
