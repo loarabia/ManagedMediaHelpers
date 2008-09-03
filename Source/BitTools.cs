@@ -247,7 +247,6 @@ namespace ManagedMediaParsers
                     return di - pattern.Length;
                 }
             }
-
             return -1;
         }
 
