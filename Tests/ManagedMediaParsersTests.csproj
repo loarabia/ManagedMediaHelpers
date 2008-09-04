@@ -58,6 +58,7 @@
     <Compile Include="BitToolsTests\FindBitPatternTests.cs" />
     <Compile Include="BitToolsTests\FindBytePatternTests.cs" />
     <Compile Include="BitToolsTests\MaskBitsTests.cs" />
+    <Compile Include="MpegFrameTests.cs" />
     <Compile Include="MpegLayer3WaveFormatTests.cs" />
     <Compile Include="SilverlightTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

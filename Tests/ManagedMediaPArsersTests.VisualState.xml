@@ -1,126 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
   <TopNode>[0-1000]C:\Users\Larry\Desktop\Repositories\ManagedMediaParsers\Tests\ManagedMediaPArsersTests.nunit</TopNode>
-  <SelectedNode>[0-1087]ManagedMediaParsersTests</SelectedNode>
+  <SelectedNode>[0-1090]ManagedMediaParsersTests.MpegFrameTests</SelectedNode>
   <ExcludeCategories>false</ExcludeCategories>
   <Nodes>
     <Node UniqueName="[0-1000]C:\Users\Larry\Desktop\Repositories\ManagedMediaParsers\Tests\ManagedMediaPArsersTests.nunit" Expanded="true">
       <Nodes>
-        <Node UniqueName="[0-1086]C:\Users\Larry\Desktop\Repositories\ManagedMediaParsers\Tests\ClientBin\ManagedMediaParsersTests.dll" Expanded="true">
+        <Node UniqueName="[0-1093]C:\Users\Larry\Desktop\Repositories\ManagedMediaParsers\Tests\ClientBin\ManagedMediaParsersTests.dll" Expanded="true">
           <Nodes>
-            <Node UniqueName="[0-1087]ManagedMediaParsersTests" Expanded="true">
+            <Node UniqueName="[0-1094]ManagedMediaParsersTests" Expanded="true">
               <Nodes>
-                <Node UniqueName="[0-1088]ManagedMediaParsersTests.BitToolsTests" Expanded="true">
+                <Node UniqueName="[0-1095]ManagedMediaParsersTests.BitToolsTests" Expanded="true">
                   <Nodes>
-                    <Node UniqueName="[0-1021]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests" Expanded="true">
+                    <Node UniqueName="[0-1079]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests">
                       <Nodes>
-                        <Node UniqueName="[0-1027]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests.InvalidData" />
-                        <Node UniqueName="[0-1026]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests.InvalidStartIndexTooBig" />
-                        <Node UniqueName="[0-1028]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests.InvalidStartIndexTooCloseToEndOfArray" />
-                        <Node UniqueName="[0-1025]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests.InvalidStartIndexTooSmall" />
-                        <Node UniqueName="[0-1023]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests.LargestValidSyncSafeIntValue" />
-                        <Node UniqueName="[0-1029]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests.NullData" />
-                        <Node UniqueName="[0-1022]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests.Simple" />
-                        <Node UniqueName="[0-1024]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests.TooSmallData" />
+                        <Node UniqueName="[0-1085]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests.InvalidData" />
+                        <Node UniqueName="[0-1084]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests.InvalidStartIndexTooBig" />
+                        <Node UniqueName="[0-1086]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests.InvalidStartIndexTooCloseToEndOfArray" />
+                        <Node UniqueName="[0-1083]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests.InvalidStartIndexTooSmall" />
+                        <Node UniqueName="[0-1081]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests.LargestValidSyncSafeIntValue" />
+                        <Node UniqueName="[0-1087]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests.NullData" />
+                        <Node UniqueName="[0-1080]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests.Simple" />
+                        <Node UniqueName="[0-1082]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests.TooSmallData" />
                       </Nodes>
                     </Node>
-                    <Node UniqueName="[0-1077]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests" Expanded="true">
+                    <Node UniqueName="[0-1050]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests">
                       <Nodes>
-                        <Node UniqueName="[0-1078]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.DataNull" />
-                        <Node UniqueName="[0-1084]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.EmptyData" />
-                        <Node UniqueName="[0-1085]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.EmptyMask" />
-                        <Node UniqueName="[0-1083]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.EmptyPattern" />
-                        <Node UniqueName="[0-1081]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.MaskAndPatternAreDifferentSizes" />
-                        <Node UniqueName="[0-1080]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.MaskNull" />
-                        <Node UniqueName="[0-1082]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.PatternLargerThanData" />
-                        <Node UniqueName="[0-1079]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.PatternNull" />
+                        <Node UniqueName="[0-1051]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.DataNull" />
+                        <Node UniqueName="[0-1057]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.EmptyData" />
+                        <Node UniqueName="[0-1058]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.EmptyMask" />
+                        <Node UniqueName="[0-1056]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.EmptyPattern" />
+                        <Node UniqueName="[0-1054]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.MaskAndPatternAreDifferentSizes" />
+                        <Node UniqueName="[0-1053]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.MaskNull" />
+                        <Node UniqueName="[0-1061]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.PatternAtBeginning" />
+                        <Node UniqueName="[0-1060]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.PatternAtEnd" />
+                        <Node UniqueName="[0-1062]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.PatternCrossingByteBoundary" />
+                        <Node UniqueName="[0-1059]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.PatternIsData" />
+                        <Node UniqueName="[0-1055]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.PatternLargerThanData" />
+                        <Node UniqueName="[0-1052]ManagedMediaParsersTests.BitToolsTests.FindBitPatternTests.PatternNull" />
                       </Nodes>
                     </Node>
-                    <Node UniqueName="[0-1068]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests" Expanded="true">
+                    <Node UniqueName="[0-1063]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests">
                       <Nodes>
-                        <Node UniqueName="[0-1069]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests.DataNull" />
-                        <Node UniqueName="[0-1074]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests.PatrialMatchAtEnd" />
-                        <Node UniqueName="[0-1075]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests.PatternLargerThanData" />
-                        <Node UniqueName="[0-1072]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests.PatternMatchAtBeginning" />
-                        <Node UniqueName="[0-1073]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests.PatternMatchAtEnd" />
-                        <Node UniqueName="[0-1070]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests.PatternNull" />
-                        <Node UniqueName="[0-1076]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests.PatternSameSizeAsArray" />
-                        <Node UniqueName="[0-1071]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests.Simple" />
+                        <Node UniqueName="[0-1064]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests.DataNull" />
+                        <Node UniqueName="[0-1069]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests.PatrialMatchAtEnd" />
+                        <Node UniqueName="[0-1070]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests.PatternLargerThanData" />
+                        <Node UniqueName="[0-1067]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests.PatternMatchAtBeginning" />
+                        <Node UniqueName="[0-1068]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests.PatternMatchAtEnd" />
+                        <Node UniqueName="[0-1065]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests.PatternNull" />
+                        <Node UniqueName="[0-1071]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests.PatternSameSizeAsArray" />
+                        <Node UniqueName="[0-1066]ManagedMediaParsersTests.BitToolsTests.FindBytePatternTests.Simple" />
                       </Nodes>
                     </Node>
-                    <Node UniqueName="[0-1030]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests" Expanded="true">
+                    <Node UniqueName="[0-1021]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests" Expanded="true">
                       <Nodes>
-                        <Node UniqueName="[0-1036]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.InvalidFirstBitTest" />
-                        <Node UniqueName="[0-1037]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.InvalidLastBitTest" />
-                        <Node UniqueName="[0-1032]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.LowerEdgeArrayTest" />
-                        <Node UniqueName="[0-1038]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.MaskOutFullSizedAlignedBitsTest" />
-                        <Node UniqueName="[0-1039]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.MaskOutFullSizeNonAlignedBitsTest" />
-                        <Node UniqueName="[0-1040]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.NullDataTest" />
-                        <Node UniqueName="[0-1031]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.SimpleTest" />
-                        <Node UniqueName="[0-1035]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.TooLargeSizeTest" />
-                        <Node UniqueName="[0-1034]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.TooSmallSizeTest" />
-                        <Node UniqueName="[0-1033]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.UpperEdgeOfArrayTest" />
+                        <Node UniqueName="[0-1027]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.InvalidFirstBitTest" />
+                        <Node UniqueName="[0-1028]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.InvalidLastBitTest" />
+                        <Node UniqueName="[0-1023]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.LowerEdgeArrayTest" />
+                        <Node UniqueName="[0-1029]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.MaskOutFullSizedAlignedBitsTest" />
+                        <Node UniqueName="[0-1030]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.MaskOutFullSizeNonAlignedBitsTest" />
+                        <Node UniqueName="[0-1031]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.NullDataTest" />
+                        <Node UniqueName="[0-1022]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.SimpleTest" />
+                        <Node UniqueName="[0-1026]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.TooLargeSizeTest" />
+                        <Node UniqueName="[0-1025]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.TooSmallSizeTest" />
+                        <Node UniqueName="[0-1024]ManagedMediaParsersTests.BitToolsTests.MaskBitsTests.UpperEdgeOfArrayTest" />
                       </Nodes>
                     </Node>
                   </Nodes>
                 </Node>
-                <Node UniqueName="[0-1001]ManagedMediaParsersTests.MpegLayer3WaveFormatTests" Expanded="true">
+                <Node UniqueName="[0-1090]ManagedMediaParsersTests.MpegFrameTests" Expanded="true">
                   <Nodes>
-                    <Node UniqueName="[0-1010]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.BitratePaddingModeMaximumValueTest" />
-                    <Node UniqueName="[0-1009]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.BitratePaddingModeMinimumValueTest" />
-                    <Node UniqueName="[0-1008]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.BitratePaddingModeTest" />
-                    <Node UniqueName="[0-1012]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.BlockSizeMinimumValueTest" />
-                    <Node UniqueName="[0-1011]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.BlockSizeTest" />
-                    <Node UniqueName="[0-1016]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.CodecDelayMinimumValueTest" />
-                    <Node UniqueName="[0-1015]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.CodecDelayTest" />
-                    <Node UniqueName="[0-1014]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.FramePerBlockMinimumValueTest" />
-                    <Node UniqueName="[0-1013]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.FramePerBlockTest" />
-                    <Node UniqueName="[0-1007]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.IdMaximumValueTest" />
-                    <Node UniqueName="[0-1006]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.IdMinimumValueTest" />
-                    <Node UniqueName="[0-1005]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.IdTest" />
-                    <Node UniqueName="[0-1017]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.ToHexStringTest" />
-                    <Node UniqueName="[0-1018]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.ToStringTest" />
-                    <Node UniqueName="[0-1004]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.WaveFormatExtensibleCoherencyTest" />
-                    <Node UniqueName="[0-1003]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.WaveFormatExtensibleNullTest" />
-                    <Node UniqueName="[0-1002]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.WaveFormatExtensibleTest" />
+                    <Node UniqueName="[0-1092]ManagedMediaParsersTests.MpegFrameTests.LayerTest" />
+                    <Node UniqueName="[0-1091]ManagedMediaParsersTests.MpegFrameTests.VersionTest" />
                   </Nodes>
                 </Node>
-                <Node UniqueName="[0-1019]ManagedMediaParsersTests.SilverlightTests" Expanded="true">
+                <Node UniqueName="[0-1032]ManagedMediaParsersTests.MpegLayer3WaveFormatTests">
                   <Nodes>
-                    <Node UniqueName="[0-1020]ManagedMediaParsersTests.SilverlightTests.SystemVersion" />
+                    <Node UniqueName="[0-1041]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.BitratePaddingModeMaximumValueTest" />
+                    <Node UniqueName="[0-1040]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.BitratePaddingModeMinimumValueTest" />
+                    <Node UniqueName="[0-1039]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.BitratePaddingModeTest" />
+                    <Node UniqueName="[0-1043]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.BlockSizeMinimumValueTest" />
+                    <Node UniqueName="[0-1042]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.BlockSizeTest" />
+                    <Node UniqueName="[0-1047]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.CodecDelayMinimumValueTest" />
+                    <Node UniqueName="[0-1046]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.CodecDelayTest" />
+                    <Node UniqueName="[0-1045]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.FramePerBlockMinimumValueTest" />
+                    <Node UniqueName="[0-1044]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.FramePerBlockTest" />
+                    <Node UniqueName="[0-1038]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.IdMaximumValueTest" />
+                    <Node UniqueName="[0-1037]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.IdMinimumValueTest" />
+                    <Node UniqueName="[0-1036]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.IdTest" />
+                    <Node UniqueName="[0-1048]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.ToHexStringTest" />
+                    <Node UniqueName="[0-1049]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.ToStringTest" />
+                    <Node UniqueName="[0-1035]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.WaveFormatExtensibleCoherencyTest" />
+                    <Node UniqueName="[0-1034]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.WaveFormatExtensibleNullTest" />
+                    <Node UniqueName="[0-1033]ManagedMediaParsersTests.MpegLayer3WaveFormatTests.WaveFormatExtensibleTest" />
                   </Nodes>
                 </Node>
-                <Node UniqueName="[0-1061]ManagedMediaParsersTests.StringExtensionTests" Expanded="true">
+                <Node UniqueName="[0-1088]ManagedMediaParsersTests.SilverlightTests" Expanded="true">
                   <Nodes>
-                    <Node UniqueName="[0-1062]ManagedMediaParsersTests.StringExtensionTests.BasicTest" />
-                    <Node UniqueName="[0-1063]ManagedMediaParsersTests.StringExtensionTests.EmptyInput" />
-                    <Node UniqueName="[0-1067]ManagedMediaParsersTests.StringExtensionTests.NonHexInput" />
-                    <Node UniqueName="[0-1066]ManagedMediaParsersTests.StringExtensionTests.NullInput" />
-                    <Node UniqueName="[0-1065]ManagedMediaParsersTests.StringExtensionTests.OddLengthInput" />
-                    <Node UniqueName="[0-1064]ManagedMediaParsersTests.StringExtensionTests.SmallestValidInput" />
+                    <Node UniqueName="[0-1089]ManagedMediaParsersTests.SilverlightTests.SystemVersion" />
                   </Nodes>
                 </Node>
-                <Node UniqueName="[0-1041]ManagedMediaParsersTests.WaveFormatExtensibleTests" Expanded="true">
+                <Node UniqueName="[0-1072]ManagedMediaParsersTests.StringExtensionTests" Expanded="true">
                   <Nodes>
-                    <Node UniqueName="[0-1051]ManagedMediaParsersTests.WaveFormatExtensibleTests.AverageBytesPerSecondMinimumValueTest" />
-                    <Node UniqueName="[0-1050]ManagedMediaParsersTests.WaveFormatExtensibleTests.AverageBytesPerSecondTest" />
-                    <Node UniqueName="[0-1055]ManagedMediaParsersTests.WaveFormatExtensibleTests.BitsPerSampleMinimumValueTest" />
-                    <Node UniqueName="[0-1054]ManagedMediaParsersTests.WaveFormatExtensibleTests.BitsPerSampleTest" />
-                    <Node UniqueName="[0-1053]ManagedMediaParsersTests.WaveFormatExtensibleTests.BlockAlignMinimumValueTest" />
-                    <Node UniqueName="[0-1052]ManagedMediaParsersTests.WaveFormatExtensibleTests.BlockAlignTest" />
-                    <Node UniqueName="[0-1046]ManagedMediaParsersTests.WaveFormatExtensibleTests.ChannelsMaximumValueTest" />
-                    <Node UniqueName="[0-1047]ManagedMediaParsersTests.WaveFormatExtensibleTests.ChannelsMinimumValueTest" />
-                    <Node UniqueName="[0-1045]ManagedMediaParsersTests.WaveFormatExtensibleTests.ChannelsTest" />
-                    <Node UniqueName="[0-1043]ManagedMediaParsersTests.WaveFormatExtensibleTests.FormatTagMaximumValueTest" />
-                    <Node UniqueName="[0-1044]ManagedMediaParsersTests.WaveFormatExtensibleTests.FormatTagMinimumValueTest" />
-                    <Node UniqueName="[0-1042]ManagedMediaParsersTests.WaveFormatExtensibleTests.FormatTagTest" />
-                    <Node UniqueName="[0-1049]ManagedMediaParsersTests.WaveFormatExtensibleTests.SamplesPerSecMinimumValueTest" />
-                    <Node UniqueName="[0-1048]ManagedMediaParsersTests.WaveFormatExtensibleTests.SamplesPerSecTest" />
-                    <Node UniqueName="[0-1057]ManagedMediaParsersTests.WaveFormatExtensibleTests.SizeMinimumValueTest" />
-                    <Node UniqueName="[0-1056]ManagedMediaParsersTests.WaveFormatExtensibleTests.SizeTest" />
-                    <Node UniqueName="[0-1059]ManagedMediaParsersTests.WaveFormatExtensibleTests.ToHexStringTest" />
-                    <Node UniqueName="[0-1060]ManagedMediaParsersTests.WaveFormatExtensibleTests.ToStringTest" />
-                    <Node UniqueName="[0-1058]ManagedMediaParsersTests.WaveFormatExtensibleTests.WaveFormatExtensibleCoherencyTests" />
+                    <Node UniqueName="[0-1073]ManagedMediaParsersTests.StringExtensionTests.BasicTest" />
+                    <Node UniqueName="[0-1074]ManagedMediaParsersTests.StringExtensionTests.EmptyInput" />
+                    <Node UniqueName="[0-1078]ManagedMediaParsersTests.StringExtensionTests.NonHexInput" />
+                    <Node UniqueName="[0-1077]ManagedMediaParsersTests.StringExtensionTests.NullInput" />
+                    <Node UniqueName="[0-1076]ManagedMediaParsersTests.StringExtensionTests.OddLengthInput" />
+                    <Node UniqueName="[0-1075]ManagedMediaParsersTests.StringExtensionTests.SmallestValidInput" />
+                  </Nodes>
+                </Node>
+                <Node UniqueName="[0-1001]ManagedMediaParsersTests.WaveFormatExtensibleTests" Expanded="true">
+                  <Nodes>
+                    <Node UniqueName="[0-1011]ManagedMediaParsersTests.WaveFormatExtensibleTests.AverageBytesPerSecondMinimumValueTest" />
+                    <Node UniqueName="[0-1010]ManagedMediaParsersTests.WaveFormatExtensibleTests.AverageBytesPerSecondTest" />
+                    <Node UniqueName="[0-1015]ManagedMediaParsersTests.WaveFormatExtensibleTests.BitsPerSampleMinimumValueTest" />
+                    <Node UniqueName="[0-1014]ManagedMediaParsersTests.WaveFormatExtensibleTests.BitsPerSampleTest" />
+                    <Node UniqueName="[0-1013]ManagedMediaParsersTests.WaveFormatExtensibleTests.BlockAlignMinimumValueTest" />
+                    <Node UniqueName="[0-1012]ManagedMediaParsersTests.WaveFormatExtensibleTests.BlockAlignTest" />
+                    <Node UniqueName="[0-1006]ManagedMediaParsersTests.WaveFormatExtensibleTests.ChannelsMaximumValueTest" />
+                    <Node UniqueName="[0-1007]ManagedMediaParsersTests.WaveFormatExtensibleTests.ChannelsMinimumValueTest" />
+                    <Node UniqueName="[0-1005]ManagedMediaParsersTests.WaveFormatExtensibleTests.ChannelsTest" />
+                    <Node UniqueName="[0-1003]ManagedMediaParsersTests.WaveFormatExtensibleTests.FormatTagMaximumValueTest" />
+                    <Node UniqueName="[0-1004]ManagedMediaParsersTests.WaveFormatExtensibleTests.FormatTagMinimumValueTest" />
+                    <Node UniqueName="[0-1002]ManagedMediaParsersTests.WaveFormatExtensibleTests.FormatTagTest" />
+                    <Node UniqueName="[0-1009]ManagedMediaParsersTests.WaveFormatExtensibleTests.SamplesPerSecMinimumValueTest" />
+                    <Node UniqueName="[0-1008]ManagedMediaParsersTests.WaveFormatExtensibleTests.SamplesPerSecTest" />
+                    <Node UniqueName="[0-1017]ManagedMediaParsersTests.WaveFormatExtensibleTests.SizeMinimumValueTest" />
+                    <Node UniqueName="[0-1016]ManagedMediaParsersTests.WaveFormatExtensibleTests.SizeTest" />
+                    <Node UniqueName="[0-1019]ManagedMediaParsersTests.WaveFormatExtensibleTests.ToHexStringTest" />
+                    <Node UniqueName="[0-1020]ManagedMediaParsersTests.WaveFormatExtensibleTests.ToStringTest" />
+                    <Node UniqueName="[0-1018]ManagedMediaParsersTests.WaveFormatExtensibleTests.WaveFormatExtensibleCoherencyTests" />
                   </Nodes>
                 </Node>
               </Nodes>

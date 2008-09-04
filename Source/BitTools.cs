@@ -99,11 +99,11 @@ namespace ManagedMediaParsers
             }
 
             // shift the bits to the right to make an int
-            headerValue = headerValue >> (firstBit % 8);
+            headerValue = headerValue >> (((ByteSize * (endByteIndex + 1)) - (firstBit + maskSize)) % 8);
 
             // mask out the appropriate bits
             headerValue = headerValue & mask;
-
+            
             return (int)headerValue;
         }
 
@@ -247,6 +247,7 @@ namespace ManagedMediaParsers
                     return di - pattern.Length;
                 }
             }
+
             return -1;
         }
 

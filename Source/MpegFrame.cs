@@ -78,7 +78,7 @@ namespace ManagedMediaParsers
     public class MpegFrame
     {
         /// <summary>
-        /// Frame Sync is 12 1s
+        /// Frame Sync is 11 1s
         /// </summary>
         private const int SyncValue = 2047;
 
@@ -86,7 +86,7 @@ namespace ManagedMediaParsers
         /// MP3 Headers are 4 Bytes long
         /// </summary>
         private const int FrameHeaderSize = 4;
-
+        
         /// <summary>
         /// A table of bitrates / 1000. These are all of the possible bitrates for Mpeg 1 - 2.5 audio. -1 encodes an error lookup.
         /// </summary>
@@ -126,23 +126,20 @@ namespace ManagedMediaParsers
                 goto cleanup;
             }
 
-            // TODO: Mask was rewritten to a different Byte Order so this may not be needed
-            // and the calls below may need to be rewritten as well.
-            Array.Reverse(frameHeader);
-
             // Sync
-            int value = BitTools.MaskBits(frameHeader, 21, 11);
+            int value = BitTools.MaskBits(frameHeader, 0, 11);
             if (!(value == SyncValue))
             {
+                System.Console.WriteLine(value);
                 goto cleanup;
             }
 
             this.Version = ParseVersion(frameHeader);
             this.Layer = ParseLayer(frameHeader);
-            this.IsProtected = BitTools.MaskBits(frameHeader, 16, 1) == 1 ? false : true;
-            this.BitrateIndex = BitTools.MaskBits(frameHeader, 12, 4);
-            this.SamplingRateIndex = BitTools.MaskBits(frameHeader, 10, 2);
-            this.Padding = BitTools.MaskBits(frameHeader, 9, 1);
+            this.IsProtected = BitTools.MaskBits(frameHeader, 15, 1) == 1 ? false : true;
+            this.BitrateIndex = BitTools.MaskBits(frameHeader, 16, 4);
+            this.SamplingRateIndex = BitTools.MaskBits(frameHeader, 20, 2);
+            this.Padding = BitTools.MaskBits(frameHeader, 22, 1);
             //// Private Bit = BitTools.MaskBits(_mp3FrameHeader,8,1); //USELESS
             this.Channels = ParseChannel(frameHeader);
             //// Joint Mode = ParseJoitMode(_mp3FrameHeader); //Not used by  Mp3MSS
@@ -318,7 +315,7 @@ namespace ManagedMediaParsers
         private static int ParseVersion(byte[] frameHeader)
         {
             int version;
-            int versionValue = BitTools.MaskBits(frameHeader, 19, 2);
+            int versionValue = BitTools.MaskBits(frameHeader, 11, 2);
 
             switch (versionValue)
             {
@@ -347,7 +344,7 @@ namespace ManagedMediaParsers
         private static int ParseLayer(byte[] frameHeader)
         {
             int layer;
-            int layerValue = BitTools.MaskBits(frameHeader, 17, 2);
+            int layerValue = BitTools.MaskBits(frameHeader, 13, 2);
 
             switch (layerValue)
             {
@@ -376,7 +373,7 @@ namespace ManagedMediaParsers
         private static Channel ParseChannel(byte[] frameHeader)
         {
             Channel channel;
-            int channelValue = BitTools.MaskBits(frameHeader, 6, 2);
+            int channelValue = BitTools.MaskBits(frameHeader, 24, 2);
 
             switch (channelValue)
             {
