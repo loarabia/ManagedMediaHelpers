@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
   <TopNode>[0-1000]C:\Users\Larry\Desktop\Repositories\ManagedMediaParsers\Tests\ManagedMediaPArsersTests.nunit</TopNode>
-  <SelectedNode>[0-1090]ManagedMediaParsersTests.MpegFrameTests</SelectedNode>
+  <SelectedNode>[0-1102]C:\Users\Larry\Desktop\Repositories\ManagedMediaParsers\Tests\ClientBin\ManagedMediaParsersTests.dll</SelectedNode>
   <ExcludeCategories>false</ExcludeCategories>
   <Nodes>
     <Node UniqueName="[0-1000]C:\Users\Larry\Desktop\Repositories\ManagedMediaParsers\Tests\ManagedMediaPArsersTests.nunit" Expanded="true">
       <Nodes>
-        <Node UniqueName="[0-1093]C:\Users\Larry\Desktop\Repositories\ManagedMediaParsers\Tests\ClientBin\ManagedMediaParsersTests.dll" Expanded="true">
+        <Node UniqueName="[0-1102]C:\Users\Larry\Desktop\Repositories\ManagedMediaParsers\Tests\ClientBin\ManagedMediaParsersTests.dll" Expanded="true">
           <Nodes>
-            <Node UniqueName="[0-1094]ManagedMediaParsersTests" Expanded="true">
+            <Node UniqueName="[0-1103]ManagedMediaParsersTests" Expanded="true">
               <Nodes>
-                <Node UniqueName="[0-1095]ManagedMediaParsersTests.BitToolsTests" Expanded="true">
+                <Node UniqueName="[0-1104]ManagedMediaParsersTests.BitToolsTests" Expanded="true">
                   <Nodes>
                     <Node UniqueName="[0-1079]ManagedMediaParsersTests.BitToolsTests.ConvertToSyncSafeInt32Tests">
                       <Nodes>
@@ -70,8 +70,17 @@
                 </Node>
                 <Node UniqueName="[0-1090]ManagedMediaParsersTests.MpegFrameTests" Expanded="true">
                   <Nodes>
-                    <Node UniqueName="[0-1092]ManagedMediaParsersTests.MpegFrameTests.LayerTest" />
-                    <Node UniqueName="[0-1091]ManagedMediaParsersTests.MpegFrameTests.VersionTest" />
+                    <Node UniqueName="[0-1098]ManagedMediaParsersTests.MpegFrameTests.Bitrate" />
+                    <Node UniqueName="[0-1094]ManagedMediaParsersTests.MpegFrameTests.BitRateIndex" />
+                    <Node UniqueName="[0-1097]ManagedMediaParsersTests.MpegFrameTests.Channels" />
+                    <Node UniqueName="[0-1100]ManagedMediaParsersTests.MpegFrameTests.FrameSize" />
+                    <Node UniqueName="[0-1093]ManagedMediaParsersTests.MpegFrameTests.IsProtected" />
+                    <Node UniqueName="[0-1092]ManagedMediaParsersTests.MpegFrameTests.Layer" />
+                    <Node UniqueName="[0-1096]ManagedMediaParsersTests.MpegFrameTests.Padding" />
+                    <Node UniqueName="[0-1099]ManagedMediaParsersTests.MpegFrameTests.SamplingRate" />
+                    <Node UniqueName="[0-1095]ManagedMediaParsersTests.MpegFrameTests.SamplingrateIndex" />
+                    <Node UniqueName="[0-1101]ManagedMediaParsersTests.MpegFrameTests.ToStringTest" />
+                    <Node UniqueName="[0-1091]ManagedMediaParsersTests.MpegFrameTests.Version" />
                   </Nodes>
                 </Node>
                 <Node UniqueName="[0-1032]ManagedMediaParsersTests.MpegLayer3WaveFormatTests">
