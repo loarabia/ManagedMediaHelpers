@@ -21,8 +21,6 @@ namespace ManagedMediaParsers
     /// This was designed for usage in an environment where PInvokes are not
     /// allowed.
     /// </remarks>
-    /// TODO: struct might be more efficient but these are made so seldom, I
-    /// doubt it would even be noticeable.
     public class WaveFormatExtensible
     {
         /// <summary>
@@ -36,8 +34,6 @@ namespace ManagedMediaParsers
         /// Mp3
         /// WAVE_FORMAT_MPEGLAYER3 = 0x0055
         /// </remarks>
-        /// TODO: Gather the other FormatTag numbers for WMA 7 - 10 and add them
-        /// to the comments
         public short FormatTag { get; set; }
 
         /// <summary>

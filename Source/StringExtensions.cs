@@ -55,7 +55,6 @@ namespace ExtensionMethods
         ///     EFBEADDE
         /// </example>
         /// </remarks>
-        /// TODO: Not quite the right way to do this but good enough for now
         public static string ToLittleEndian(this string value)
         {
             // Guard
@@ -75,7 +74,6 @@ namespace ExtensionMethods
             int i, ai, bi, ci, di;
             char a, b, c, d;
 
-            // TODO: bug in the for loop's definition.
             for (i = 0; i < bigEndianChars.Length / 2; i += 2) 
             {
                 // front byte ( in hex )

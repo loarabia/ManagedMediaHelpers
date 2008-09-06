@@ -21,8 +21,6 @@ namespace ManagedMediaParsers
     /// This was designed for usage in an environment where PInvokes are not
     /// allowed.
     /// </remarks>
-    /// TODO: struct might be more efficient but these are instantiated so
-    /// seldom, I doubt it would even be noticeable.
     public class MpegLayer3WaveFormat
     {
         /// <summary>
@@ -67,7 +65,6 @@ namespace ManagedMediaParsers
         /// <summary>
         /// Gets or sets the number of frames per block.
         /// </summary>
-        /// TODO: Always 1?
         public short FramesPerBlock { get; set; }
 
         /// <summary>
