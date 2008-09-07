@@ -225,13 +225,13 @@ namespace MediaParsers
                 return -1;
             }
 
-            //GUARD
+            // GUARD
             if (startIndex < 0 || startIndex >= data.Length)
             {
                 throw new ArgumentOutOfRangeException("startIndex", "Start index must be in the range [0,data.Length-1]");
             }
 
-            int di = startIndex ; // data index
+            int di = startIndex; // data index
             int pati = 0; // pattern index
 
             while (di < data.Length)
@@ -276,9 +276,9 @@ namespace MediaParsers
         /// Returns the location of the first byte in the pattern or -1 if
         /// nothing was found or there was an error.
         /// </returns>
-        public static int FindBitPattern(byte[] data, byte[] pattern, byte[] mask )
+        public static int FindBitPattern(byte[] data, byte[] pattern, byte[] mask)
         {
-            return FindBitPattern(data,pattern,mask,0);
+            return FindBitPattern(data, pattern, mask, 0);
         }
 
         /// <summary>
@@ -297,7 +297,7 @@ namespace MediaParsers
         /// Returns the location of the first byte in the pattern or -1 if
         /// nothing was found or there was an error.
         /// </returns>
-        public static int FindBytePattern(byte[] data, byte[] pattern,int startIndex)
+        public static int FindBytePattern(byte[] data, byte[] pattern, int startIndex)
         {
             // GUARD
             if (pattern == null)
