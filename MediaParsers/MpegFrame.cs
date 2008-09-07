@@ -11,13 +11,13 @@
 
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional",
     Scope = "member",
-    Target = "ManagedMediaParsers.MpegFrame.#bitrateTable",
+    Target = "MediaParsers.MpegFrame.#bitrateTable",
     MessageId = "Member",
     Justification = "Array is not Jagged and does not waste space.")]
 
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional",
     Scope = "member",
-    Target = "ManagedMediaParsers.MpegFrame.#samplingRateTable",
+    Target = "MediaParsers.MpegFrame.#samplingRateTable",
     MessageId = "Member",
     Justification = "Array is not Jagged and does not waste space.")]
 

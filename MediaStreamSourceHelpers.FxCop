@@ -23,9 +23,10 @@
  </ProjectOptions>
  <Targets>
   <AssemblyReferenceDirectories>
+   <Directory>$(ProjectDir)/Source/Bin/Debug/</Directory>
    <Directory>$(ProjectDir)/Tests/ClientBin/</Directory>
   </AssemblyReferenceDirectories>
-  <Target Name="$(ProjectDir)/Source/Bin/Debug/ManagedMediaParsers.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/MediaParsers/Bin/Debug/ManagedMediaParsers.dll" Analyze="True" AnalyzeAllChildren="True" />
  </Targets>
  <Rules>
   <RuleFiles>
@@ -44,7 +45,7 @@
  </Rules>
  <FxCopReport Version="1.36">
   <Targets>
-   <Target Name="$(ProjectDir)/Source/Bin/Debug/ManagedMediaParsers.dll">
+   <Target Name="$(ProjectDir)/MediaParsers/Bin/Debug/ManagedMediaParsers.dll">
     <Modules>
      <Module Name="managedmediaparsers.dll">
       <Messages>

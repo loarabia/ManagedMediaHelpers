@@ -70,7 +70,7 @@
     <Content Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Source\MediaParsers.csproj">
+    <ProjectReference Include="..\MediaParsers\MediaParsers.csproj">
       <Project>{4354547C-0008-4D2A-8644-F2ACAC9DCC85}</Project>
       <Name>MediaParsers</Name>
     </ProjectReference>
