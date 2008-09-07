@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaParsers", "Source\MediaParsers.csproj", "{4354547C-0008-4D2A-8644-F2ACAC9DCC85}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaParsers", "MediaParsers\MediaParsers.csproj", "{4354547C-0008-4D2A-8644-F2ACAC9DCC85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaParsersTests", "Tests\MediaParsersTests.csproj", "{0A489EAA-2083-43A3-987E-C25DDFF5A892}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaParsersTests", "MediaParsersTests\MediaParsersTests.csproj", "{0A489EAA-2083-43A3-987E-C25DDFF5A892}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
