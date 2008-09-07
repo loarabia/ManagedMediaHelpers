@@ -4,21 +4,23 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0A489EAA-2083-43A3-987E-C25DDFF5A892}</ProjectGuid>
+    <ProjectGuid>{4354547C-0008-4D2A-8644-F2ACAC9DCC85}</ProjectGuid>
     <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ManagedMediaParsersTests</RootNamespace>
-    <AssemblyName>ManagedMediaParsersTests</AssemblyName>
+    <RootNamespace>ManagedMediaParsers</RootNamespace>
+    <AssemblyName>ManagedMediaParsers</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>false</ThrowErrorsInValidation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>ClientBin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT; CODE_ANALYSIS</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -27,7 +29,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>ClientBin\</OutputPath>
+    <OutputPath>Bin\Release</OutputPath>
     <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -35,45 +37,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
-    <Reference Include="System.Windows">
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="System.Windows" />
     <Reference Include="mscorlib" />
-    <Reference Include="system">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Core">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Xml">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Windows.Browser">
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BitToolsTests\ConvertToSyncSafeInt32Tests.cs" />
-    <Compile Include="BitToolsTests\FindBitPatternTests.cs" />
-    <Compile Include="BitToolsTests\FindBytePatternTests.cs" />
-    <Compile Include="BitToolsTests\MaskBitsTests.cs" />
-    <Compile Include="MpegFrameTests.cs" />
-    <Compile Include="MpegLayer3WaveFormatTests.cs" />
-    <Compile Include="SilverlightTests.cs" />
+    <Compile Include="BitTools.cs" />
+    <Compile Include="ID3Segment.cs" />
+    <Compile Include="MpegFrame.cs" />
+    <Compile Include="MpegLayer3WaveFormat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringExtensionTests.cs" />
-    <Compile Include="WaveFormatExtensibleTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="lib\nunit.framework.dll" />
-    <Content Include="readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Source\ManagedMediaParsers.csproj">
-      <Project>{4354547C-0008-4D2A-8644-F2ACAC9DCC85}</Project>
-      <Name>ManagedMediaParsers</Name>
-    </ProjectReference>
+    <Compile Include="StringExtensions.cs" />
+    <Compile Include="WaveFormatExtensible.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\v2.0\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
