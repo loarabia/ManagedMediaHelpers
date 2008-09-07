@@ -9,9 +9,9 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using NUnit.Framework;
-using ManagedMediaParsers;
+using MediaParsers;
 
-namespace ManagedMediaParsersTests.BitToolsTests
+namespace MediaParsersTests.BitToolsTests
 {
     [TestFixture]
     public class FindBitPatternTests
@@ -136,6 +136,28 @@ namespace ManagedMediaParsersTests.BitToolsTests
             mask = new byte[3] { 15, 223, 240 };
             int result = BitTools.FindBitPattern(dataArray, pattern, mask);
             Assert.AreEqual(0, result);
+        }
+
+        [Test,ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void StartIndexTooSmall()
+        {
+            BitTools.FindBitPattern(dataArray, pattern, mask, -1);
+        }
+
+        [Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void StartIndexTooLarge()
+        {
+            BitTools.FindBitPattern(dataArray, pattern, mask, dataArray.Length);
+        }
+
+        [Test]
+        public void SearchLaterInArray()
+        {
+            int result = BitTools.FindBitPattern(dataArray, new byte[1] { 1 }, new byte[1] { 1 }, 7);
+            Assert.AreEqual(7, result);
+
+            result = BitTools.FindBitPattern(dataArray, new byte[1] { 1 }, new byte[1] { 1 }, 13);
+            Assert.AreEqual(14, result);
         }
     }
 }

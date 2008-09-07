@@ -2,7 +2,7 @@
 using System.Reflection;
 using NUnit.Framework;
 
-namespace ManagedMediaParsersTests
+namespace MediaParsersTests
 {
     [TestFixture]
     public class SilverlightTests

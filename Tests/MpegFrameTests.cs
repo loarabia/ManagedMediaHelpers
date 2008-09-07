@@ -9,10 +9,10 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using NUnit.Framework;
-using ManagedMediaParsers;
+using MediaParsers;
 using System.IO;
 
-namespace ManagedMediaParsersTests
+namespace MediaParsersTests
 {
     [TestFixture]
     public class MpegFrameTests

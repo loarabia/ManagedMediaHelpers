@@ -7,7 +7,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace ManagedMediaParsers
+namespace MediaParsers
 {
     using System;
     using System.Diagnostics;
@@ -192,11 +192,14 @@ namespace ManagedMediaParsers
         /// <param name="mask">
         /// A mask to zero out bits that aren't part of the pattern.
         /// </param>
+        /// <param name="startIndex">
+        /// The byte to begin the search from.
+        /// </param>
         /// <returns>
         /// Returns the location of the first byte in the pattern or -1 if
         /// nothing was found or there was an error.
         /// </returns>
-        public static int FindBitPattern(byte[] data, byte[] pattern, byte[] mask)
+        public static int FindBitPattern(byte[] data, byte[] pattern, byte[] mask, int startIndex)
         {
             // GUARD
             if (data == null)
@@ -222,7 +225,13 @@ namespace ManagedMediaParsers
                 return -1;
             }
 
-            int di = 0; // data index
+            //GUARD
+            if (startIndex < 0 || startIndex >= data.Length)
+            {
+                throw new ArgumentOutOfRangeException("startIndex", "Start index must be in the range [0,data.Length-1]");
+            }
+
+            int di = startIndex ; // data index
             int pati = 0; // pattern index
 
             while (di < data.Length)
@@ -252,6 +261,60 @@ namespace ManagedMediaParsers
         }
 
         /// <summary>
+        /// Searches a byte array for a pattern of bits.
+        /// </summary>
+        /// <param name="data">
+        /// The array of bytes to search for the pattern within.
+        /// </param>
+        /// <param name="pattern">
+        /// The pattern of bytes to match with undesired bits zeroed out.
+        /// </param>
+        /// <param name="mask">
+        /// A mask to zero out bits that aren't part of the pattern.
+        /// </param>
+        /// <returns>
+        /// Returns the location of the first byte in the pattern or -1 if
+        /// nothing was found or there was an error.
+        /// </returns>
+        public static int FindBitPattern(byte[] data, byte[] pattern, byte[] mask )
+        {
+            return FindBitPattern(data,pattern,mask,0);
+        }
+
+        /// <summary>
+        /// Searches a byte array for a pattern of bytes.
+        /// </summary>
+        /// <param name="data">
+        /// The array of bytes to search for the pattern within.
+        /// </param>
+        /// <param name="pattern">
+        /// The pattern of bytes to match.
+        /// </param>
+        /// <param name="startIndex">
+        /// The byte to begin the search from.
+        /// </param>
+        /// <returns>
+        /// Returns the location of the first byte in the pattern or -1 if
+        /// nothing was found or there was an error.
+        /// </returns>
+        public static int FindBytePattern(byte[] data, byte[] pattern,int startIndex)
+        {
+            // GUARD
+            if (pattern == null)
+            {
+                throw new ArgumentNullException("pattern");
+            }
+
+            byte[] mask = new byte[pattern.Length];
+            for (int i = 0; i < pattern.Length; i++)
+            {
+                mask[i] = byte.MaxValue; // 1111 1111
+            }
+
+            return FindBitPattern(data, pattern, mask, startIndex);
+        }
+
+        /// <summary>
         /// Searches a byte array for a pattern of bytes.
         /// </summary>
         /// <param name="data">
@@ -266,19 +329,7 @@ namespace ManagedMediaParsers
         /// </returns>
         public static int FindBytePattern(byte[] data, byte[] pattern)
         {
-            // GUARD
-            if (pattern == null)
-            {
-                throw new ArgumentNullException("pattern");
-            }
-
-            byte[] mask = new byte[pattern.Length];
-            for (int i = 0; i < pattern.Length; i++)
-            {
-                mask[i] = byte.MaxValue; // 1111 1111
-            }
-
-            return FindBitPattern(data, pattern, mask);
+            return FindBytePattern(data, pattern, 0);
         }
     }
 }

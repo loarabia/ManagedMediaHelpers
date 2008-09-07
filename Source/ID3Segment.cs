@@ -7,7 +7,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace ManagedMediaParsers
+namespace MediaParsers
 {
     using System;
     using System.Diagnostics;

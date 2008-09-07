@@ -11,7 +11,7 @@ using System.Windows.Shapes;
 using NUnit.Framework;
 using ExtensionMethods;
 
-namespace ManagedMediaParsersTests
+namespace MediaParsersTests
 {
     [TestFixture]
     public class StringExtensionTests

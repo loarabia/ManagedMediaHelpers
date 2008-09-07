@@ -21,7 +21,7 @@
     MessageId = "Member",
     Justification = "Array is not Jagged and does not waste space.")]
 
-namespace ManagedMediaParsers
+namespace MediaParsers
 {
     using System;
     using System.IO;
