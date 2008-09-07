@@ -5,6 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaParsers", "MediaParser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaParsersTests", "MediaParsersTests\MediaParsersTests.csproj", "{0A489EAA-2083-43A3-987E-C25DDFF5A892}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mp3MediaStreamSource", "Mp3MediaStreamSource\Mp3MediaStreamSource.csproj", "{32CC19AF-0340-48BB-AB87-11B49287240E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mp3MediaStreamSourceTests", "Mp3MediaStreamSourceTests\Mp3MediaStreamSourceTests.csproj", "{D189BA57-6137-40C7-978B-08BD048A8906}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
@@ -35,6 +39,26 @@ Global
 		{0A489EAA-2083-43A3-987E-C25DDFF5A892}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0A489EAA-2083-43A3-987E-C25DDFF5A892}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0A489EAA-2083-43A3-987E-C25DDFF5A892}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{32CC19AF-0340-48BB-AB87-11B49287240E}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{32CC19AF-0340-48BB-AB87-11B49287240E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32CC19AF-0340-48BB-AB87-11B49287240E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32CC19AF-0340-48BB-AB87-11B49287240E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{32CC19AF-0340-48BB-AB87-11B49287240E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{32CC19AF-0340-48BB-AB87-11B49287240E}.Release|.NET.ActiveCfg = Release|Any CPU
+		{32CC19AF-0340-48BB-AB87-11B49287240E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32CC19AF-0340-48BB-AB87-11B49287240E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32CC19AF-0340-48BB-AB87-11B49287240E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{32CC19AF-0340-48BB-AB87-11B49287240E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D189BA57-6137-40C7-978B-08BD048A8906}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{D189BA57-6137-40C7-978B-08BD048A8906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D189BA57-6137-40C7-978B-08BD048A8906}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D189BA57-6137-40C7-978B-08BD048A8906}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D189BA57-6137-40C7-978B-08BD048A8906}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D189BA57-6137-40C7-978B-08BD048A8906}.Release|.NET.ActiveCfg = Release|Any CPU
+		{D189BA57-6137-40C7-978B-08BD048A8906}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D189BA57-6137-40C7-978B-08BD048A8906}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D189BA57-6137-40C7-978B-08BD048A8906}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D189BA57-6137-40C7-978B-08BD048A8906}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
