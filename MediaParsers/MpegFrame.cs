@@ -60,8 +60,7 @@ namespace MediaParsers
     }
 
     /// <summary>
-    /// A partial implementation of an MPEG audio frame as specified by IS0/IEC
-    /// 13818-3 and ISO/IEC 11172-3.
+    /// A partial implementation of an MPEG audio frame
     /// </summary>
     /// <remarks>
     /// <para>

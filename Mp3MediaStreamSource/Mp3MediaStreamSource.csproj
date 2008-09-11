@@ -8,7 +8,7 @@
     <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Mp3MediaStreamSource</RootNamespace>
+    <RootNamespace>Media</RootNamespace>
     <AssemblyName>Mp3MediaStreamSource</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <SilverlightApplication>false</SilverlightApplication>
@@ -48,6 +48,12 @@
   <ItemGroup>
     <Compile Include="Mp3MediaStreamSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MediaParsers\MediaParsers.csproj">
+      <Project>{4354547C-0008-4D2A-8644-F2ACAC9DCC85}</Project>
+      <Name>MediaParsers</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\v2.0\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

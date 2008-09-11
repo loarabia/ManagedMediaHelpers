@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
+  <TopNode>[0-1000]C:\Users\Larry\Desktop\Repositories\ManagedMediaParsers\Mp3MediaStreamSourceTests\Mp3MediaStreamSourceTests.nunit</TopNode>
+  <SelectedNode>[0-1008]Mp3MediaStreamSourceTests</SelectedNode>
+  <ExcludeCategories>false</ExcludeCategories>
+  <Nodes>
+    <Node UniqueName="[0-1000]C:\Users\Larry\Desktop\Repositories\ManagedMediaParsers\Mp3MediaStreamSourceTests\Mp3MediaStreamSourceTests.nunit" Expanded="true">
+      <Nodes>
+        <Node UniqueName="[0-1006]C:\Users\Larry\Desktop\Repositories\ManagedMediaParsers\Mp3MediaStreamSourceTests\ClientBin\Mp3MediaStreamSourceTests.dll" Expanded="true">
+          <Nodes>
+            <Node UniqueName="[0-1008]Mp3MediaStreamSourceTests" Expanded="true">
+              <Nodes>
+                <Node UniqueName="[0-1003]Mp3MediaStreamSourceTests.Mp3MediaStreamSourceTests" Expanded="true">
+                  <Nodes>
+                    <Node UniqueName="[0-1005]Mp3MediaStreamSourceTests.Mp3MediaStreamSourceTests.MediaStreamSourceStateTest" />
+                    <Node UniqueName="[0-1004]Mp3MediaStreamSourceTests.Mp3MediaStreamSourceTests.SamplesDelivered" />
+                  </Nodes>
+                </Node>
+              </Nodes>
+            </Node>
+            <Node UniqueName="[0-1007]SilverlightNUnitProject2" Expanded="true">
+              <Nodes>
+                <Node UniqueName="[0-1001]SilverlightNUnitProject2.SilverlightTests" Expanded="true">
+                  <Nodes>
+                    <Node UniqueName="[0-1002]SilverlightNUnitProject2.SilverlightTests.SystemVersion" />
+                  </Nodes>
+                </Node>
+              </Nodes>
+            </Node>
+          </Nodes>
+        </Node>
+      </Nodes>
+    </Node>
+  </Nodes>
+</VisualState>
