@@ -1,4 +1,12 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="FindBitPatternTests.cs" company="Larry Olson">
+// (c) Copyright Larry Olson.
+// This source is subject to the Microsoft Public License (Ms-PL)
+// See http://code.msdn.microsoft.com/ManagedMediaHelpers/Project/License.aspx
+// All other rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using System;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;

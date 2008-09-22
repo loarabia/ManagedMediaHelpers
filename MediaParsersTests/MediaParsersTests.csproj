@@ -60,7 +60,6 @@
     <Compile Include="BitToolsTests\MaskBitsTests.cs" />
     <Compile Include="MpegFrameTests.cs" />
     <Compile Include="MpegLayer3WaveFormatTests.cs" />
-    <Compile Include="SilverlightTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringExtensionTests.cs" />
     <Compile Include="WaveFormatExtensibleTests.cs" />

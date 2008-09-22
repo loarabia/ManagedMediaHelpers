@@ -1,8 +1,8 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="AssemblyInfo.cs" company="Larry Olson">
 // (c) Copyright Larry Olson.
-// This source is subject to the Microsoft Reciprocal License (Ms-RL)
-// See http://www.microsoft.com/resources/sharedsource/licensingbasics/reciprocallicense.mspx
+// This source is subject to the Microsoft Public License (Ms-PL)
+// See http://code.msdn.microsoft.com/ManagedMediaHelpers/Project/License.aspx
 // All other rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyProduct("Mp3MediaStreamSource")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2008")]
+[assembly: AssemblyCopyright("Copyright © Larry Olson 2008")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

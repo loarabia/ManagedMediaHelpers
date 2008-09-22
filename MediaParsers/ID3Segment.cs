@@ -1,8 +1,8 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="ID3Segment.cs" company="Larry Olson">
 // (c) Copyright Larry Olson.
-// This source is subject to the Microsoft Reciprocal License (Ms-RL)
-// See http://www.microsoft.com/resources/sharedsource/licensingbasics/reciprocallicense.mspx
+// This source is subject to the Microsoft Public License (Ms-PL)
+// See http://code.msdn.microsoft.com/ManagedMediaHelpers/Project/License.aspx
 // All other rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
