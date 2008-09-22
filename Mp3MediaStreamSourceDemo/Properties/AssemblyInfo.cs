@@ -1,23 +1,15 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="AssemblyInfo.cs" company="Larry Olson">
-// (c) Copyright Larry Olson.
-// This source is subject to the Microsoft Reciprocal License (Ms-RL)
-// See http://www.microsoft.com/resources/sharedsource/licensingbasics/reciprocallicense.mspx
-// All other rights reserved.
-// </copyright>
-//-----------------------------------------------------------------------
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Mp3MediaStreamSource")]
+[assembly: AssemblyTitle("Mp3MediaStreamSourceDemo")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Mp3MediaStreamSource")]
+[assembly: AssemblyProduct("Mp3MediaStreamSourceDemo")]
 [assembly: AssemblyCopyright("Copyright © Microsoft 2008")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -28,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1ffc30e6-cd45-4cc3-a262-03fe1ee87bc7")]
+[assembly: Guid("2dc5ecb4-82e7-4b92-afb8-d1427f6050b5")]
 
 // Version information for an assembly consists of the following four values:
 //
