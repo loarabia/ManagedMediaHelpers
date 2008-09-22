@@ -6,10 +6,19 @@
 // All other rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+
+[module: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming",
+    "CA1709:IdentifiersShouldBeCasedCorrectly",
+    Scope = "type",
+    Target = "Media.Mp3MediaStreamSource",
+    MessageId = "Mp",
+    Justification = "Mp is not a two letter acyonym but is instead part of Mp3")]
+
 namespace Media
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Windows.Media;
     using System.Windows.Threading;
@@ -53,10 +62,10 @@ namespace Media
         /// <summary>
         ///  Initializes a new instance of the Mp3MediaStreamSource class.
         /// </summary>
-        /// <param name="s"> TODO FILL ME IN LATERs</param>
-        public Mp3MediaStreamSource(Stream s)
+        /// <param name="audioStream"> TODO FILL ME IN LATERs</param>
+        public Mp3MediaStreamSource(Stream audioStream)
         {
-            this.audioStream = s;
+            this.audioStream = audioStream;
 
             // Temporary Workaroud for Beta 2
             this.tempTimer = new DispatcherTimer();
@@ -65,14 +74,9 @@ namespace Media
         }
 
         /// <summary>
-        /// Gets the number of samples delivered to the MediaElement
-        /// </summary>
-        public long SamplesDelivered { get; private set; }
-
-        /// <summary>
         /// Gets TODO FILLE ME  IN LATER
         /// </summary>
-        public MpegLayer3WaveFormat Mp3WaveFormat { get; private set; }
+        public MpegLayer3WaveFormat MpegLayer3WaveFormat { get; private set; }
 
         /// <summary>
         /// Parses the passed in MediaStream to find the first frame and signals
@@ -124,7 +128,7 @@ namespace Media
                 }
                 else
                 {
-                    throw new IndexOutOfRangeException("Frame Is Not MP3");
+                    throw new InvalidOperationException("Frame Is Not MP3");
                 }
             }
         }
@@ -183,41 +187,42 @@ namespace Media
             byte[] audioData = new byte[this.audioStream.Length];
             if (audioData.Length != this.audioStream.Read(audioData, 0, audioData.Length))
             {
-                throw new Exception("ERROR"); // TODO IMPROVE
+                throw new IOException("Could not read in the AudioStream");
             }
 
             int result = BitTools.FindBitPattern(audioData, new byte[2] { 255, 240 }, new byte[2] { 255, 240 });
             this.audioStream.Position = result;
+
             MpegFrame mpegLayer3Frame = new MpegFrame(this.audioStream);
             if (mpegLayer3Frame.FrameSize <= 0)
             {
-                throw new Exception("ERROR"); // TODO IMPROVE
+                throw new InvalidOperationException("MpegFrame's FrameSize cannot be negative");
             }
 
             WaveFormatExtensible wfx = new WaveFormatExtensible();
-            this.Mp3WaveFormat = new MpegLayer3WaveFormat();
-            this.Mp3WaveFormat.WaveFormatExtensible = wfx;
+            this.MpegLayer3WaveFormat = new MpegLayer3WaveFormat();
+            this.MpegLayer3WaveFormat.WaveFormatExtensible = wfx;
 
-            this.Mp3WaveFormat.WaveFormatExtensible.FormatTag = 85;
-            this.Mp3WaveFormat.WaveFormatExtensible.Channels = (short)((mpegLayer3Frame.Channels == Channel.SingleChannel) ? 1 : 2);
-            this.Mp3WaveFormat.WaveFormatExtensible.SamplesPerSec = mpegLayer3Frame.SamplingRate;
-            this.Mp3WaveFormat.WaveFormatExtensible.AverageBytesPerSecond = mpegLayer3Frame.Bitrate / 8;
-            this.Mp3WaveFormat.WaveFormatExtensible.BlockAlign = 1;
-            this.Mp3WaveFormat.WaveFormatExtensible.BitsPerSample = 0;
-            this.Mp3WaveFormat.WaveFormatExtensible.Size = 12;
+            this.MpegLayer3WaveFormat.WaveFormatExtensible.FormatTag = 85;
+            this.MpegLayer3WaveFormat.WaveFormatExtensible.Channels = (short)((mpegLayer3Frame.Channels == Channel.SingleChannel) ? 1 : 2);
+            this.MpegLayer3WaveFormat.WaveFormatExtensible.SamplesPerSec = mpegLayer3Frame.SamplingRate;
+            this.MpegLayer3WaveFormat.WaveFormatExtensible.AverageBytesPerSecond = mpegLayer3Frame.Bitrate / 8;
+            this.MpegLayer3WaveFormat.WaveFormatExtensible.BlockAlign = 1;
+            this.MpegLayer3WaveFormat.WaveFormatExtensible.BitsPerSample = 0;
+            this.MpegLayer3WaveFormat.WaveFormatExtensible.Size = 12;
 
-            this.Mp3WaveFormat.Id = 1;
-            this.Mp3WaveFormat.BitratePaddingMode = 0;
-            this.Mp3WaveFormat.FramesPerBlock = 1;
-            this.Mp3WaveFormat.BlockSize = (short)mpegLayer3Frame.FrameSize;
-            this.Mp3WaveFormat.CodecDelay = 0;
+            this.MpegLayer3WaveFormat.Id = 1;
+            this.MpegLayer3WaveFormat.BitratePaddingMode = 0;
+            this.MpegLayer3WaveFormat.FramesPerBlock = 1;
+            this.MpegLayer3WaveFormat.BlockSize = (short)mpegLayer3Frame.FrameSize;
+            this.MpegLayer3WaveFormat.CodecDelay = 0;
 
-            mediaStreamAttributes[MediaStreamAttributeKeys.CodecPrivateData] = this.Mp3WaveFormat.ToHexString();
+            mediaStreamAttributes[MediaStreamAttributeKeys.CodecPrivateData] = this.MpegLayer3WaveFormat.ToHexString();
             this.audioStreamDescription = new MediaStreamDescription(MediaStreamType.Audio, mediaStreamAttributes);
 
             mediaStreamDescriptions.Add(this.audioStreamDescription);
 
-            mediaSourceAttributes[MediaSourceAttributesKeys.Duration] = TimeSpan.FromMinutes(0).Ticks.ToString();
+            mediaSourceAttributes[MediaSourceAttributesKeys.Duration] = TimeSpan.FromMinutes(0).Ticks.ToString(CultureInfo.InvariantCulture);
 
             this.ReportOpenMediaCompleted(mediaSourceAttributes, mediaStreamDescriptions);
 

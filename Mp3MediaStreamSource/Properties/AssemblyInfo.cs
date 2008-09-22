@@ -6,6 +6,8 @@
 // All other rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -41,3 +43,10 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+[assembly: CLSCompliantAttribute(false)]
+
+[module: SuppressMessage("Microsoft.Naming",
+    "CA1709:IdentifiersShouldBeCasedCorrectly",
+    MessageId = "Mp",
+    Justification = "Mp is not a two letter acyonym but is instead part of Mp3")]

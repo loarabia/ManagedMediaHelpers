@@ -27,6 +27,7 @@
    <Directory>$(ProjectDir)/Tests/ClientBin/</Directory>
   </AssemblyReferenceDirectories>
   <Target Name="$(ProjectDir)/MediaParsers/Bin/Debug/ManagedMediaParsers.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/Mp3MediaStreamSource/Bin/Debug/Mp3MediaStreamSource.dll" Analyze="True" AnalyzeAllChildren="True" />
  </Targets>
  <Rules>
   <RuleFiles>
@@ -52,6 +53,19 @@
        <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2008-09-03 03:46:17Z">
         <Issue Name="NoStrongName">
          <Item>'ManagedMediaParsers.dll'</Item>
+        </Issue>
+       </Message>
+      </Messages>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/Mp3MediaStreamSource/Bin/Debug/Mp3MediaStreamSource.dll">
+    <Modules>
+     <Module Name="mp3mediastreamsource.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2008-09-22 04:54:18Z">
+        <Issue Name="NoStrongName">
+         <Item>'Mp3MediaStreamSource.dll'</Item>
         </Issue>
        </Message>
       </Messages>
