@@ -129,7 +129,6 @@ namespace MediaParsers
             int value = BitTools.MaskBits(frameHeader, 0, 11);
             if (!(value == SyncValue))
             {
-                System.Console.WriteLine(value);
                 goto cleanup;
             }
 

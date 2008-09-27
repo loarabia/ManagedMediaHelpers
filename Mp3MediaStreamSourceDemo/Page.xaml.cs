@@ -22,13 +22,28 @@ namespace Mp3MediaStreamSourceDemo
     using System.Windows.Shapes;
     using Media;
 
+    /// <summary>
+    /// A Page of a Silvelight Application.
+    /// </summary>
     public partial class Page : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the Page class.
+        /// </summary>
         public Page()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Event handler for the Button on the Page.
+        /// </summary>
+        /// <param name="sender">
+        /// The button which was clicked.
+        /// </param>
+        /// <param name="e">
+        /// The state when this event was generated.
+        /// </param>
         private void OpenMedia(object sender, RoutedEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();

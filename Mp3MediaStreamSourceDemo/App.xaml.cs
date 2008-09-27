@@ -21,8 +21,14 @@ namespace Mp3MediaStreamSourceDemo
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
 
+    /// <summary>
+    /// A Silverlight Application 
+    /// </summary>
     public partial class App : Application
     {
+        /// <summary>
+        /// Initializes a new instance of the App class.
+        /// </summary>
         public App()
         {
             this.Startup += this.Application_Startup;
@@ -32,15 +38,42 @@ namespace Mp3MediaStreamSourceDemo
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Occurs when an application is started.
+        /// </summary>
+        /// <param name="sender">
+        /// Sender of the event.
+        /// </param>
+        /// <param name="e">
+        /// State when the event was generated.
+        /// </param>
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             this.RootVisual = new Page();
         }
 
+        /// <summary>
+        /// Occurs just before an application shuts down.
+        /// </summary>
+        /// <param name="sender">
+        /// Sender of the event.
+        /// </param>
+        /// <param name="e">
+        /// State when the event was generated.
+        /// </param>
         private void Application_Exit(object sender, EventArgs e)
         {
         }
 
+        /// <summary>
+        /// Handle exceptions not handled by the application.
+        /// </summary>
+        /// <param name="sender">
+        /// Sender of the event.
+        /// </param>
+        /// <param name="e">
+        /// State when the event was generated.
+        /// </param>
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
             // If the app is running outside of the debugger then report the exception using

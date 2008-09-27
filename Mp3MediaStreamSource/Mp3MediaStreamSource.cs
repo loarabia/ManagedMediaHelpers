@@ -25,44 +25,57 @@ namespace Media
     using MediaParsers;
 
     /// <summary>
-    /// TODO FILL ME IN LATER
+    /// A Simple MediaStreamSource which can play back MP3 streams from
+    /// beginning to end.
     /// </summary>
     public class Mp3MediaStreamSource : MediaStreamSource
     {
         /// <summary>
-        ///  TODO FILL ME IN LATER
+        ///  ID3 version 1 tags are 128 bytes at the end of the file.
+        ///  http://www.id3.org/ID3v1
         /// </summary>
         private const int Id3Version1TagSize = 128;
 
         /// <summary>
-        /// TODO FILL ME IN LATER
+        /// The Mp3 stream being played back.
         /// </summary>
         private Stream audioStream;
 
         /// <summary>
-        ///  TODO FILL ME IN LATER
+        /// Description of the Mp3 Stream being played back which includes the
+        /// MpegLayer3WaveFormat structure serialized out as a string of hex 
+        /// characters.
         /// </summary>
         private MediaStreamDescription audioStreamDescription;
 
         /// <summary>
-        ///  TODO FILL ME IN LATER
+        /// Part of a Temporary workaround for Silverlight 2 Beta 2. When
+        /// Silverlight calls into this class's implementation of OpenMediaAsync
+        /// the corresponding response, ReportOpenMediaCompleted, cannot be 
+        /// called synchronously and must be called after OpenMediaAsync 
+        /// completes. This timer's tick handler is set off after OpenMediaAsync
+        /// returns.
         /// </summary>
         private DispatcherTimer tempTimer;
 
         /// <summary>
-        ///  TODO FILL ME IN LATER
+        ///  The position in the stream where the current MpegFrame starts.
+        ///  For purposes of this code, the frame starts with the header and
+        ///  not after the header.
         /// </summary>
         private long currentFrameStartPosition;
 
         /// <summary>
-        ///  TODO FILL ME IN LATER
+        ///  The size of the MpegFrame in Bytes.
         /// </summary>
         private int currentFrameSize;
 
         /// <summary>
         ///  Initializes a new instance of the Mp3MediaStreamSource class.
         /// </summary>
-        /// <param name="audioStream"> TODO FILL ME IN LATERs</param>
+        /// <param name="audioStream">
+        /// Seekable stream containing Mp3 data
+        /// </param>
         public Mp3MediaStreamSource(Stream audioStream)
         {
             this.audioStream = audioStream;
@@ -74,7 +87,7 @@ namespace Media
         }
 
         /// <summary>
-        /// Gets TODO FILLE ME  IN LATER
+        /// Gets the MpegLayer3WaveFormat structure which represents this Mp3 file.
         /// </summary>
         public MpegLayer3WaveFormat MpegLayer3WaveFormat { get; private set; }
 
@@ -85,6 +98,8 @@ namespace Media
         /// </summary>
         protected override void OpenMediaAsync()
         {
+            // Workaround for Beta 2. This effectively calls directly to this._timer_Tick;
+            // After Beta 2, code from _timer_Tick() should be movable to here.
             this.tempTimer.Start();
         }
 
@@ -92,7 +107,9 @@ namespace Media
         /// Parses the next sample from the requested stream and then calls ReportGetSampleCompleted
         /// to inform its parent MediaElement of the next sample.
         /// </summary>
-        /// <param name="mediaStreamType"> TODO FILL ME IN LATER</param>
+        /// <param name="mediaStreamType">
+        /// Should always be Audio for this MediaStreamSource.
+        /// </param>
         protected override void GetSampleAsync(MediaStreamType mediaStreamType)
         {
             Dictionary<MediaSampleAttributeKeys, string> emptyDict = new Dictionary<MediaSampleAttributeKeys, string>();
@@ -100,6 +117,8 @@ namespace Media
 
             if (this.currentFrameStartPosition + this.currentFrameSize + Id3Version1TagSize >= this.audioStream.Length)
             {
+                // If you are near the end of the file, return a null stream, which
+                // tells the MediaStreamSource and MediaElement to close down.
                 audioSample = new MediaStreamSample(
                     this.audioStreamDescription,
                     null,
@@ -111,6 +130,8 @@ namespace Media
             }
             else
             {
+                // Common case. Return the next sample in the stream and find the
+                // one after it.
                 audioSample = new MediaStreamSample(
                     this.audioStreamDescription,
                     this.audioStream,
@@ -144,7 +165,7 @@ namespace Media
         ///  TODO FILL ME IN LATER
         /// </summary>
         /// <param name="diagnosticKind">
-        ///  TODO FILL ME IN LATERs
+        ///  TODO FILL ME IN LATER . . .
         /// </param>
         protected override void GetDiagnosticAsync(MediaStreamSourceDiagnosticKind diagnosticKind)
         {
@@ -152,10 +173,17 @@ namespace Media
         }
 
         /// <summary>
-        ///  TODO FILL ME IN LATER
+        /// <para>
+        /// Effectively a Null-Op for when a MediaElement requests a seek at the beginning
+        /// of the stream. This makes the stream semi-unseekable.
+        /// </para>
+        /// <para>
+        /// In a fuller MediaStreamSource, the logic here would be to actually seek to
+        /// the correct mpeg frame matching the seekToTime passed in.
+        /// </para>
         /// </summary>
         /// <param name="seekToTime">
-        ///  TODO FILL ME IN LATERs
+        ///  The time to seek to in nanosecond ticks.
         /// </param>
         protected override void SeekAsync(long seekToTime)
         {
@@ -166,7 +194,7 @@ namespace Media
         ///  TODO FILL ME IN LATER
         /// </summary>
         /// <param name="mediaStreamDescription">
-        ///  TODO FILL ME IN LATERs
+        ///  TODO FILL ME IN LATER . . .
         /// </param>
         protected override void SwitchMediaStreamAsync(MediaStreamDescription mediaStreamDescription)
         {
@@ -174,31 +202,42 @@ namespace Media
         }
 
         /// <summary>
-        ///  TODO FILL ME IN LATER
+        ///  Sets up a MediaStreamSource to use an Mp3 frame. Seeks into the file and builds
+        ///  up necessary metadata to initialize a MediaStreamSource to playback and Mp3 file.
         /// </summary>
-        /// <param name="sender">  TODO FILL ME IN LATERs</param>
-        /// <param name="e">  TODO FILL ME IN LATERss</param>
+        /// <param name="sender"> 
+        /// The DispatcherTimer which just Ticked
+        /// </param>
+        /// <param name="e">
+        /// The state during which this event occured. These event args have no state
+        /// for the tick event.
+        /// </param>
         private void _timer_Tick(object sender, EventArgs e)
         {
+            // Initialize data structures to pass to the Media pipeline via the MediaStreamSource
             Dictionary<MediaSourceAttributesKeys, string> mediaSourceAttributes = new Dictionary<MediaSourceAttributesKeys, string>();
             Dictionary<MediaStreamAttributeKeys, string> mediaStreamAttributes = new Dictionary<MediaStreamAttributeKeys, string>();
             List<MediaStreamDescription> mediaStreamDescriptions = new List<MediaStreamDescription>();
 
+            // Pull in the entire Audio stream.
             byte[] audioData = new byte[this.audioStream.Length];
             if (audioData.Length != this.audioStream.Read(audioData, 0, audioData.Length))
             {
                 throw new IOException("Could not read in the AudioStream");
             }
 
+            // Find the syncpoint of the first MpegFrame in the file.
             int result = BitTools.FindBitPattern(audioData, new byte[2] { 255, 240 }, new byte[2] { 255, 240 });
             this.audioStream.Position = result;
 
+            // Mp3 frame validity check.
             MpegFrame mpegLayer3Frame = new MpegFrame(this.audioStream);
             if (mpegLayer3Frame.FrameSize <= 0)
             {
                 throw new InvalidOperationException("MpegFrame's FrameSize cannot be negative");
             }
 
+            // Initialize the Mp3 data structures used by the Media pipeline with state from the first frame.
             WaveFormatExtensible wfx = new WaveFormatExtensible();
             this.MpegLayer3WaveFormat = new MpegLayer3WaveFormat();
             this.MpegLayer3WaveFormat.WaveFormatExtensible = wfx;
@@ -222,8 +261,12 @@ namespace Media
 
             mediaStreamDescriptions.Add(this.audioStreamDescription);
 
+            // Setting a 0 duration to avoid the math to calcualte the Mp3 file length in minutes and seconds.
+            // This was done just to simplify this initial version of the code for other people reading it.
             mediaSourceAttributes[MediaSourceAttributesKeys.Duration] = TimeSpan.FromMinutes(0).Ticks.ToString(CultureInfo.InvariantCulture);
 
+            // Report that the Mp3MediaStreamSource has finished initializing its internal state and can now
+            // pass in Mp3 Samples.
             this.ReportOpenMediaCompleted(mediaSourceAttributes, mediaStreamDescriptions);
 
             this.currentFrameStartPosition = result;
