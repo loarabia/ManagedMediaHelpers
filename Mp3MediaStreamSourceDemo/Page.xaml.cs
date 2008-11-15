@@ -49,7 +49,7 @@ namespace Mp3MediaStreamSourceDemo
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.ShowDialog();
 
-            Mp3MediaStreamSource mediaSource = new Mp3MediaStreamSource(ofd.SelectedFile.OpenRead());
+            Mp3MediaStreamSource mediaSource = new Mp3MediaStreamSource(ofd.File.OpenRead());
             me.SetSource(mediaSource);
         }
     }

@@ -49,16 +49,6 @@ namespace Media
         private MediaStreamDescription audioStreamDescription;
 
         /// <summary>
-        /// Part of a Temporary workaround for Silverlight 2 Beta 2. When
-        /// Silverlight calls into this class's implementation of OpenMediaAsync
-        /// the corresponding response, ReportOpenMediaCompleted, cannot be 
-        /// called synchronously and must be called after OpenMediaAsync 
-        /// completes. This timer's tick handler is set off after OpenMediaAsync
-        /// returns.
-        /// </summary>
-        private DispatcherTimer tempTimer;
-
-        /// <summary>
         ///  The position in the stream where the current MpegFrame starts.
         ///  For purposes of this code, the frame starts with the header and
         ///  not after the header.
@@ -79,11 +69,6 @@ namespace Media
         public Mp3MediaStreamSource(Stream audioStream)
         {
             this.audioStream = audioStream;
-
-            // Temporary Workaroud for Beta 2
-            this.tempTimer = new DispatcherTimer();
-            this.tempTimer.Interval = TimeSpan.FromMilliseconds(250);
-            this.tempTimer.Tick += new EventHandler(this._timer_Tick);
         }
 
         /// <summary>
@@ -98,9 +83,64 @@ namespace Media
         /// </summary>
         protected override void OpenMediaAsync()
         {
-            // Workaround for Beta 2. This effectively calls directly to this._timer_Tick;
-            // After Beta 2, code from _timer_Tick() should be movable to here.
-            this.tempTimer.Start();
+            // Initialize data structures to pass to the Media pipeline via the MediaStreamSource
+            Dictionary<MediaSourceAttributesKeys, string> mediaSourceAttributes = new Dictionary<MediaSourceAttributesKeys, string>();
+            Dictionary<MediaStreamAttributeKeys, string> mediaStreamAttributes = new Dictionary<MediaStreamAttributeKeys, string>();
+            List<MediaStreamDescription> mediaStreamDescriptions = new List<MediaStreamDescription>();
+
+            // Pull in the entire Audio stream.
+            byte[] audioData = new byte[this.audioStream.Length];
+            if (audioData.Length != this.audioStream.Read(audioData, 0, audioData.Length))
+            {
+                throw new IOException("Could not read in the AudioStream");
+            }
+
+            // Find the syncpoint of the first MpegFrame in the file.
+            int result = BitTools.FindBitPattern(audioData, new byte[2] { 255, 240 }, new byte[2] { 255, 240 });
+            this.audioStream.Position = result;
+
+            // Mp3 frame validity check.
+            MpegFrame mpegLayer3Frame = new MpegFrame(this.audioStream);
+            if (mpegLayer3Frame.FrameSize <= 0)
+            {
+                throw new InvalidOperationException("MpegFrame's FrameSize cannot be negative");
+            }
+
+            // Initialize the Mp3 data structures used by the Media pipeline with state from the first frame.
+            WaveFormatExtensible wfx = new WaveFormatExtensible();
+            this.MpegLayer3WaveFormat = new MpegLayer3WaveFormat();
+            this.MpegLayer3WaveFormat.WaveFormatExtensible = wfx;
+
+            this.MpegLayer3WaveFormat.WaveFormatExtensible.FormatTag = 85;
+            this.MpegLayer3WaveFormat.WaveFormatExtensible.Channels = (short)((mpegLayer3Frame.Channels == Channel.SingleChannel) ? 1 : 2);
+            this.MpegLayer3WaveFormat.WaveFormatExtensible.SamplesPerSec = mpegLayer3Frame.SamplingRate;
+            this.MpegLayer3WaveFormat.WaveFormatExtensible.AverageBytesPerSecond = mpegLayer3Frame.Bitrate / 8;
+            this.MpegLayer3WaveFormat.WaveFormatExtensible.BlockAlign = 1;
+            this.MpegLayer3WaveFormat.WaveFormatExtensible.BitsPerSample = 0;
+            this.MpegLayer3WaveFormat.WaveFormatExtensible.Size = 12;
+
+            this.MpegLayer3WaveFormat.Id = 1;
+            this.MpegLayer3WaveFormat.BitratePaddingMode = 0;
+            this.MpegLayer3WaveFormat.FramesPerBlock = 1;
+            this.MpegLayer3WaveFormat.BlockSize = (short)mpegLayer3Frame.FrameSize;
+            this.MpegLayer3WaveFormat.CodecDelay = 0;
+
+            mediaStreamAttributes[MediaStreamAttributeKeys.CodecPrivateData] = this.MpegLayer3WaveFormat.ToHexString();
+            this.audioStreamDescription = new MediaStreamDescription(MediaStreamType.Audio, mediaStreamAttributes);
+
+            mediaStreamDescriptions.Add(this.audioStreamDescription);
+
+            // Setting a 0 duration to avoid the math to calcualte the Mp3 file length in minutes and seconds.
+            // This was done just to simplify this initial version of the code for other people reading it.
+            mediaSourceAttributes[MediaSourceAttributesKeys.Duration] = TimeSpan.FromMinutes(5).Ticks.ToString(CultureInfo.InvariantCulture);
+            mediaSourceAttributes[MediaSourceAttributesKeys.CanSeek] = "0";
+
+            // Report that the Mp3MediaStreamSource has finished initializing its internal state and can now
+            // pass in Mp3 Samples.
+            this.ReportOpenMediaCompleted(mediaSourceAttributes, mediaStreamDescriptions);
+
+            this.currentFrameStartPosition = result;
+            this.currentFrameSize = mpegLayer3Frame.FrameSize;
         }
 
         /// <summary>
@@ -201,78 +241,5 @@ namespace Media
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        ///  Sets up a MediaStreamSource to use an Mp3 frame. Seeks into the file and builds
-        ///  up necessary metadata to initialize a MediaStreamSource to playback and Mp3 file.
-        /// </summary>
-        /// <param name="sender"> 
-        /// The DispatcherTimer which just Ticked
-        /// </param>
-        /// <param name="e">
-        /// The state during which this event occured. These event args have no state
-        /// for the tick event.
-        /// </param>
-        private void _timer_Tick(object sender, EventArgs e)
-        {
-            // Initialize data structures to pass to the Media pipeline via the MediaStreamSource
-            Dictionary<MediaSourceAttributesKeys, string> mediaSourceAttributes = new Dictionary<MediaSourceAttributesKeys, string>();
-            Dictionary<MediaStreamAttributeKeys, string> mediaStreamAttributes = new Dictionary<MediaStreamAttributeKeys, string>();
-            List<MediaStreamDescription> mediaStreamDescriptions = new List<MediaStreamDescription>();
-
-            // Pull in the entire Audio stream.
-            byte[] audioData = new byte[this.audioStream.Length];
-            if (audioData.Length != this.audioStream.Read(audioData, 0, audioData.Length))
-            {
-                throw new IOException("Could not read in the AudioStream");
-            }
-
-            // Find the syncpoint of the first MpegFrame in the file.
-            int result = BitTools.FindBitPattern(audioData, new byte[2] { 255, 240 }, new byte[2] { 255, 240 });
-            this.audioStream.Position = result;
-
-            // Mp3 frame validity check.
-            MpegFrame mpegLayer3Frame = new MpegFrame(this.audioStream);
-            if (mpegLayer3Frame.FrameSize <= 0)
-            {
-                throw new InvalidOperationException("MpegFrame's FrameSize cannot be negative");
-            }
-
-            // Initialize the Mp3 data structures used by the Media pipeline with state from the first frame.
-            WaveFormatExtensible wfx = new WaveFormatExtensible();
-            this.MpegLayer3WaveFormat = new MpegLayer3WaveFormat();
-            this.MpegLayer3WaveFormat.WaveFormatExtensible = wfx;
-
-            this.MpegLayer3WaveFormat.WaveFormatExtensible.FormatTag = 85;
-            this.MpegLayer3WaveFormat.WaveFormatExtensible.Channels = (short)((mpegLayer3Frame.Channels == Channel.SingleChannel) ? 1 : 2);
-            this.MpegLayer3WaveFormat.WaveFormatExtensible.SamplesPerSec = mpegLayer3Frame.SamplingRate;
-            this.MpegLayer3WaveFormat.WaveFormatExtensible.AverageBytesPerSecond = mpegLayer3Frame.Bitrate / 8;
-            this.MpegLayer3WaveFormat.WaveFormatExtensible.BlockAlign = 1;
-            this.MpegLayer3WaveFormat.WaveFormatExtensible.BitsPerSample = 0;
-            this.MpegLayer3WaveFormat.WaveFormatExtensible.Size = 12;
-
-            this.MpegLayer3WaveFormat.Id = 1;
-            this.MpegLayer3WaveFormat.BitratePaddingMode = 0;
-            this.MpegLayer3WaveFormat.FramesPerBlock = 1;
-            this.MpegLayer3WaveFormat.BlockSize = (short)mpegLayer3Frame.FrameSize;
-            this.MpegLayer3WaveFormat.CodecDelay = 0;
-
-            mediaStreamAttributes[MediaStreamAttributeKeys.CodecPrivateData] = this.MpegLayer3WaveFormat.ToHexString();
-            this.audioStreamDescription = new MediaStreamDescription(MediaStreamType.Audio, mediaStreamAttributes);
-
-            mediaStreamDescriptions.Add(this.audioStreamDescription);
-
-            // Setting a 0 duration to avoid the math to calcualte the Mp3 file length in minutes and seconds.
-            // This was done just to simplify this initial version of the code for other people reading it.
-            mediaSourceAttributes[MediaSourceAttributesKeys.Duration] = TimeSpan.FromMinutes(0).Ticks.ToString(CultureInfo.InvariantCulture);
-
-            // Report that the Mp3MediaStreamSource has finished initializing its internal state and can now
-            // pass in Mp3 Samples.
-            this.ReportOpenMediaCompleted(mediaSourceAttributes, mediaStreamDescriptions);
-
-            this.currentFrameStartPosition = result;
-            this.currentFrameSize = mpegLayer3Frame.FrameSize;
-
-            this.tempTimer.Stop();
-        }
     }
 }
