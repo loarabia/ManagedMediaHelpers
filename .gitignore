@@ -1,5 +1,4 @@
 #use glob syntax.
-syntax: glob
 TestResults\*
 *\Bin\*
 *\ClientBin\*.xap
