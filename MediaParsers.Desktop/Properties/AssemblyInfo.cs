@@ -13,11 +13,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MediaParsersTests")]
+[assembly: AssemblyTitle("MediaParsers.Desktop")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("LarryOlson")]
-[assembly: AssemblyProduct("MediaParsersTests")]
+[assembly: AssemblyProduct("MediaParsers.Desktop")]
 [assembly: AssemblyCopyright("Copyright © Microsoft 2008-2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -28,7 +28,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("728990da-b7ec-47d4-ada7-5a49f2ef2ee0")]
+[assembly: Guid("40ef61b8-8c0a-49fe-af17-2c957bcaf60a")]
 
 // Version information for an assembly consists of the following four values:
 //

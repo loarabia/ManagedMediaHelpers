@@ -6,25 +6,17 @@
 // All other rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using NUnit.Framework;
-using ExtensionMethods;
-
 namespace MediaParsersTests
 {
-    [TestFixture]
+    using System;
+    using System.Net;
+    using ExtensionMethods;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    [TestClass]
     public class StringExtensionTests
     {
-        [Test]
+        [TestMethod]
         public void BasicTest()
         {
             string s = "DEADBEEF";
@@ -32,7 +24,7 @@ namespace MediaParsersTests
             Assert.AreEqual("EFBEADDE", result);
         }
 
-        [Test]
+        [TestMethod]
         public void EmptyInput()
         {
             string s = string.Empty;
@@ -40,16 +32,16 @@ namespace MediaParsersTests
             Assert.AreEqual(string.Empty, result);
         }
 
-        [Test]
+        [TestMethod]
         public void SmallestValidInput()
         {
-            //No-op.
+            // No-op.
             string s = "AB";
             string result = s.ToLittleEndian();
             Assert.AreEqual(s, result);
         }
 
-        [Test]
+        [TestMethod]
         public void OddLengthInput()
         {
             string s = "ABC";
@@ -57,19 +49,19 @@ namespace MediaParsersTests
             Assert.AreEqual(string.Empty, result);
         }
 
-        [Test, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void NullInput()
         {
             string s = null;
             string result = s.ToLittleEndian();
         }
 
-        [Test]
+        [TestMethod]
         public void NonHexInput()
         {
             string s = "WXYZABCD";
             string result = s.ToLittleEndian();
-            Assert.Ignore("Not a bug in the code but a place to add robustness checks");
+            ////Assert.Inconclusive("Not a bug in the code but a place to add robustness checks");
             ////Assert.AreEqual(string.Empty, result);
         }
     }

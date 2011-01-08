@@ -6,102 +6,112 @@
 // All other rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using NUnit.Framework;
-using MediaParsers;
-using System.IO;
-
 namespace MediaParsersTests
 {
-    [TestFixture]
-    public class MpegFrameTests
-    {
+    using System;
+    using System.IO;
+    using System.Net;
+    using MediaParsers;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    [TestClass]
+    public class MpegFrameTests : IDisposable
+    {
         private Stream s = new MemoryStream(new byte[4] { 255, 251, 50, 0 });
         private MpegFrame mf;
 
-        [SetUp]
+        [TestInitialize]
         public void Setup()
         {
-            s.Position = 0;
-            mf = new MpegFrame(s);
+            this.s.Position = 0;
+            this.mf = new MpegFrame(this.s);
         }
 
-        [Test]
+        [TestMethod]
         public void Version()
         {
-            Assert.AreEqual(1, mf.Version);
+            Assert.AreEqual(1, this.mf.Version);
         }
 
-        [Test]
+        [TestMethod]
         public void Layer()
         {
-            Assert.AreEqual(3, mf.Layer);
+            Assert.AreEqual(3, this.mf.Layer);
         }
 
-        [Test]
+        [TestMethod]
         public void IsProtected()
         {
-            Assert.AreEqual(false ,mf.IsProtected);
+            Assert.AreEqual(false, this.mf.IsProtected);
         }
 
-        [Test]
+        [TestMethod]
         public void BitRateIndex()
         {
-            Assert.AreEqual(3, mf.BitrateIndex);
+            Assert.AreEqual(3, this.mf.BitrateIndex);
         }
 
-        [Test]
+        [TestMethod]
         public void SamplingrateIndex()
         {
-            Assert.AreEqual(0, mf.SamplingRateIndex);
+            Assert.AreEqual(0, this.mf.SamplingRateIndex);
         }
 
-        [Test]
+        [TestMethod]
         public void Padding()
         {
-            Assert.AreEqual(1 ,mf.Padding);
+            Assert.AreEqual(1, this.mf.Padding);
         }
 
-        [Test]
+        [TestMethod]
         public void Channels()
         {
-            Assert.AreEqual(Channel.Stereo, mf.Channels);
+            Assert.AreEqual(Channel.Stereo, this.mf.Channels);
         }
 
-        [Test]
+        [TestMethod]
         public void Bitrate()
         {
-            Assert.AreEqual(48000,mf.Bitrate);
+            Assert.AreEqual(48000, this.mf.Bitrate);
         }
 
-        [Test]
+        [TestMethod]
         public void SamplingRate()
         {
-            Assert.AreEqual(44100,mf.SamplingRate);
+            Assert.AreEqual(44100, this.mf.SamplingRate);
         }
 
-        [Test]
+        [TestMethod]
         public void FrameSize()
         {
-            Assert.AreEqual(157,mf.FrameSize);
+            Assert.AreEqual(157, this.mf.FrameSize);
         }
 
-        [Test]
+        [TestMethod]
         public void ToStringTest()
         {
             Assert.AreEqual(
                 "FrameSize\t157\nBitRate\t48000\nSamplingRate44100\n",
-                mf.ToString());
+                this.mf.ToString());
         }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.mf = null;
+            }
+
+            this.s.Close();
+        }
+        #endregion
     }
 }

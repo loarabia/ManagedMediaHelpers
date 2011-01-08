@@ -16,9 +16,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Mp3MediaStreamSourceDemo")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("LarryOlson")]
 [assembly: AssemblyProduct("Mp3MediaStreamSourceDemo")]
-[assembly: AssemblyCopyright("Copyright © Larry Olson 2008")]
+[assembly: AssemblyCopyright("Copyright © Larry Olson 2008-2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -28,7 +28,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("2dc5ecb4-82e7-4b92-afb8-d1427f6050b5")]
+[assembly: Guid("665d6d11-7180-47de-9a7f-00d0b43e04c2")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -39,5 +39,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.1.0")]
-[assembly: AssemblyFileVersion("1.1.0")]
+[assembly: AssemblyVersion("1.1.1.0")]
+[assembly: AssemblyFileVersion("1.1.1.0")]

@@ -6,30 +6,22 @@
 // All other rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using NUnit.Framework;
-using MediaParsers;
-
 namespace MediaParsersTests.BitToolsTests
 {
-    [TestFixture]
+    using System;
+    using System.Net;
+    using MediaParsers;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    [TestClass]
     public class FindBytePatternTests
     {
-        byte[] dataArray;
+        private byte[] dataArray;
 
-        [SetUp]
+        [TestInitialize]
         public void Setup()
         {
-            dataArray = new byte[20]
+           this.dataArray = new byte[20]
             {
                 128, 56, 255, 33, 0,
                 48, 101, 45, 97, 1,
@@ -38,97 +30,97 @@ namespace MediaParsersTests.BitToolsTests
             };
         }
 
-        [Test, ExpectedException(typeof(ArgumentNullException))]
+        [TestMethod, ExpectedException(typeof(ArgumentNullException))]
         public void DataNull()
         {
-            dataArray = null;
-            byte[] pattern = new byte[4] { 53, 28, 58, 45};
-            BitTools.FindBytePattern(dataArray, pattern);
+           this.dataArray = null;
+            byte[] pattern = new byte[4] { 53, 28, 58, 45 };
+            BitTools.FindBytePattern(this.dataArray, pattern);
         }
 
-        [Test, ExpectedException(typeof(ArgumentNullException))]
+        [TestMethod, ExpectedException(typeof(ArgumentNullException))]
         public void PatternNull()
         {
             byte[] pattern = new byte[4] { 53, 28, 58, 45 };
-            BitTools.FindBytePattern(dataArray, null);
+            BitTools.FindBytePattern(this.dataArray, null);
         }
 
-        [Test]
+        [TestMethod]
         public void Simple()
         {
             byte[] pattern = new byte[4] { 53, 28, 58, 45 };
-            int result = BitTools.FindBytePattern(dataArray, pattern);
-            Assert.AreEqual(11,result);
+            int result = BitTools.FindBytePattern(this.dataArray, pattern);
+            Assert.AreEqual(11, result);
 
             pattern = new byte[5] { 53, 28, 58, 45, 7 };
-            BitTools.FindBytePattern(dataArray, pattern);
+            BitTools.FindBytePattern(this.dataArray, pattern);
             Assert.AreEqual(11, result);
         }
 
-        [Test]
+        [TestMethod]
         public void PatternMatchAtBeginning()
         {
             byte[] pattern = new byte[1] { 128 };
-            int result = BitTools.FindBytePattern(dataArray, pattern);
+            int result = BitTools.FindBytePattern(this.dataArray, pattern);
             Assert.AreEqual(0, result);
         }
 
-        [Test]
+        [TestMethod]
         public void PatternMatchAtEnd()
         {
             byte[] pattern = new byte[1] { 109 };
-            int result = BitTools.FindBytePattern(dataArray, pattern);
+            int result = BitTools.FindBytePattern(this.dataArray, pattern);
             Assert.AreEqual(19, result);
         }
 
-        [Test]
+        [TestMethod]
         public void PatrialMatchAtEnd()
         {
             byte[] pattern = new byte[4] { 79, 109, 1, 2 };
-            int result = BitTools.FindBytePattern(dataArray, pattern);
+            int result = BitTools.FindBytePattern(this.dataArray, pattern);
             Assert.AreEqual(-1, result);
         }
 
-        [Test]
+        [TestMethod]
         public void PatternLargerThanData()
         {
             byte[] pattern = new byte[4] { 79, 109, 1, 2 };
             byte[] data = new byte[3] { 79, 109, 1 };
-            int result = BitTools.FindBytePattern(dataArray, pattern);
+            int result = BitTools.FindBytePattern(this.dataArray, pattern);
             Assert.AreEqual(-1, result);
         }
 
-        [Test]
+        [TestMethod]
         public void PatternSameSizeAsArray()
         {
-            int result = BitTools.FindBytePattern(dataArray, dataArray);
+            int result = BitTools.FindBytePattern(this.dataArray, this.dataArray);
             Assert.AreEqual(0, result);
         }
 
-        [Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void StartIndexTooSmall()
         {
-            byte[] pattern = new byte[1]{128};
-            BitTools.FindBytePattern(dataArray, pattern, -1);
+            byte[] pattern = new byte[1] { 128 };
+            BitTools.FindBytePattern(this.dataArray, pattern, -1);
         }
 
-        [Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void StartIndexTooLarge()
         {
             byte[] pattern = new byte[1] { 128 };
-            BitTools.FindBytePattern(dataArray, pattern, dataArray.Length);
+            BitTools.FindBytePattern(this.dataArray, pattern, this.dataArray.Length);
         }
 
-        [Test]
+        [TestMethod]
         public void SearchLaterInArray()
         {
-            dataArray = new byte[4] { 128, 4, 128, 128 };
+           this.dataArray = new byte[4] { 128, 4, 128, 128 };
             byte[] pattern = new byte[1] { 128 };
 
-            int result = BitTools.FindBytePattern(dataArray, pattern, 1);
+            int result = BitTools.FindBytePattern(this.dataArray, pattern, 1);
             Assert.AreEqual(2, result);
 
-            result = BitTools.FindBytePattern(dataArray, pattern, 3);
+            result = BitTools.FindBytePattern(this.dataArray, pattern, 3);
             Assert.AreEqual(3, result);
         }
     }

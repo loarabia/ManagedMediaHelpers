@@ -6,40 +6,32 @@
 // All other rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using NUnit.Framework;
-using MediaParsers;
-
 namespace MediaParsersTests
 {
-    [TestFixture]
+    using System;
+    using System.Net;
+    using MediaParsers;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    [TestClass]
     public class WaveFormatExtensibleTests
     {
         private WaveFormatExtensible wfx;
 
-        [SetUp]
+        [TestInitialize]
         public void SetupTests()
         {
-            wfx = new WaveFormatExtensible();
+            this.wfx = new WaveFormatExtensible();
         }
 
-        [Test]
+        [TestMethod]
         public void FormatTagTest()
         {
-            wfx.FormatTag = 1;
-            Assert.AreEqual(1, wfx.FormatTag);   
+            this.wfx.FormatTag = 1;
+            Assert.AreEqual(1, this.wfx.FormatTag);   
         }
 
-        [Test]
+        [TestMethod]
         public void FormatTagMaximumValueTest()
         {
             /* 
@@ -51,10 +43,10 @@ namespace MediaParsersTests
              * 
              * Clamp or throw
              */
-            Assert.Ignore();
+            ////Assert.Inconclusive();
         }
 
-        [Test]
+        [TestMethod]
         public void FormatTagMinimumValueTest()
         {
             /*  
@@ -66,20 +58,20 @@ namespace MediaParsersTests
              * Clamp or throw
              */
             //// wfx.FormatTag = -1;
-            Assert.Ignore();
+            ////Assert.Inconclusive();
         }
 
-        [Test]
+        [TestMethod]
         public void ChannelsTest()
         {
-            wfx.Channels = 1;
-            Assert.AreEqual(1, wfx.Channels);
+            this.wfx.Channels = 1;
+            Assert.AreEqual(1, this.wfx.Channels);
             
-            wfx.Channels = 2;
-            Assert.AreEqual(2, wfx.Channels);
+            this.wfx.Channels = 2;
+            Assert.AreEqual(2, this.wfx.Channels);
         }
 
-        [Test]
+        [TestMethod]
         public void ChannelsMaximumValueTest()
         {
             /*  
@@ -91,10 +83,10 @@ namespace MediaParsersTests
              * Clamp or throw
              */
             ////wfx.Channels = 3;
-            Assert.Ignore();
+            ////Assert.Inconclusive();
         }
 
-        [Test]
+        [TestMethod]
         public void ChannelsMinimumValueTest()
         {
             /*  
@@ -106,17 +98,17 @@ namespace MediaParsersTests
              * Clamp or throw
              */
             ////wfx.Channels = 0;
-            Assert.Ignore();
+            ////Assert.Inconclusive();
         }
 
-        [Test]
+        [TestMethod]
         public void SamplesPerSecTest()
         {
-            wfx.SamplesPerSec = 1000;
-            Assert.AreEqual(1000, wfx.SamplesPerSec);
+            this.wfx.SamplesPerSec = 1000;
+            Assert.AreEqual(1000, this.wfx.SamplesPerSec);
         }
 
-        [Test]
+        [TestMethod]
         public void SamplesPerSecMinimumValueTest()
         {
             /*  
@@ -128,17 +120,17 @@ namespace MediaParsersTests
              * Clamp or throw
              */
              //// wfx.SamplesPerSec = -1;
-             Assert.Ignore();
+             ////Assert.Inconclusive();
         }
 
-        [Test]
+        [TestMethod]
         public void AverageBytesPerSecondTest()
         {
-            wfx.AverageBytesPerSecond = 1000;
-            Assert.AreEqual(1000, wfx.AverageBytesPerSecond);
+            this.wfx.AverageBytesPerSecond = 1000;
+            Assert.AreEqual(1000, this.wfx.AverageBytesPerSecond);
         }
 
-        [Test]
+        [TestMethod]
         public void AverageBytesPerSecondMinimumValueTest()
         {
             /*  
@@ -150,17 +142,17 @@ namespace MediaParsersTests
              * Clamp or throw
              */
             //// wfx.AverageBytesPerSecond = -1;
-            Assert.Ignore();
+            ////Assert.Inconclusive();
         }
 
-        [Test]
+        [TestMethod]
         public void BlockAlignTest()
         {
-            wfx.BlockAlign = 1000;
-            Assert.AreEqual(1000, wfx.BlockAlign);
+            this.wfx.BlockAlign = 1000;
+            Assert.AreEqual(1000, this.wfx.BlockAlign);
         }
 
-        [Test]
+        [TestMethod]
         public void BlockAlignMinimumValueTest()
         {
             /*  
@@ -172,17 +164,17 @@ namespace MediaParsersTests
              * Clamp or throw
              */
             //// wfx.BlockAlign = -1;
-            Assert.Ignore();
+            ////Assert.Inconclusive();
         }
 
-        [Test]
+        [TestMethod]
         public void BitsPerSampleTest()
         {
-            wfx.BitsPerSample = 16;
-            Assert.AreEqual(16, wfx.BitsPerSample);
+            this.wfx.BitsPerSample = 16;
+            Assert.AreEqual(16, this.wfx.BitsPerSample);
         }
 
-        [Test]
+        [TestMethod]
         public void BitsPerSampleMinimumValueTest()
         {
             /*  
@@ -194,17 +186,17 @@ namespace MediaParsersTests
              * Clamp or throw
              */
             //// wfx.BitsPerSample = 0;
-            Assert.Ignore();
+            ////Assert.Inconclusive();
         }
 
-        [Test]
+        [TestMethod]
         public void SizeTest()
         {
-            wfx.Size = 12;
-            Assert.AreEqual(12, wfx.Size);
+            this.wfx.Size = 12;
+            Assert.AreEqual(12, this.wfx.Size);
         }
 
-        [Test]
+        [TestMethod]
         public void SizeMinimumValueTest()
         {
             /*  
@@ -216,10 +208,10 @@ namespace MediaParsersTests
              * Clamp or throw
              */
             //// wfx.Size = -1;
-            Assert.Ignore();
+            ////Assert.Inconclusive();
         }
 
-        [Test]
+        [TestMethod]
         public void WaveFormatExtensibleCoherencyTests()
         {
             /*
@@ -233,38 +225,37 @@ namespace MediaParsersTests
              * See the documentation for WAVEFORMATEX on msdn
              * http://msdn.microsoft.com/en-us/library/ms713497.aspx
              */
-            Assert.Ignore();
+            ////Assert.Inconclusive();
         }
 
-        [Test]
+        [TestMethod]
         public void ToHexStringTest()
         {
-            wfx.FormatTag = 85;
-            wfx.Channels = 2;
-            wfx.SamplesPerSec = 8000;
-            wfx.AverageBytesPerSecond = 500;
-            wfx.BlockAlign = 1;
-            wfx.BitsPerSample = 16;
-            wfx.Size = 12;
+            this.wfx.FormatTag = 85;
+            this.wfx.Channels = 2;
+            this.wfx.SamplesPerSec = 8000;
+            this.wfx.AverageBytesPerSecond = 500;
+            this.wfx.BlockAlign = 1;
+            this.wfx.BitsPerSample = 16;
+            this.wfx.Size = 12;
 
-            string s = wfx.ToHexString();
+            string s = this.wfx.ToHexString();
             string expectedResult = "55000200401F0000F4010000010010000C00";
             Assert.AreEqual(expectedResult, s);
         }
 
-
-        [Test]
+        [TestMethod]
         public void ToStringTest()
         {
-            wfx.FormatTag = 85;
-            wfx.Channels = 2;
-            wfx.SamplesPerSec = 8000;
-            wfx.AverageBytesPerSecond = 500;
-            wfx.BlockAlign = 1;
-            wfx.BitsPerSample = 16;
-            wfx.Size = 12;
+            this.wfx.FormatTag = 85;
+            this.wfx.Channels = 2;
+            this.wfx.SamplesPerSec = 8000;
+            this.wfx.AverageBytesPerSecond = 500;
+            this.wfx.BlockAlign = 1;
+            this.wfx.BitsPerSample = 16;
+            this.wfx.Size = 12;
 
-            string s = wfx.ToString();
+            string s = this.wfx.ToString();
             string expectedResult = "WAVEFORMATEX FormatTag: 85, Channels: 2, SamplesPerSec: 8000, AvgBytesPerSec: 500, BlockAlign: 1, BitsPerSample: 16, Size: 12 ";
             Assert.AreEqual(expectedResult, s);
         }

@@ -6,33 +6,24 @@
 // All other rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using NUnit.Framework;
-using MediaParsers;
-
 namespace MediaParsersTests.BitToolsTests
 {
-    [TestFixture]
+    using System;
+    using System.Net;
+    using MediaParsers;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    [TestClass]
     public class FindBitPatternTests
     {
+        private byte[] dataArray;
+        private byte[] mask;
+        private byte[] pattern;
 
-        byte[] dataArray;
-        byte[] mask;
-        byte[] pattern;
-
-        [SetUp]
+        [TestInitialize]
         public void Setup()
         {
-            dataArray = new byte[20]
+           this.dataArray = new byte[20]
             {
                 128, 56, 255, 33, 0,
                 48, 101, 45, 97, 1,
@@ -41,130 +32,134 @@ namespace MediaParsersTests.BitToolsTests
             };
         }
 
-        [Test, ExpectedException(typeof(ArgumentNullException))]
+        [TestMethod, ExpectedException(typeof(ArgumentNullException))]
         public void DataNull()
         {
-            pattern = new byte[4] { 10, 10, 10, 10 };
-            mask = new byte[4] { 10, 10, 10, 10 };
-            BitTools.FindBitPattern(null, pattern, mask);
+            this.pattern = new byte[4] { 10, 10, 10, 10 };
+            this.mask = new byte[4] { 10, 10, 10, 10 };
+            BitTools.FindBitPattern(null, this.pattern, this.mask);
         }
 
-        [Test, ExpectedException(typeof(ArgumentNullException))]
+        [TestMethod, ExpectedException(typeof(ArgumentNullException))]
         public void PatternNull()
         {
-            BitTools.FindBitPattern(dataArray, null, mask);
+            BitTools.FindBitPattern(this.dataArray, null, this.mask);
         }
 
-        [Test, ExpectedException(typeof(ArgumentNullException))]
+        [TestMethod, ExpectedException(typeof(ArgumentNullException))]
         public void MaskNull()
         {
-            BitTools.FindBitPattern(dataArray, pattern, null);
+            BitTools.FindBitPattern(this.dataArray, this.pattern, null);
         }
 
-        [Test]
+        [TestMethod]
         public void MaskAndPatternAreDifferentSizes()
         {
-            mask = new byte[4] {128, 128, 128, 128 };
-            pattern = new byte[3] { 36, 0, 72 };
-            int result = BitTools.FindBitPattern(dataArray, pattern, mask);
+            this.mask = new byte[4] { 128, 128, 128, 128 };
+            this.pattern = new byte[3] { 36, 0, 72 };
+            int result = BitTools.FindBitPattern(this.dataArray, this.pattern, this.mask);
             Assert.AreEqual(-1, result);
 
-            pattern = new byte[5] { 7, 9, 25, 79, 109 };
-            result = BitTools.FindBitPattern(dataArray, pattern, mask);
+            this.pattern = new byte[5] { 7, 9, 25, 79, 109 };
+            result = BitTools.FindBitPattern(this.dataArray, this.pattern, this.mask);
             Assert.AreEqual(-1, result);
         }
 
-        [Test]
+        [TestMethod]
         public void PatternLargerThanData()
         {
-            dataArray = new byte[5] { 1, 2, 3, 4, 5 };
-            mask = new byte[6] { 128, 128, 128, 128, 128, 128 };
-            pattern = new byte[6] { 1, 2, 3, 4, 5, 6 };
-            int result = BitTools.FindBitPattern(dataArray, pattern, mask);
+            this.dataArray = new byte[5] { 1, 2, 3, 4, 5 };
+            this.mask = new byte[6] { 128, 128, 128, 128, 128, 128 };
+            this.pattern = new byte[6] { 1, 2, 3, 4, 5, 6 };
+            int result = BitTools.FindBitPattern(this.dataArray, this.pattern, this.mask);
             Assert.AreEqual(-1, result);
         }
 
-        [Test]
+        [TestMethod]
         public void EmptyPattern()
         {
-            mask = new byte[4]{128, 128, 128, 128};
-            int result = BitTools.FindBitPattern(dataArray, new byte[0] { }, mask);
+            this.mask = new byte[4] { 128, 128, 128, 128 };
+            int result = BitTools.FindBitPattern(this.dataArray, new byte[0] { }, this.mask);
             Assert.AreEqual(-1, result);
         }
 
-        [Test]
+        [TestMethod]
         public void EmptyData()
         {
-            mask = new byte[4] { 128, 128, 128, 128 };
-            pattern = new byte[4] { 128, 128, 128, 128 };
-            int result = BitTools.FindBitPattern(new byte[0] { },pattern, mask);
+            this.mask = new byte[4] { 128, 128, 128, 128 };
+            this.pattern = new byte[4] { 128, 128, 128, 128 };
+            int result = BitTools.FindBitPattern(new byte[0] { }, this.pattern, this.mask);
             Assert.AreEqual(-1, result);
         }
 
-        [Test]
+        [TestMethod]
         public void EmptyMask()
         {
-            pattern = new byte[4] { 128, 128, 128, 128 };
-            int result = BitTools.FindBitPattern(dataArray, pattern, new byte[0] { });
+            this.pattern = new byte[4] { 128, 128, 128, 128 };
+            int result = BitTools.FindBitPattern(this.dataArray, this.pattern, new byte[0] { });
             Assert.AreEqual(-1, result);
         }
 
-        [Test]
+        [TestMethod]
         public void PatternIsData()
         {
-            dataArray = new byte[4] { 1, 2, 3, 4 };
-            mask = new byte[4] { 255, 255, 255, 255 };
-            pattern = new byte[4] { 1, 2, 3, 4 };
-            int result = BitTools.FindBitPattern(dataArray, pattern, mask);
+            this.dataArray = new byte[4] { 1, 2, 3, 4 };
+            this.mask = new byte[4] { 255, 255, 255, 255 };
+            this.pattern = new byte[4] { 1, 2, 3, 4 };
+            int result = BitTools.FindBitPattern(this.dataArray, this.pattern, this.mask);
             Assert.AreEqual(0, result);
         }
 
-        [Test]
+        [TestMethod]
         public void PatternAtEnd()
         {
-            mask = new byte[1] { 255 };
-            pattern = new byte[1] { 109 };
-            int result = BitTools.FindBitPattern(dataArray, pattern, mask);
+            this.mask = new byte[1] { 255 };
+            this.pattern = new byte[1] { 109 };
+            int result = BitTools.FindBitPattern(this.dataArray, this.pattern, this.mask);
             Assert.AreEqual(19, result);
         }
 
-        [Test]
+        [TestMethod]
         public void PatternAtBeginning()
         {
-            mask = new byte[1] { 255 };
-            pattern = new byte[1] { 128 };
-            int result = BitTools.FindBitPattern(dataArray, pattern, mask);
+            this.mask = new byte[1] { 255 };
+            this.pattern = new byte[1] { 128 };
+            int result = BitTools.FindBitPattern(this.dataArray, this.pattern, this.mask);
             Assert.AreEqual(0, result);
         }
 
-        [Test]
+        [TestMethod]
         public void PatternCrossingByteBoundary()
         {
-            pattern = new byte[3] { 0, 24, 240 };
-            mask = new byte[3] { 15, 223, 240 };
-            int result = BitTools.FindBitPattern(dataArray, pattern, mask);
+            this.pattern = new byte[3] { 0, 24, 240 };
+            this.mask = new byte[3] { 15, 223, 240 };
+            int result = BitTools.FindBitPattern(this.dataArray, this.pattern, this.mask);
             Assert.AreEqual(0, result);
         }
 
-        [Test,ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void StartIndexTooSmall()
         {
-            BitTools.FindBitPattern(dataArray, pattern, mask, -1);
+            this.pattern = new byte[1] { 128 };
+            this.mask = new byte[1] { 1 };
+            BitTools.FindBitPattern(this.dataArray, this.pattern, this.mask, -1);
         }
 
-        [Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void StartIndexTooLarge()
         {
-            BitTools.FindBitPattern(dataArray, pattern, mask, dataArray.Length);
+            this.pattern = new byte[1] { 128 };
+            this.mask = new byte[1] { 1 };
+            BitTools.FindBitPattern(this.dataArray, this.pattern, this.mask, this.dataArray.Length);
         }
 
-        [Test]
+        [TestMethod]
         public void SearchLaterInArray()
         {
-            int result = BitTools.FindBitPattern(dataArray, new byte[1] { 1 }, new byte[1] { 1 }, 7);
+            int result = BitTools.FindBitPattern(this.dataArray, new byte[1] { 1 }, new byte[1] { 1 }, 7);
             Assert.AreEqual(7, result);
 
-            result = BitTools.FindBitPattern(dataArray, new byte[1] { 1 }, new byte[1] { 1 }, 13);
+            result = BitTools.FindBitPattern(this.dataArray, new byte[1] { 1 }, new byte[1] { 1 }, 13);
             Assert.AreEqual(14, result);
         }
     }

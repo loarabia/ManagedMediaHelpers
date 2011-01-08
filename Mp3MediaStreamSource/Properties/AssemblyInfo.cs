@@ -6,8 +6,6 @@
 // All other rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -18,9 +16,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Mp3MediaStreamSource")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("LarryOlson")]
 [assembly: AssemblyProduct("Mp3MediaStreamSource")]
-[assembly: AssemblyCopyright("Copyright © Larry Olson 2008")]
+[assembly: AssemblyCopyright("Copyright © Larry Olson 2008-2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -30,7 +28,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1ffc30e6-cd45-4cc3-a262-03fe1ee87bc7")]
+[assembly: Guid("d75f85a5-288c-43d0-88ec-84c25a7a6b37")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -41,12 +39,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.1.0")]
-[assembly: AssemblyFileVersion("1.1.0")]
-
-[assembly: CLSCompliantAttribute(false)]
-
-[module: SuppressMessage("Microsoft.Naming",
-    "CA1709:IdentifiersShouldBeCasedCorrectly",
-    MessageId = "Mp",
-    Justification = "Mp is not a two letter acyonym but is instead part of Mp3")]
+[assembly: AssemblyVersion("1.1.1.0")]
+[assembly: AssemblyFileVersion("1.1.1.0")]
