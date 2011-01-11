@@ -14,7 +14,7 @@
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming",
     "CA1709:IdentifiersShouldBeCasedCorrectly",
     Scope = "type",
-    Target = "Rdio.Player.StreamSource.Mp3MediaStreamSource",
+    Target = "Media.Mp3MediaStreamSource",
     MessageId = "Mp",
     Justification = "Mp is not a two letter acyonym but is instead part of Mp3")]
 
@@ -22,16 +22,13 @@
  * Presents a byte stream as mp3 frames for the Media Element.  
  * Based on ManagedMediaHelpers code sample from http://code.msdn.microsoft.com/ManagedMediaHelpers/
  * 
- * Tweaked to work on WinPho. Changes include BitTools.ToLittleEndianString and setting the duration properly based
- * on bit rate & content length.  Also added support for non-seekable content and to be more memory-efficient
+ * Tweaked to work on WinPho. Changes include BitTools.ToLittleEndianString
+ * and setting the duration properly based on bit rate & content length.
+ * Also added support for non-seekable content and to be more memory-efficient
  * to avoid copying the entire audio stream's data into memory.
- * 
- * NOTE:
- *   - Does not support seeking yet
- *   - Needs some extra buffering logic
  */
 
-namespace Rdio.Player.StreamSource
+namespace Media
 {
     using System;
     using System.Collections.Generic;
@@ -40,7 +37,6 @@ namespace Rdio.Player.StreamSource
     using System.Windows.Media;
     using System.Windows.Threading;
     using System.Diagnostics;
-    using Rdio.Util;
     using System.Security.Cryptography;
 
     /// <summary>
@@ -49,8 +45,6 @@ namespace Rdio.Player.StreamSource
     /// </summary>
     public class Mp3MediaStreamSource : MediaStreamSource
     {
-        private const String TAG = "Mp3MediaStreamSource";
-
         /// <summary>
         ///  ID3 version 1 tags are 128 bytes at the end of the file.
         ///  http://www.id3.org/ID3v1
@@ -209,7 +203,7 @@ namespace Rdio.Player.StreamSource
                 int c = this.audioStream.Read(buffer, MpegFrame.FrameHeaderSize, audioSampleSize);
                 if (c != audioSampleSize)
                 {
-                    Log.Error(TAG, "Ran out of bytes trying to read MP3 frame.  Audio sample size was: " + audioSampleSize + ", actual bytes read: " + c);
+                    // Ran out of bytes trying to read MP3 frame.
                     this.currentFrame = null;
                     audioSample = new MediaStreamSample(this.audioStreamDescription, null, 0, 0, 0, emptyDict);
                     this.ReportGetSampleCompleted(audioSample);
@@ -254,11 +248,13 @@ namespace Rdio.Player.StreamSource
             }
             catch (CryptographicException)
             {
-                // Ignore these, they are thrown when abruptly closing a stream (i.e. skipping tracks)
+                // Ignore these, they are thrown when abruptly closing a
+                // stream (i.e. skipping tracks) where the source is a
+                // CryptoStream
             }
             catch (Exception e)
             {
-                Log.Error(TAG, "Got exception closing stream: ", e);
+                // Should probably log these somewhere
             }
         }
 

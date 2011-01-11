@@ -11,17 +11,17 @@
 
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional",
     Scope = "member",
-    Target = "Rdio.Player.StreamSource.MpegFrame.#bitrateTable",
+    Target = "MediaParsers.MpegFrame.#bitrateTable",
     MessageId = "Member",
     Justification = "Array is not Jagged and does not waste space.")]
 
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional",
     Scope = "member",
-    Target = "Rdio.Player.StreamSource.MpegFrame.#samplingRateTable",
+    Target = "MediaParsers.MpegFrame.#samplingRateTable",
     MessageId = "Member",
     Justification = "Array is not Jagged and does not waste space.")]
 
-namespace Rdio.Player.StreamSource
+namespace MediaParsers
 {
     using System;
     using System.IO;
@@ -121,7 +121,6 @@ namespace Rdio.Player.StreamSource
         /// </param>
         public MpegFrame(Stream stream)
         {
-            //long startPostion = stream.Position;
             frameHeader = new byte[FrameHeaderSize];
 
             // Guard against a read error
@@ -152,7 +151,6 @@ namespace Rdio.Player.StreamSource
 
             return;
         cleanup:
-            //stream.Position = startPostion;
             frameHeader = null;
             return;
         }

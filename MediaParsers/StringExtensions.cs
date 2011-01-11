@@ -9,10 +9,10 @@
 
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes",
     Scope = "member",
-    Target = "Rdio.Player.StreamSource.StringExtensions.#ToLittleEndian(System.String)",
+    Target = "ExtensionMethods.StringExtensions.#ToLittleEndian(System.String)",
     Justification = "This is appropriate to make this method look like a first class member of string.")]
 
-namespace Rdio.Player.StreamSource
+namespace ExtensionMethods
 {
     using System;
 

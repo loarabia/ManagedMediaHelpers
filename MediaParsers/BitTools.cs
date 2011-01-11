@@ -7,7 +7,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Rdio.Player.StreamSource
+namespace MediaParsers
 {
     using System;
     using System.Diagnostics;
