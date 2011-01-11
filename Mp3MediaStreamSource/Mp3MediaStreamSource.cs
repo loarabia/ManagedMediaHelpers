@@ -1,6 +1,10 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Mp3MediaStreamSource.cs" company="Larry Olson">
 // (c) Copyright Larry Olson.
+//
+// Changes to support duration and streaming (i.e. non-seekable) content
+// (c) Copyright 2010 Rdio.
+//
 // This source is subject to the Microsoft Public License (Ms-PL)
 // See http://code.msdn.microsoft.com/ManagedMediaHelpers/Project/License.aspx
 // All other rights reserved.
@@ -10,11 +14,24 @@
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming",
     "CA1709:IdentifiersShouldBeCasedCorrectly",
     Scope = "type",
-    Target = "Media.Mp3MediaStreamSource",
+    Target = "Rdio.Player.StreamSource.Mp3MediaStreamSource",
     MessageId = "Mp",
     Justification = "Mp is not a two letter acyonym but is instead part of Mp3")]
 
-namespace Media
+/**
+ * Presents a byte stream as mp3 frames for the Media Element.  
+ * Based on ManagedMediaHelpers code sample from http://code.msdn.microsoft.com/ManagedMediaHelpers/
+ * 
+ * Tweaked to work on WinPho. Changes include BitTools.ToLittleEndianString and setting the duration properly based
+ * on bit rate & content length.  Also added support for non-seekable content and to be more memory-efficient
+ * to avoid copying the entire audio stream's data into memory.
+ * 
+ * NOTE:
+ *   - Does not support seeking yet
+ *   - Needs some extra buffering logic
+ */
+
+namespace Rdio.Player.StreamSource
 {
     using System;
     using System.Collections.Generic;
@@ -22,7 +39,9 @@ namespace Media
     using System.IO;
     using System.Windows.Media;
     using System.Windows.Threading;
-    using MediaParsers;
+    using System.Diagnostics;
+    using Rdio.Util;
+    using System.Security.Cryptography;
 
     /// <summary>
     /// A Simple MediaStreamSource which can play back MP3 streams from
@@ -30,6 +49,8 @@ namespace Media
     /// </summary>
     public class Mp3MediaStreamSource : MediaStreamSource
     {
+        private const String TAG = "Mp3MediaStreamSource";
+
         /// <summary>
         ///  ID3 version 1 tags are 128 bytes at the end of the file.
         ///  http://www.id3.org/ID3v1
@@ -49,19 +70,19 @@ namespace Media
         private MediaStreamDescription audioStreamDescription;
 
         /// <summary>
-        ///  The position in the stream where the current MpegFrame starts.
-        ///  For purposes of this code, the frame starts with the header and
-        ///  not after the header.
+        /// The position in the stream where the current MpegFrame starts.
+        /// For purposes of this code, the frame starts with the header and
+        /// not after the header.
         /// </summary>
         private long currentFrameStartPosition;
 
         /// <summary>
-        ///  The size of the MpegFrame in Bytes.
+        /// The length of the audiostream as determined via the constructors.
         /// </summary>
-        private int currentFrameSize;
-
+        private long audioStreamLength;
+        
         /// <summary>
-        ///  Initializes a new instance of the Mp3MediaStreamSource class.
+        /// Initializes a new instance of the Mp3MediaStreamSource class.
         /// </summary>
         /// <param name="audioStream">
         /// Seekable stream containing Mp3 data
@@ -69,12 +90,40 @@ namespace Media
         public Mp3MediaStreamSource(Stream audioStream)
         {
             this.audioStream = audioStream;
+            this.audioStreamLength = audioStream.Length;
+        }
+
+        /// <summary>
+        /// Initialises a new instance of the Mp3MediaStreamSource with a pre-determined length.
+        /// This is useful for wrapping an IO stream that may not be seekable (and thus won't have a .Length)
+        /// but for which you already know the length (e.g. a CryptoStream from an IsolatedStorageFileStream with a byte count,
+        /// or an HTTP stream which has a specified content-length)
+        /// </summary>
+        public Mp3MediaStreamSource(Stream audioStream, long length)
+        {
+            this.audioStream = audioStream;
+            this.audioStreamLength = length;
         }
 
         /// <summary>
         /// Gets the MpegLayer3WaveFormat structure which represents this Mp3 file.
         /// </summary>
         public MpegLayer3WaveFormat MpegLayer3WaveFormat { get; private set; }
+
+        /// <summary>
+        /// Holds the duration of the track
+        /// </summary>
+        private TimeSpan trackDuration;
+
+        /// <summary>
+        /// The current frame to parse
+        /// </summary>
+        private MpegFrame currentFrame;
+
+        /// <summary>
+        /// Buffer for decoding audio frames into.  4096 should be larger than we'll ever need, right? (144*448*1000/44100)
+        /// </summary>
+        private static byte[] buffer = new byte[4096];
 
         /// <summary>
         /// Parses the passed in MediaStream to find the first frame and signals
@@ -87,17 +136,6 @@ namespace Media
             Dictionary<MediaSourceAttributesKeys, string> mediaSourceAttributes = new Dictionary<MediaSourceAttributesKeys, string>();
             Dictionary<MediaStreamAttributeKeys, string> mediaStreamAttributes = new Dictionary<MediaStreamAttributeKeys, string>();
             List<MediaStreamDescription> mediaStreamDescriptions = new List<MediaStreamDescription>();
-
-            // Pull in the entire Audio stream.
-            byte[] audioData = new byte[this.audioStream.Length];
-            if (audioData.Length != this.audioStream.Read(audioData, 0, audioData.Length))
-            {
-                throw new IOException("Could not read in the AudioStream");
-            }
-
-            // Find the syncpoint of the first MpegFrame in the file.
-            int result = BitTools.FindBitPattern(audioData, new byte[2] { 255, 240 }, new byte[2] { 255, 240 });
-            this.audioStream.Position = result;
 
             // Mp3 frame validity check.
             MpegFrame mpegLayer3Frame = new MpegFrame(this.audioStream);
@@ -130,17 +168,19 @@ namespace Media
 
             mediaStreamDescriptions.Add(this.audioStreamDescription);
 
-            // Setting a 0 duration to avoid the math to calcualte the Mp3 file length in minutes and seconds.
-            // This was done just to simplify this initial version of the code for other people reading it.
-            mediaSourceAttributes[MediaSourceAttributesKeys.Duration] = TimeSpan.FromMinutes(5).Ticks.ToString(CultureInfo.InvariantCulture);
-            mediaSourceAttributes[MediaSourceAttributesKeys.CanSeek] = "0";
+            trackDuration = new TimeSpan(0, 0, (int)(this.audioStreamLength / MpegLayer3WaveFormat.WaveFormatExtensible.AverageBytesPerSecond));
+            mediaSourceAttributes[MediaSourceAttributesKeys.Duration] = trackDuration.Ticks.ToString(CultureInfo.InvariantCulture);
+            if (audioStream.CanSeek)
+                mediaSourceAttributes[MediaSourceAttributesKeys.CanSeek] = "1";
+            else
+                mediaSourceAttributes[MediaSourceAttributesKeys.CanSeek] = "0";
 
             // Report that the Mp3MediaStreamSource has finished initializing its internal state and can now
             // pass in Mp3 Samples.
             this.ReportOpenMediaCompleted(mediaSourceAttributes, mediaStreamDescriptions);
 
-            this.currentFrameStartPosition = result;
-            this.currentFrameSize = mpegLayer3Frame.FrameSize;
+            this.currentFrame = mpegLayer3Frame;
+            this.currentFrameStartPosition = MpegFrame.FrameHeaderSize;
         }
 
         /// <summary>
@@ -155,42 +195,51 @@ namespace Media
             Dictionary<MediaSampleAttributeKeys, string> emptyDict = new Dictionary<MediaSampleAttributeKeys, string>();
             MediaStreamSample audioSample = null;
 
-            if (this.currentFrameStartPosition + this.currentFrameSize + Id3Version1TagSize >= this.audioStream.Length)
+            if (this.currentFrame != null)
             {
-                // If you are near the end of the file, return a null stream, which
-                // tells the MediaStreamSource and MediaElement to close down.
-                audioSample = new MediaStreamSample(
-                    this.audioStreamDescription,
-                    null,
-                    0,
-                    0,
-                    0,
-                    emptyDict);
-                this.ReportGetSampleCompleted(audioSample);
-            }
-            else
-            {
-                // Common case. Return the next sample in the stream and find the
-                // one after it.
-                audioSample = new MediaStreamSample(
-                    this.audioStreamDescription,
-                    this.audioStream,
-                    this.currentFrameStartPosition,
-                    this.currentFrameSize,
-                    0,
-                    emptyDict);
+                // Calculate our current position
+                double ratio = (double)this.currentFrameStartPosition / (double)this.audioStreamLength;
+                TimeSpan currentPosition = new TimeSpan((long)(trackDuration.Ticks * ratio));
+
+                // Create a MemoryStream to hold the bytes
+                // FrameSize includes the frame header which we've already read from the previous iteration, so just copy the
+                // header, and then read the remaining bytes
+                this.currentFrame.CopyHeader(buffer, 0);
+                int audioSampleSize = this.currentFrame.FrameSize - MpegFrame.FrameHeaderSize;
+                int c = this.audioStream.Read(buffer, MpegFrame.FrameHeaderSize, audioSampleSize);
+                if (c != audioSampleSize)
+                {
+                    Log.Error(TAG, "Ran out of bytes trying to read MP3 frame.  Audio sample size was: " + audioSampleSize + ", actual bytes read: " + c);
+                    this.currentFrame = null;
+                    audioSample = new MediaStreamSample(this.audioStreamDescription, null, 0, 0, 0, emptyDict);
+                    this.ReportGetSampleCompleted(audioSample);
+                    return;
+                }
+                this.currentFrameStartPosition += c;
+                MemoryStream audioFrameStream = new MemoryStream(buffer);
+
+                // Return the next sample in the stream
+                audioSample = new MediaStreamSample(this.audioStreamDescription, audioFrameStream, 0, this.currentFrame.FrameSize, currentPosition.Ticks, emptyDict);
                 this.ReportGetSampleCompleted(audioSample);
 
+                // Grab the next frame
                 MpegFrame nextFrame = new MpegFrame(this.audioStream);
                 if (nextFrame.Version == 1 && nextFrame.Layer == 3)
                 {
-                    this.currentFrameStartPosition = this.audioStream.Position - 4;
-                    this.currentFrameSize = nextFrame.FrameSize;
+                    this.currentFrameStartPosition += MpegFrame.FrameHeaderSize;
+                    this.currentFrame = nextFrame;
                 }
                 else
                 {
-                    throw new InvalidOperationException("Frame Is Not MP3");
+                    this.currentFrame = null;
                 }
+            }
+            else
+            {
+                // We're near the end of the file, or we got an irrecoverable error.
+                // Return a null stream which tells the MediaStreamSource & MediaElement to shut down
+                audioSample = new MediaStreamSample(this.audioStreamDescription, null, 0, 0, 0, emptyDict);
+                this.ReportGetSampleCompleted(audioSample);
             }
         }
 
@@ -199,6 +248,18 @@ namespace Media
         /// </summary>
         protected override void CloseMedia()
         {
+            try
+            {
+                audioStream.Close();
+            }
+            catch (CryptographicException)
+            {
+                // Ignore these, they are thrown when abruptly closing a stream (i.e. skipping tracks)
+            }
+            catch (Exception e)
+            {
+                Log.Error(TAG, "Got exception closing stream: ", e);
+            }
         }
 
         /// <summary>

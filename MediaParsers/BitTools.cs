@@ -7,10 +7,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace MediaParsers
+namespace Rdio.Player.StreamSource
 {
     using System;
     using System.Diagnostics;
+    using System.Text;
 
     /// <summary>
     /// Helper methods for manipulating values at the byte and binary level.
@@ -330,6 +331,16 @@ namespace MediaParsers
         public static int FindBytePattern(byte[] data, byte[] pattern)
         {
             return FindBytePattern(data, pattern, 0);
+        }
+
+        public static string ToLittleEndianString(string bigEndianString)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            for (int i = 0; i < bigEndianString.Length; i += 2)
+                builder.Insert(0, bigEndianString.Substring(i, 2));
+
+            return builder.ToString();
         }
     }
 }

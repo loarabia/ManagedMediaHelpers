@@ -7,11 +7,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace MediaParsers
+namespace Rdio.Player.StreamSource
 {
     using System;
     using System.Globalization;
-    using ExtensionMethods;
+    using System.Text;
     
     /// <summary>
     /// A managed representation of the multimedia MPEGLAYER3WAVEFORMATEX 
@@ -87,11 +87,11 @@ namespace MediaParsers
         public string ToHexString()
         {
             string s = WaveFormatExtensible.ToHexString();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.Id).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X8}", this.BitratePaddingMode).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.BlockSize).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.FramesPerBlock).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.CodecDelay).ToLittleEndian();
+            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.Id));
+            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X8}", this.BitratePaddingMode));
+            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.BlockSize));
+            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.FramesPerBlock));
+            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.CodecDelay));
             return s;
         }
 

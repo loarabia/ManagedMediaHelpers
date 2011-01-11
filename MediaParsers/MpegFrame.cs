@@ -11,17 +11,17 @@
 
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional",
     Scope = "member",
-    Target = "MediaParsers.MpegFrame.#bitrateTable",
+    Target = "Rdio.Player.StreamSource.MpegFrame.#bitrateTable",
     MessageId = "Member",
     Justification = "Array is not Jagged and does not waste space.")]
 
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional",
     Scope = "member",
-    Target = "MediaParsers.MpegFrame.#samplingRateTable",
+    Target = "Rdio.Player.StreamSource.MpegFrame.#samplingRateTable",
     MessageId = "Member",
     Justification = "Array is not Jagged and does not waste space.")]
 
-namespace MediaParsers
+namespace Rdio.Player.StreamSource
 {
     using System;
     using System.IO;
@@ -84,7 +84,7 @@ namespace MediaParsers
         /// <summary>
         /// MP3 Headers are 4 Bytes long
         /// </summary>
-        private const int FrameHeaderSize = 4;
+        public const int FrameHeaderSize = 4;
         
         /// <summary>
         /// A table of bitrates / 1000. These are all of the possible bitrates for Mpeg 1 - 2.5 audio. -1 encodes an error lookup.
@@ -109,6 +109,11 @@ namespace MediaParsers
             };
 
         /// <summary>
+        /// The frame header for this frame describing its contents. 
+        /// </summary>
+        private byte[] frameHeader;
+
+        /// <summary>
         /// Initializes a new instance of the MpegFrame class.
         /// </summary>
         /// <param name="stream">
@@ -116,8 +121,8 @@ namespace MediaParsers
         /// </param>
         public MpegFrame(Stream stream)
         {
-            long startPostion = stream.Position;
-            byte[] frameHeader = new byte[FrameHeaderSize];
+            //long startPostion = stream.Position;
+            frameHeader = new byte[FrameHeaderSize];
 
             // Guard against a read error
             if (stream.Read(frameHeader, 0, FrameHeaderSize) != FrameHeaderSize)
@@ -147,7 +152,7 @@ namespace MediaParsers
 
             return;
         cleanup:
-            stream.Position = startPostion;
+            //stream.Position = startPostion;
             frameHeader = null;
             return;
         }
@@ -393,6 +398,11 @@ namespace MediaParsers
             }
 
             return channel;
+        }
+
+        public void CopyHeader(byte[] destinationBuffer, int offset)
+        {
+            frameHeader.CopyTo(destinationBuffer, offset);
         }
     }
 }

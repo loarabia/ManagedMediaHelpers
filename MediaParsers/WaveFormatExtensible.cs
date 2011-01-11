@@ -7,11 +7,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace MediaParsers
+namespace Rdio.Player.StreamSource
 {
     using System;
     using System.Globalization;
-    using ExtensionMethods;
     
     /// <summary>
     /// A managed representation of the multimedia WAVEFORMATEX structure
@@ -88,13 +87,13 @@ namespace MediaParsers
         /// </returns>
         public string ToHexString()
         {
-            string s = string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.FormatTag).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.Channels).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X8}", this.SamplesPerSec).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X8}", this.AverageBytesPerSecond).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.BlockAlign).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.BitsPerSample).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.Size).ToLittleEndian();
+            string s = BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.FormatTag));
+            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.Channels));
+            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X8}", this.SamplesPerSec));
+            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X8}", this.AverageBytesPerSecond));
+            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.BlockAlign));
+            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.BitsPerSample));
+            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.Size));
             return s;
         }
 
