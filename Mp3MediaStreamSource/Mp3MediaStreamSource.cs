@@ -38,6 +38,7 @@ namespace Media
     using System.Windows.Threading;
     using System.Diagnostics;
     using System.Security.Cryptography;
+    using MediaParsers;
 
     /// <summary>
     /// A Simple MediaStreamSource which can play back MP3 streams from
