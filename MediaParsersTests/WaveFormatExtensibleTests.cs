@@ -192,8 +192,8 @@ namespace MediaParsersTests
         [TestMethod]
         public void SizeTest()
         {
-            this.wfx.Size = 12;
-            Assert.AreEqual(12, this.wfx.Size);
+            this.wfx.ExtraDataSize = 12;
+            Assert.AreEqual(12, this.wfx.ExtraDataSize);
         }
 
         [TestMethod]
@@ -237,7 +237,7 @@ namespace MediaParsersTests
             this.wfx.AverageBytesPerSecond = 500;
             this.wfx.BlockAlign = 1;
             this.wfx.BitsPerSample = 16;
-            this.wfx.Size = 12;
+            this.wfx.ExtraDataSize = 12;
 
             string s = this.wfx.ToHexString();
             string expectedResult = "55000200401F0000F4010000010010000C00";
@@ -253,7 +253,7 @@ namespace MediaParsersTests
             this.wfx.AverageBytesPerSecond = 500;
             this.wfx.BlockAlign = 1;
             this.wfx.BitsPerSample = 16;
-            this.wfx.Size = 12;
+            this.wfx.ExtraDataSize = 12;
 
             string s = this.wfx.ToString();
             string expectedResult = "WAVEFORMATEX FormatTag: 85, Channels: 2, SamplesPerSec: 8000, AvgBytesPerSec: 500, BlockAlign: 1, BitsPerSample: 16, Size: 12 ";

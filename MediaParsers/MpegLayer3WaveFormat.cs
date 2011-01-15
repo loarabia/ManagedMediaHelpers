@@ -87,12 +87,13 @@ namespace MediaParsers
         public string ToHexString()
         {
             string s = WaveFormatExtensible.ToHexString();
-            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.Id));
-            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X8}", this.BitratePaddingMode));
-            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.BlockSize));
-            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.FramesPerBlock));
-            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.CodecDelay));
-            return s;
+            char[] mpeglayer3Data = new char[6 * 4];
+            BitTools.ToHexHelper(4, this.Id, 0, mpeglayer3Data);
+            BitTools.ToHexHelper(8, this.BitratePaddingMode, 4, mpeglayer3Data);
+            BitTools.ToHexHelper(4, this.BlockSize, 12, mpeglayer3Data);
+            BitTools.ToHexHelper(4, this.FramesPerBlock, 16, mpeglayer3Data);
+            BitTools.ToHexHelper(4, this.CodecDelay, 20, mpeglayer3Data);
+            return s + new string(mpeglayer3Data);            
         }
 
         /// <summary>

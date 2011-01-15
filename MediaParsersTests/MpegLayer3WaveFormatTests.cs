@@ -31,7 +31,7 @@ namespace MediaParsersTests
             this.wfx.AverageBytesPerSecond = 500;
             this.wfx.BlockAlign = 1;
             this.wfx.BitsPerSample = 16;
-            this.wfx.Size = 12;
+            this.wfx.ExtraDataSize = 12;
 
             this.mp3wfx = new MpegLayer3WaveFormat();
         }

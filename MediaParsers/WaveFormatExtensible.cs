@@ -71,7 +71,7 @@ namespace MediaParsers
         /// Gets or sets the size in bytes of any extra format data added to the end of the
         /// WAVEFORMATEX structure.
         /// </summary>
-        public short Size { get; set; }
+        public short ExtraDataSize { get; set; }
 
         /// <summary>
         /// Returns a string representing the structure in little-endian 
@@ -87,14 +87,15 @@ namespace MediaParsers
         /// </returns>
         public string ToHexString()
         {
-            string s = BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.FormatTag));
-            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.Channels));
-            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X8}", this.SamplesPerSec));
-            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X8}", this.AverageBytesPerSecond));
-            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.BlockAlign));
-            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.BitsPerSample));
-            s += BitTools.ToLittleEndianString(string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.Size));
-            return s;
+            char[] data = new char[9 * 4];
+            BitTools.ToHexHelper(4, this.FormatTag, 0, data);
+            BitTools.ToHexHelper(4, this.Channels, 4, data);
+            BitTools.ToHexHelper(8, this.SamplesPerSec, 8, data);
+            BitTools.ToHexHelper(8, this.AverageBytesPerSecond, 16, data);
+            BitTools.ToHexHelper(4, this.BlockAlign, 24, data);
+            BitTools.ToHexHelper(4, this.BitsPerSample, 28, data);
+            BitTools.ToHexHelper(4, this.ExtraDataSize, 32, data);
+            return new string(data);
         }
 
         /// <summary>
@@ -114,7 +115,7 @@ namespace MediaParsers
                 this.AverageBytesPerSecond,
                 this.BlockAlign,
                 this.BitsPerSample,
-                this.Size);
+                this.ExtraDataSize);
         }
     }
 }

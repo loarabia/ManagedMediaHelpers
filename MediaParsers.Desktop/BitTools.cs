@@ -11,12 +11,47 @@ namespace MediaParsers
 {
     using System;
     using System.Diagnostics;
+    using System.Text;
 
     /// <summary>
     /// Helper methods for manipulating values at the byte and binary level.
     /// </summary>
     public static class BitTools
     {
+        /// <summary>
+        /// Mask for the bits that make up the second hex digit in a byte.
+        /// </summary>
+        private const byte MaskTail = 0x0F;
+
+        /// <summary>
+        /// Mask for the bits that make up the first hex digit in a byte.
+        /// </summary>
+        private const byte MaskHead = 0xF0;
+
+        /// <summary>
+        /// Lookup table for converting a 4 bit value into its corresponding
+        /// hex char.
+        /// </summary>
+        private static readonly char[] DecToHexConv = new char[] 
+        {
+            '0',    /* 48 ascii */
+            '1',    /* 49 */
+            '2',    /* 50 */
+            '3',    /* 51 */
+            '4',    /* 52 */
+            '5',    /* 53 */
+            '6',    /* 54 */
+            '7',    /* 55 */
+            '8',    /* 56 */
+            '9',    /* 57 */
+            'A',    /* 65 ascii */
+            'B',    /* 66 */
+            'C',    /* 67 */
+            'D',    /* 68 */
+            'E',    /* 69 */
+            'F'     /* 70 */
+        };
+
         /// <summary>
         /// Defined by ID3v2 spec as 4 bytes
         /// </summary>
@@ -51,14 +86,14 @@ namespace MediaParsers
 
             // Clear out numbers where you are masking outside of the valid
             // range
-            if ((firstBit + maskSize) > data.Length * ByteSize) 
+            if ((firstBit + maskSize) > data.Length * ByteSize)
             {
                 throw new ArgumentException("Attempting to mask outside of the data array");
             }
 
             // Clear out masks which are larger than the number of bits in an
             // int
-            if (maskSize > sizeof(int) * ByteSize) 
+            if (maskSize > sizeof(int) * ByteSize)
             {
                 throw new ArgumentException("maskSize is larger than an integer");
             }
@@ -91,10 +126,10 @@ namespace MediaParsers
             for (int bi = startByteIndex; bi <= endByteIndex; bi++)
             {
                 temp = data[bi];
-                                
+
                 shiftAmount = (endByteIndex - bi) * ByteSize;
                 temp = temp << shiftAmount;
-                
+
                 headerValue = headerValue | temp;
             }
 
@@ -103,7 +138,7 @@ namespace MediaParsers
 
             // mask out the appropriate bits
             headerValue = headerValue & mask;
-            
+
             return (int)headerValue;
         }
 
@@ -330,6 +365,30 @@ namespace MediaParsers
         public static int FindBytePattern(byte[] data, byte[] pattern)
         {
             return FindBytePattern(data, pattern, 0);
+        }
+
+        /// <summary>
+        /// Inserts a field in little endian hex format to an array of chars.
+        /// </summary>
+        /// <param name="sizeOfField">
+        /// The size of the data field in bytes.
+        /// </param>
+        /// <param name="fieldData">
+        /// The actual field of data.
+        /// </param>
+        /// <param name="startIndex">
+        /// The index where the field should be inserted.
+        /// </param>
+        /// <param name="chars">
+        /// The character array to insert the field data into.
+        /// </param>
+        public static void ToHexHelper(byte sizeOfField, long fieldData, int startIndex, char[] chars)
+        {
+            for (int i = 0; i < sizeOfField; i += 2, fieldData >>= 8, startIndex += 2)
+            {
+                chars[startIndex] = DecToHexConv[((fieldData & MaskHead) >> 4)];
+                chars[startIndex + 1] = DecToHexConv[fieldData & MaskTail];
+            }
         }
     }
 }

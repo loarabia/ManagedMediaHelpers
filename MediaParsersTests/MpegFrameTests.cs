@@ -95,6 +95,23 @@ namespace MediaParsersTests
                 this.mf.ToString());
         }
 
+        [TestMethod]
+        public void FrameHeaderSize()
+        {
+            Assert.AreEqual(4, MpegFrame.FrameHeaderSize);
+        }
+
+        [TestMethod]
+        public void CopyHeaderTest()
+        {
+            byte[] newData = new byte[8];
+            this.mf.CopyHeader(newData);
+            Assert.AreEqual(255, newData[0]);
+            Assert.AreEqual(50, newData[2]);
+            Assert.AreEqual(0, newData[4]);
+            Assert.AreEqual(0, newData[5]);
+        }
+
         #region IDisposable Members
 
         public void Dispose()

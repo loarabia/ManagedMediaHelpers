@@ -19,6 +19,40 @@ namespace MediaParsers
     public static class BitTools
     {
         /// <summary>
+        /// Mask for the bits that make up the second hex digit in a byte.
+        /// </summary>
+        private const byte MaskTail = 0x0F;
+
+        /// <summary>
+        /// Mask for the bits that make up the first hex digit in a byte.
+        /// </summary>
+        private const byte MaskHead = 0xF0;
+
+        /// <summary>
+        /// Lookup table for converting a 4 bit value into its corresponding
+        /// hex char.
+        /// </summary>
+        private static readonly char[] DecToHexConv = new char[] 
+        {
+            '0',    /* 48 ascii */
+            '1',    /* 49 */
+            '2',    /* 50 */
+            '3',    /* 51 */
+            '4',    /* 52 */
+            '5',    /* 53 */
+            '6',    /* 54 */
+            '7',    /* 55 */
+            '8',    /* 56 */
+            '9',    /* 57 */
+            'A',    /* 65 ascii */
+            'B',    /* 66 */
+            'C',    /* 67 */
+            'D',    /* 68 */
+            'E',    /* 69 */
+            'F'     /* 70 */
+        };
+
+        /// <summary>
         /// Defined by ID3v2 spec as 4 bytes
         /// </summary>
         private const int SyncSafeIntegerSize = 4;
@@ -333,14 +367,28 @@ namespace MediaParsers
             return FindBytePattern(data, pattern, 0);
         }
 
-        public static string ToLittleEndianString(string bigEndianString)
+        /// <summary>
+        /// Inserts a field in little endian hex format to an array of chars.
+        /// </summary>
+        /// <param name="sizeOfField">
+        /// The size of the data field in bytes.
+        /// </param>
+        /// <param name="fieldData">
+        /// The actual field of data.
+        /// </param>
+        /// <param name="startIndex">
+        /// The index where the field should be inserted.
+        /// </param>
+        /// <param name="chars">
+        /// The character array to insert the field data into.
+        /// </param>
+        public static void ToHexHelper(byte sizeOfField, long fieldData, int startIndex, char[] chars)
         {
-            StringBuilder builder = new StringBuilder();
-
-            for (int i = 0; i < bigEndianString.Length; i += 2)
-                builder.Insert(0, bigEndianString.Substring(i, 2));
-
-            return builder.ToString();
+            for (int i = 0; i < sizeOfField; i += 2, fieldData >>= 8, startIndex += 2)
+            {
+                chars[startIndex] = DecToHexConv[((fieldData & MaskHead) >> 4)];
+                chars[startIndex + 1] = DecToHexConv[fieldData & MaskTail];
+            }
         }
     }
 }

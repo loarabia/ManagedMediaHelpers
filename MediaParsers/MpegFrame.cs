@@ -77,14 +77,14 @@ namespace MediaParsers
     public class MpegFrame
     {
         /// <summary>
-        /// Frame Sync is 11 1s
-        /// </summary>
-        private const int SyncValue = 2047;
-
-        /// <summary>
         /// MP3 Headers are 4 Bytes long
         /// </summary>
         public const int FrameHeaderSize = 4;
+
+        /// <summary>
+        /// Frame Sync is 11 1s
+        /// </summary>
+        private const int SyncValue = 2047;
         
         /// <summary>
         /// A table of bitrates / 1000. These are all of the possible bitrates for Mpeg 1 - 2.5 audio. -1 encodes an error lookup.
@@ -121,29 +121,29 @@ namespace MediaParsers
         /// </param>
         public MpegFrame(Stream stream)
         {
-            frameHeader = new byte[FrameHeaderSize];
+            this.frameHeader = new byte[FrameHeaderSize];
 
             // Guard against a read error
-            if (stream.Read(frameHeader, 0, FrameHeaderSize) != FrameHeaderSize)
+            if (stream.Read(this.frameHeader, 0, FrameHeaderSize) != FrameHeaderSize)
             {
                 goto cleanup;
             }
 
             // Sync
-            int value = BitTools.MaskBits(frameHeader, 0, 11);
+            int value = BitTools.MaskBits(this.frameHeader, 0, 11);
             if (!(value == SyncValue))
             {
                 goto cleanup;
             }
 
-            this.Version = ParseVersion(frameHeader);
-            this.Layer = ParseLayer(frameHeader);
-            this.IsProtected = BitTools.MaskBits(frameHeader, 15, 1) == 1 ? false : true;
-            this.BitrateIndex = BitTools.MaskBits(frameHeader, 16, 4);
-            this.SamplingRateIndex = BitTools.MaskBits(frameHeader, 20, 2);
-            this.Padding = BitTools.MaskBits(frameHeader, 22, 1);
+            this.Version = ParseVersion(this.frameHeader);
+            this.Layer = ParseLayer(this.frameHeader);
+            this.IsProtected = BitTools.MaskBits(this.frameHeader, 15, 1) == 1 ? false : true;
+            this.BitrateIndex = BitTools.MaskBits(this.frameHeader, 16, 4);
+            this.SamplingRateIndex = BitTools.MaskBits(this.frameHeader, 20, 2);
+            this.Padding = BitTools.MaskBits(this.frameHeader, 22, 1);
             //// Private Bit = BitTools.MaskBits(_mp3FrameHeader,8,1); //USELESS
-            this.Channels = ParseChannel(frameHeader);
+            this.Channels = ParseChannel(this.frameHeader);
             //// Joint Mode = ParseJoitMode(_mp3FrameHeader); //Not used by  Mp3MSS
             //// CopyRight = BitTools.MaskBits(_mp3FrameHeader,3,1); //Not used by Mp3MSS
             //// Original = BitTools.MaskBits(_mp3FrameHeader,2,1); //Not used by Mp3MSS
@@ -151,7 +151,7 @@ namespace MediaParsers
 
             return;
         cleanup:
-            frameHeader = null;
+            this.frameHeader = null;
             return;
         }
 
@@ -304,6 +304,15 @@ namespace MediaParsers
         }
 
         /// <summary>
+        /// Copies the MpegFrame's FrameHeader to the berginning of the desired buffer.
+        /// </summary>
+        /// <param name="destinationBuffer">Buffer to copy FrameHeader into.</param>
+        public void CopyHeader(byte[] destinationBuffer)
+        {
+            this.frameHeader.CopyTo(destinationBuffer, 0);
+        }
+
+        /// <summary>
         /// Parses the version of the MPEG standard this frame header conforms to from the frame header.
         /// </summary>
         /// <param name="frameHeader"> The 4 byte header for this frame. </param>
@@ -396,11 +405,6 @@ namespace MediaParsers
             }
 
             return channel;
-        }
-
-        public void CopyHeader(byte[] destinationBuffer, int offset)
-        {
-            frameHeader.CopyTo(destinationBuffer, offset);
         }
     }
 }

@@ -11,8 +11,8 @@ namespace MediaParsers
 {
     using System;
     using System.Globalization;
-    using ExtensionMethods;
-    
+    using System.Text;
+
     /// <summary>
     /// A managed representation of the multimedia MPEGLAYER3WAVEFORMATEX 
     /// structure declared in mmreg.h.
@@ -87,12 +87,13 @@ namespace MediaParsers
         public string ToHexString()
         {
             string s = WaveFormatExtensible.ToHexString();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.Id).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X8}", this.BitratePaddingMode).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.BlockSize).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.FramesPerBlock).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.CodecDelay).ToLittleEndian();
-            return s;
+            char[] mpeglayer3Data = new char[6 * 4];
+            BitTools.ToHexHelper(4, this.Id, 0, mpeglayer3Data);
+            BitTools.ToHexHelper(8, this.BitratePaddingMode, 4, mpeglayer3Data);
+            BitTools.ToHexHelper(4, this.BlockSize, 12, mpeglayer3Data);
+            BitTools.ToHexHelper(4, this.FramesPerBlock, 16, mpeglayer3Data);
+            BitTools.ToHexHelper(4, this.CodecDelay, 20, mpeglayer3Data);
+            return s + new string(mpeglayer3Data);
         }
 
         /// <summary>
@@ -106,7 +107,7 @@ namespace MediaParsers
             return "MPEGLAYER3 "
                 + WaveFormatExtensible.ToString()
                 + string.Format(
-                    CultureInfo.InvariantCulture, 
+                    CultureInfo.InvariantCulture,
                     "ID: {0}, Flags: {1}, BlockSize: {2}, FramesPerBlock {3}, CodecDelay {4}",
                     this.Id,
                     this.BitratePaddingMode,

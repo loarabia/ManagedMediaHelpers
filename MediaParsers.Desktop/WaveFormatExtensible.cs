@@ -11,8 +11,7 @@ namespace MediaParsers
 {
     using System;
     using System.Globalization;
-    using ExtensionMethods;
-    
+
     /// <summary>
     /// A managed representation of the multimedia WAVEFORMATEX structure
     /// declared in mmreg.h.
@@ -72,7 +71,7 @@ namespace MediaParsers
         /// Gets or sets the size in bytes of any extra format data added to the end of the
         /// WAVEFORMATEX structure.
         /// </summary>
-        public short Size { get; set; }
+        public short ExtraDataSize { get; set; }
 
         /// <summary>
         /// Returns a string representing the structure in little-endian 
@@ -88,14 +87,15 @@ namespace MediaParsers
         /// </returns>
         public string ToHexString()
         {
-            string s = string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.FormatTag).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.Channels).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X8}", this.SamplesPerSec).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X8}", this.AverageBytesPerSecond).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.BlockAlign).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.BitsPerSample).ToLittleEndian();
-            s += string.Format(CultureInfo.InvariantCulture, "{0:X4}", this.Size).ToLittleEndian();
-            return s;
+            char[] data = new char[9 * 4];
+            BitTools.ToHexHelper(4, this.FormatTag, 0, data);
+            BitTools.ToHexHelper(4, this.Channels, 4, data);
+            BitTools.ToHexHelper(8, this.SamplesPerSec, 8, data);
+            BitTools.ToHexHelper(8, this.AverageBytesPerSecond, 16, data);
+            BitTools.ToHexHelper(4, this.BlockAlign, 24, data);
+            BitTools.ToHexHelper(4, this.BitsPerSample, 28, data);
+            BitTools.ToHexHelper(4, this.ExtraDataSize, 32, data);
+            return new string(data);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace MediaParsers
         public override string ToString()
         {
             return string.Format(
-                CultureInfo.InvariantCulture, 
+                CultureInfo.InvariantCulture,
                 "WAVEFORMATEX FormatTag: {0}, Channels: {1}, SamplesPerSec: {2}, AvgBytesPerSec: {3}, BlockAlign: {4}, BitsPerSample: {5}, Size: {6} ",
                 this.FormatTag,
                 this.Channels,
@@ -115,7 +115,7 @@ namespace MediaParsers
                 this.AverageBytesPerSecond,
                 this.BlockAlign,
                 this.BitsPerSample,
-                this.Size);
+                this.ExtraDataSize);
         }
     }
 }

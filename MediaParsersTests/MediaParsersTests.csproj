@@ -52,7 +52,6 @@
     <Compile Include="MpegFrameTests.cs" />
     <Compile Include="MpegLayer3WaveFormatTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringExtensionTests.cs" />
     <Compile Include="WaveFormatExtensibleTests.cs" />
   </ItemGroup>
   <ItemGroup>

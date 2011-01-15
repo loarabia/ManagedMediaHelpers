@@ -32,12 +32,13 @@ namespace Media
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
-    using System.Windows.Media;
-    using System.Windows.Threading;
-    using System.Diagnostics;
     using System.Security.Cryptography;
+    using System.Windows.Media;
+    //using System.Windows.Threading;
+    
     using MediaParsers;
 
     /// <summary>
@@ -53,6 +54,11 @@ namespace Media
         private const int Id3Version1TagSize = 128;
 
         /// <summary>
+        /// Buffer for decoding audio frames into.  4096 should be larger than we'll ever need, right? (144*448*1000/44100)
+        /// </summary>
+        private static byte[] buffer = new byte[4096];
+
+         /// <summary>
         /// The Mp3 stream being played back.
         /// </summary>
         private Stream audioStream;
@@ -75,35 +81,6 @@ namespace Media
         /// The length of the audiostream as determined via the constructors.
         /// </summary>
         private long audioStreamLength;
-        
-        /// <summary>
-        /// Initializes a new instance of the Mp3MediaStreamSource class.
-        /// </summary>
-        /// <param name="audioStream">
-        /// Seekable stream containing Mp3 data
-        /// </param>
-        public Mp3MediaStreamSource(Stream audioStream)
-        {
-            this.audioStream = audioStream;
-            this.audioStreamLength = audioStream.Length;
-        }
-
-        /// <summary>
-        /// Initialises a new instance of the Mp3MediaStreamSource with a pre-determined length.
-        /// This is useful for wrapping an IO stream that may not be seekable (and thus won't have a .Length)
-        /// but for which you already know the length (e.g. a CryptoStream from an IsolatedStorageFileStream with a byte count,
-        /// or an HTTP stream which has a specified content-length)
-        /// </summary>
-        public Mp3MediaStreamSource(Stream audioStream, long length)
-        {
-            this.audioStream = audioStream;
-            this.audioStreamLength = length;
-        }
-
-        /// <summary>
-        /// Gets the MpegLayer3WaveFormat structure which represents this Mp3 file.
-        /// </summary>
-        public MpegLayer3WaveFormat MpegLayer3WaveFormat { get; private set; }
 
         /// <summary>
         /// Holds the duration of the track
@@ -116,9 +93,35 @@ namespace Media
         private MpegFrame currentFrame;
 
         /// <summary>
-        /// Buffer for decoding audio frames into.  4096 should be larger than we'll ever need, right? (144*448*1000/44100)
+        /// Initializes a new instance of the Mp3MediaStreamSource class.
         /// </summary>
-        private static byte[] buffer = new byte[4096];
+        /// <param name="audioStream">
+        /// Stream containing Mp3 data
+        /// </param>
+        public Mp3MediaStreamSource(Stream audioStream)
+        {
+            this.audioStream = audioStream;
+            this.audioStreamLength = audioStream.Length;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the Mp3MediaStreamSource class with a pre-determined length.
+        /// This is useful for wrapping an IO stream that may not be seekable (and thus won't have a .Length)
+        /// but for which you already know the length (e.g. a CryptoStream from an IsolatedStorageFileStream with a byte count,
+        /// or an HTTP stream which has a specified content-length)
+        /// </summary>
+        /// <param name="audioStream">Non-seekable Stream containing Mp3 data</param>
+        /// <param name="length">Length of non-seekable stream</param>
+        public Mp3MediaStreamSource(Stream audioStream, long length)
+        {
+            this.audioStream = audioStream;
+            this.audioStreamLength = length;
+        }
+
+        /// <summary>
+        /// Gets the MpegLayer3WaveFormat structure which represents this Mp3 file.
+        /// </summary>
+        public MpegLayer3WaveFormat MpegLayer3WaveFormat { get; private set; }
 
         /// <summary>
         /// Parses the passed in MediaStream to find the first frame and signals
@@ -150,7 +153,7 @@ namespace Media
             this.MpegLayer3WaveFormat.WaveFormatExtensible.AverageBytesPerSecond = mpegLayer3Frame.Bitrate / 8;
             this.MpegLayer3WaveFormat.WaveFormatExtensible.BlockAlign = 1;
             this.MpegLayer3WaveFormat.WaveFormatExtensible.BitsPerSample = 0;
-            this.MpegLayer3WaveFormat.WaveFormatExtensible.Size = 12;
+            this.MpegLayer3WaveFormat.WaveFormatExtensible.ExtraDataSize = 12;
 
             this.MpegLayer3WaveFormat.Id = 1;
             this.MpegLayer3WaveFormat.BitratePaddingMode = 0;
@@ -163,12 +166,16 @@ namespace Media
 
             mediaStreamDescriptions.Add(this.audioStreamDescription);
 
-            trackDuration = new TimeSpan(0, 0, (int)(this.audioStreamLength / MpegLayer3WaveFormat.WaveFormatExtensible.AverageBytesPerSecond));
-            mediaSourceAttributes[MediaSourceAttributesKeys.Duration] = trackDuration.Ticks.ToString(CultureInfo.InvariantCulture);
-            if (audioStream.CanSeek)
+            this.trackDuration = new TimeSpan(0, 0, (int)(this.audioStreamLength / MpegLayer3WaveFormat.WaveFormatExtensible.AverageBytesPerSecond));
+            mediaSourceAttributes[MediaSourceAttributesKeys.Duration] = this.trackDuration.Ticks.ToString(CultureInfo.InvariantCulture);
+            if (this.audioStream.CanSeek)
+            {
                 mediaSourceAttributes[MediaSourceAttributesKeys.CanSeek] = "1";
+            }
             else
+            {
                 mediaSourceAttributes[MediaSourceAttributesKeys.CanSeek] = "0";
+            }
 
             // Report that the Mp3MediaStreamSource has finished initializing its internal state and can now
             // pass in Mp3 Samples.
@@ -194,12 +201,12 @@ namespace Media
             {
                 // Calculate our current position
                 double ratio = (double)this.currentFrameStartPosition / (double)this.audioStreamLength;
-                TimeSpan currentPosition = new TimeSpan((long)(trackDuration.Ticks * ratio));
+                TimeSpan currentPosition = new TimeSpan((long)(this.trackDuration.Ticks * ratio));
 
                 // Create a MemoryStream to hold the bytes
                 // FrameSize includes the frame header which we've already read from the previous iteration, so just copy the
                 // header, and then read the remaining bytes
-                this.currentFrame.CopyHeader(buffer, 0);
+                this.currentFrame.CopyHeader(buffer);
                 int audioSampleSize = this.currentFrame.FrameSize - MpegFrame.FrameHeaderSize;
                 int c = this.audioStream.Read(buffer, MpegFrame.FrameHeaderSize, audioSampleSize);
                 if (c != audioSampleSize)
@@ -210,23 +217,25 @@ namespace Media
                     this.ReportGetSampleCompleted(audioSample);
                     return;
                 }
+
                 this.currentFrameStartPosition += c;
-                MemoryStream audioFrameStream = new MemoryStream(buffer);
-
-                // Return the next sample in the stream
-                audioSample = new MediaStreamSample(this.audioStreamDescription, audioFrameStream, 0, this.currentFrame.FrameSize, currentPosition.Ticks, emptyDict);
-                this.ReportGetSampleCompleted(audioSample);
-
-                // Grab the next frame
-                MpegFrame nextFrame = new MpegFrame(this.audioStream);
-                if (nextFrame.Version == 1 && nextFrame.Layer == 3)
+                using (MemoryStream audioFrameStream = new MemoryStream(buffer))
                 {
-                    this.currentFrameStartPosition += MpegFrame.FrameHeaderSize;
-                    this.currentFrame = nextFrame;
-                }
-                else
-                {
-                    this.currentFrame = null;
+                    // Return the next sample in the stream
+                    audioSample = new MediaStreamSample(this.audioStreamDescription, audioFrameStream, 0, this.currentFrame.FrameSize, currentPosition.Ticks, emptyDict);
+                    this.ReportGetSampleCompleted(audioSample);
+
+                    // Grab the next frame
+                    MpegFrame nextFrame = new MpegFrame(this.audioStream);
+                    if (nextFrame.Version == 1 && nextFrame.Layer == 3)
+                    {
+                        this.currentFrameStartPosition += MpegFrame.FrameHeaderSize;
+                        this.currentFrame = nextFrame;
+                    }
+                    else
+                    {
+                        this.currentFrame = null;
+                    }
                 }
             }
             else
@@ -245,7 +254,7 @@ namespace Media
         {
             try
             {
-                audioStream.Close();
+                this.audioStream.Close();
             }
             catch (CryptographicException)
             {
@@ -255,7 +264,7 @@ namespace Media
             }
             catch (Exception e)
             {
-                // Should probably log these somewhere
+                Debug.Assert(false, e.StackTrace);
             }
         }
 
