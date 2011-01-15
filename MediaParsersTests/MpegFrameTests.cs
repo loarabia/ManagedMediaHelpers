@@ -17,14 +17,20 @@ namespace MediaParsersTests
     [TestClass]
     public class MpegFrameTests : IDisposable
     {
-        private Stream s = new MemoryStream(new byte[4] { 255, 251, 50, 0 });
+        private static byte[] headerData = new byte[4] { 255, 251, 50, 0 };
+        private Stream s = new MemoryStream(MpegFrameTests.headerData);
         private MpegFrame mf;
+        private MpegFrame mf2;
 
         [TestInitialize]
         public void Setup()
         {
             this.s.Position = 0;
             this.mf = new MpegFrame(this.s);
+
+            this.s.Seek(0, SeekOrigin.Begin);
+            this.s.Read(headerData, 0, 4);
+            this.mf2 = new MpegFrame(this.s, MpegFrameTests.headerData);
         }
 
         [TestMethod]

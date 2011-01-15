@@ -37,7 +37,6 @@ namespace Media
     using System.IO;
     using System.Security.Cryptography;
     using System.Windows.Media;
-    //using System.Windows.Threading;
     
     using MediaParsers;
 
@@ -124,6 +123,73 @@ namespace Media
         public MpegLayer3WaveFormat MpegLayer3WaveFormat { get; private set; }
 
         /// <summary>
+        /// Read off the Id3Data from the stream and return the first MpegFrame of the audio stream.
+        /// This assumes that the first bit of data is either an ID3 segment or an MPEG segment. Should
+        /// probably do something a bit more robust at some point.
+        /// </summary>
+        /// <returns>
+        /// The first MpegFrame in the audio stream.
+        /// </returns>
+        public MpegFrame ReadPastId3V2Tags()
+        {
+            /* 
+             * Since this code assumes that the first bit of data is either an ID3 segment or an MPEG segment it could
+             * get into trouble. Should probably do something a bit more robust at some point.
+             */
+
+            MpegFrame mpegFrame;
+
+            // Read and (throw out) any Id3 data if present. 
+            byte[] data = new byte[10];
+            if (this.audioStream.Read(data, 0, 3) != 3)
+            {
+                goto cleanup;
+            }
+
+            if (data[0] == 73 /* I */ &&
+                data[1] == 68 /* D */ &&
+                data[2] == 51 /* 3 */)
+            {
+                // Need to update to read the is footer present flag and account for its 10 bytes if needed.
+                if (this.audioStream.Read(data, 3, 7) != 7)
+                {
+                    goto cleanup;
+                }
+
+                int id3Size = BitTools.ConvertSyncSafeToInt32(data, 6);
+                int bytesRead = 0;
+
+                // Read through the ID3 Data tossing it out.
+                while (id3Size > 0)
+                {
+                    bytesRead = (id3Size - buffer.Length > 0) ? 
+                        this.audioStream.Read(buffer, 0, buffer.Length) :
+                        this.audioStream.Read(buffer, 0, id3Size);
+                    id3Size -= bytesRead;
+                }
+
+                mpegFrame = new MpegFrame(this.audioStream);
+            }
+            else
+            {
+                // No ID3 tag present, presumably this is streaming and we are starting right at the Mp3 data.
+                // Assume the stream isn't seekable.
+                if (this.audioStream.Read(data, 3, 1) != 1)
+                {
+                    goto cleanup;
+                }
+
+                mpegFrame = new MpegFrame(this.audioStream, data);
+            }
+
+            return mpegFrame;
+
+            // Cleanup and quit if you couldn't even read the initial data for some reason.
+        cleanup:
+            throw new Exception("Could not read intial audio stream data");
+        }
+
+        /// <summary>
         /// Parses the passed in MediaStream to find the first frame and signals
         /// to its parent MediaElement that it is ready to begin playback by calling
         /// ReportOpenMediaCompleted.
@@ -135,8 +201,9 @@ namespace Media
             Dictionary<MediaStreamAttributeKeys, string> mediaStreamAttributes = new Dictionary<MediaStreamAttributeKeys, string>();
             List<MediaStreamDescription> mediaStreamDescriptions = new List<MediaStreamDescription>();
 
+            MpegFrame mpegLayer3Frame = this.ReadPastId3V2Tags();
+            
             // Mp3 frame validity check.
-            MpegFrame mpegLayer3Frame = new MpegFrame(this.audioStream);
             if (mpegLayer3Frame.FrameSize <= 0)
             {
                 throw new InvalidOperationException("MpegFrame's FrameSize cannot be negative");

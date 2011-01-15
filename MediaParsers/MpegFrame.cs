@@ -120,13 +120,38 @@ namespace MediaParsers
         /// A stream with its position at the SyncPoint of the header.
         /// </param>
         public MpegFrame(Stream stream)
+            : this(stream, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the MpegFrame class.
+        /// </summary>
+        /// <param name="stream">
+        /// A stream with its position at the SyncPoint of the header.
+        /// </param>
+        /// <param name="data">
+        /// The first 4 bytes of the audiostream. This should contain the MpegFrame's
+        /// header data.
+        /// </param>
+        public MpegFrame(Stream stream, byte[] data)
         {
             this.frameHeader = new byte[FrameHeaderSize];
 
-            // Guard against a read error
-            if (stream.Read(this.frameHeader, 0, FrameHeaderSize) != FrameHeaderSize)
+            if (data != null)
             {
-                goto cleanup;
+                for (int i = 0; i < this.frameHeader.Length; i++)
+                {
+                    this.frameHeader[i] = data[i];
+                }
+            }
+            else
+            {
+                // Guard against a read error
+                if (stream.Read(this.frameHeader, 0, FrameHeaderSize) != FrameHeaderSize)
+                {
+                    goto cleanup;
+                }
             }
 
             // Sync
@@ -152,7 +177,7 @@ namespace MediaParsers
             return;
         cleanup:
             this.frameHeader = null;
-            return;
+            return;            
         }
 
         /**********************************************************************
