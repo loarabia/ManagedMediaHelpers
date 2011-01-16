@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mp3MediaStreamSourceDemo.Web", "Mp3MediaStreamSourceDemo.Web\Mp3MediaStreamSourceDemo.Web.csproj", "{4258BD79-73B6-4371-AA67-F1C34D6CA8F6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaParsersTests", "MediaParsersTests\MediaParsersTests.csproj", "{1B07F73E-0D8F-4DF1-A6E0-66FDF8A5392E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{47AFEF0C-1379-46B2-A9FC-95BA4CBF1A17}"
@@ -21,16 +19,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mp3MediaStreamSource.SL4", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mp3MediaStreamSourceDemo.SL4", "Mp3MediaStreamSourceDemo.SL4\Mp3MediaStreamSourceDemo.SL4.csproj", "{DF3CB43C-E059-42EF-8B92-9D62D9649098}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mp3MediaStreamSourceDemo.SL4.Web", "Mp3MediaStreamSourceDemo.SL4.Web\Mp3MediaStreamSourceDemo.SL4.Web.csproj", "{4258BD79-73B6-4371-AA67-F1C34D6CA8F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4258BD79-73B6-4371-AA67-F1C34D6CA8F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4258BD79-73B6-4371-AA67-F1C34D6CA8F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4258BD79-73B6-4371-AA67-F1C34D6CA8F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4258BD79-73B6-4371-AA67-F1C34D6CA8F6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1B07F73E-0D8F-4DF1-A6E0-66FDF8A5392E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1B07F73E-0D8F-4DF1-A6E0-66FDF8A5392E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B07F73E-0D8F-4DF1-A6E0-66FDF8A5392E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -65,6 +61,10 @@ Global
 		{DF3CB43C-E059-42EF-8B92-9D62D9649098}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF3CB43C-E059-42EF-8B92-9D62D9649098}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF3CB43C-E059-42EF-8B92-9D62D9649098}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4258BD79-73B6-4371-AA67-F1C34D6CA8F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4258BD79-73B6-4371-AA67-F1C34D6CA8F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4258BD79-73B6-4371-AA67-F1C34D6CA8F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4258BD79-73B6-4371-AA67-F1C34D6CA8F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
