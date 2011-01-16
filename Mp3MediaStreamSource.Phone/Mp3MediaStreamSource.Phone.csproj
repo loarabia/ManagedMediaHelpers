@@ -48,7 +48,9 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Mp3MediaStreamSource.cs" />
+    <Compile Include="..\Mp3MediaStreamSource.SL4\Mp3MediaStreamSource.cs">
+      <Link>Mp3MediaStreamSource.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
