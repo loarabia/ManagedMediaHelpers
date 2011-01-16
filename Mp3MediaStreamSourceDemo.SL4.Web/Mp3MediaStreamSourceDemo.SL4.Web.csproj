@@ -13,7 +13,8 @@
     <RootNamespace>Mp3MediaStreamSourceDemo.Web</RootNamespace>
     <AssemblyName>Mp3MediaStreamSourceDemo.Web</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <SilverlightApplicationList>{DF3CB43C-E059-42EF-8B92-9D62D9649098}|..\Mp3MediaStreamSourceDemo\Mp3MediaStreamSourceDemo.csproj|ClientBin|False</SilverlightApplicationList>
+    <SilverlightApplicationList>
+    </SilverlightApplicationList>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
