@@ -4,6 +4,10 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaParsersTests", "MediaParsersTests\MediaParsersTests.csproj", "{1B07F73E-0D8F-4DF1-A6E0-66FDF8A5392E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{47AFEF0C-1379-46B2-A9FC-95BA4CBF1A17}"
+	ProjectSection(SolutionItems) = preProject
+		License.txt = License.txt
+		ReadMe.md = ReadMe.md
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaParsers.Desktop", "MediaParsers.Desktop\MediaParsers.Desktop.csproj", "{648DDB89-148C-4DA6-860E-ACE1904D2860}"
 EndProject
