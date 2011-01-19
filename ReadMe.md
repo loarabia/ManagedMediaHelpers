@@ -67,7 +67,7 @@ License.txt for a complete copy of the license.
 
 (c) Copyright 2008 Larry Olson 
 
-Changes to support duration and streaming (i.e. non-seekable) content
+Changes to support duration and streaming (i.e. non-seekable) content  
 (c) Copyright 2010 Rdio.
 
 [Visual Studio 2010]: http://msdn.microsoft.com/en-us/vstudio/default.aspx
