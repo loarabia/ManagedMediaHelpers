@@ -11,6 +11,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Threading;
+
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming",
     "CA1709:IdentifiersShouldBeCasedCorrectly",
     Scope = "type",
@@ -130,7 +132,7 @@ namespace Media
         /// <returns>
         /// The first MpegFrame in the audio stream.
         /// </returns>
-        public MpegFrame ReadPastId3V2Tags()
+        public MpegFrame ReadPastId3V2Tags(Action<MpegFrame> callback)
         {
             /* 
              * Since this code assumes that the first bit of data is either an ID3 segment or an MPEG segment it could
@@ -159,16 +161,21 @@ namespace Media
                 int id3Size = BitTools.ConvertSyncSafeToInt32(data, 6);
                 int bytesRead = 0;
 
-                // Read through the ID3 Data tossing it out.
-                while (id3Size > 0)
-                {
-                    bytesRead = (id3Size - buffer.Length > 0) ? 
-                        this.audioStream.Read(buffer, 0, buffer.Length) :
-                        this.audioStream.Read(buffer, 0, id3Size);
-                    id3Size -= bytesRead;
-                }
+                ThreadPool.QueueUserWorkItem(o =>
+                                                 {
+                                                     // Read through the ID3 Data tossing it out.)
+                                                     while (id3Size > 0)
+                                                     {
+                                                         bytesRead = (id3Size - buffer.Length > 0)
+                                                                         ? this.audioStream.Read(buffer, 0,
+                                                                                                 buffer.Length)
+                                                                         : this.audioStream.Read(buffer, 0, id3Size);
+                                                         id3Size -= bytesRead;
+                                                     }
 
-                mpegFrame = new MpegFrame(this.audioStream);
+                                                     mpegFrame = new MpegFrame(this.audioStream);
+                                                     callback(mpegFrame);
+                                                 });
             }
             else
             {
@@ -180,9 +187,10 @@ namespace Media
                 }
 
                 mpegFrame = new MpegFrame(this.audioStream, data);
+                callback(mpegFrame);
             }
 
-            return mpegFrame;
+            return null;
 
             // Cleanup and quit if you couldn't even read the initial data for some reason.
         cleanup:
@@ -201,9 +209,11 @@ namespace Media
             Dictionary<MediaStreamAttributeKeys, string> mediaStreamAttributes = new Dictionary<MediaStreamAttributeKeys, string>();
             List<MediaStreamDescription> mediaStreamDescriptions = new List<MediaStreamDescription>();
 
-            MpegFrame mpegLayer3Frame = this.ReadPastId3V2Tags();
-            
-            // Mp3 frame validity check.
+            this.ReadPastId3V2Tags(mpegLayer3Frame => ReadPastId3v2TagsCallback(mpegLayer3Frame, mediaStreamAttributes, mediaStreamDescriptions, mediaSourceAttributes));           
+        }
+
+        private void ReadPastId3v2TagsCallback(MpegFrame mpegLayer3Frame, Dictionary<MediaStreamAttributeKeys, string> mediaStreamAttributes, List<MediaStreamDescription> mediaStreamDescriptions, Dictionary<MediaSourceAttributesKeys, string> mediaSourceAttributes)
+        {
             if (mpegLayer3Frame.FrameSize <= 0)
             {
                 throw new InvalidOperationException("MpegFrame's FrameSize cannot be negative");
