@@ -282,6 +282,7 @@ namespace MediaParsers
                     {
                         di -= pati;
                     }
+
                     pati = 0;
                 }
                 else
