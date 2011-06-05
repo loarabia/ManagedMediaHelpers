@@ -111,6 +111,22 @@ namespace MediaParsersTests.BitToolsTests
         }
 
         [TestMethod]
+        public void PartialPattern()
+        {
+            byte[] localDataArray = new byte[20]
+            {
+                0, 0, 0, 1, 0,
+                48, 101, 45, 97, 1,
+                88, 53, 97, 58, 45,
+                0, 0, 0, 1, 109
+            };
+            this.mask = new byte[3] { 255, 255, 255 };
+            this.pattern = new byte[3] { 0, 0, 1 };
+            int result = BitTools.FindBitPattern(localDataArray, this.pattern, this.mask);
+            Assert.AreEqual(1, result);
+        }
+
+        [TestMethod]
         public void PatternAtEnd()
         {
             this.mask = new byte[1] { 255 };

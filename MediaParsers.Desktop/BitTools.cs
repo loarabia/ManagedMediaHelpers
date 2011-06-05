@@ -277,6 +277,11 @@ namespace MediaParsers
                 }
                 else if (pattern[pati] != (data[di] & mask[pati]))
                 {
+                    // If we were in the middle of matching a pattern, move back in case the pattern occurred within this section
+                    if (pati > 0)
+                    {
+                        di -= pati;
+                    }
                     pati = 0;
                 }
                 else
