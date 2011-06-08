@@ -225,9 +225,13 @@ namespace Media
 
             if (this.currentFrame != null)
             {
-                // Calculate our current position
-                double ratio = (double)this.currentFrameStartPosition / (double)this.audioStreamLength;
-                TimeSpan currentPosition = new TimeSpan((long)(this.trackDuration.Ticks * ratio));
+                // Calculate our current position based on the stream's length
+                //// double ratio = (double)this.currentFrameStartPosition / (double)this.audioStreamLength;
+                //// TimeSpan currentPosition = new TimeSpan((long)(this.trackDuration.Ticks * ratio));
+
+                // Calculate our current position instead based on the bitrate of the stream (more accurate?)
+                double position = (double)this.currentFrameStartPosition / (double)this.currentFrame.Bitrate;
+                TimeSpan currentPosition = TimeSpan.FromSeconds(position * 8 /* bits per Byte */);
 
                 // Create a MemoryStream to hold the bytes
                 // FrameSize includes the frame header which we've already read from the previous iteration, so just copy the
