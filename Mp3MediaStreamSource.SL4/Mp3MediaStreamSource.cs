@@ -257,7 +257,7 @@ namespace Media
 
                     // Grab the next frame
                     MpegFrame nextFrame = new MpegFrame(this.audioStream);
-                    if (nextFrame.Version == 1 && nextFrame.Layer == 3)
+                    if ( (nextFrame.Version == 1 || nextFrame.Version == 2) && nextFrame.Layer == 3)
                     {
                         this.currentFrameStartPosition += MpegFrame.FrameHeaderSize;
                         this.currentFrame = nextFrame;

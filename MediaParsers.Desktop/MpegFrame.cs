@@ -305,7 +305,7 @@ namespace MediaParsers
                         return ((12 * this.Bitrate / this.SamplingRate) + this.Padding) * 4;
                     case 2:
                     case 3:
-                        return (144 * this.Bitrate / this.SamplingRate) + this.Padding;
+                        return ((this.Version == 1 ? 144 : 72) * this.Bitrate / this.SamplingRate) + this.Padding;
                     default:
                         return -1;
                 }
